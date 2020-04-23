@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Domain Tokens</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicons -->
+    <link href="img/favicon.png" rel="icon">
+    <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,600,700,700i|Montserrat:300,400,500,600,700" rel="stylesheet">
+
+    <!-- Bootstrap CSS File -->
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Libraries CSS Files -->
+    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Main Stylesheet File -->
+    <link href="css/style.css" rel="stylesheet">
+    <script src="./js/vue.min.js"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        
+        body {
+            background-color: #FEFEFE;
+        }
+        
+        .shuoming {
+            width: 375px;
+            margin: 0 auto;
+        }
+        
+        .shuoming .title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #656565;
+            margin-bottom: 10px;
+        }
+        
+        .shuoming .kuang {
+            border: 1px solid #E5E5E5;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+        
+        .shuoming .kuang img {
+            width: 32px;
+            margin-top: -4px;
+        }
+        
+        .shuoming .kuang input {
+            border: 0;
+            width: 200px;
+            height: 40px;
+        }
+        
+        .shuoming .kuang .line {
+            display: inline-block;
+            margin-right: 5px;
+            color: #ffffff;
+        }
+        
+        .shuoming .price {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .shuoming .priceNum {
+            display: inline-block;
+            margin-right: 3px;
+            font-size: 16px;
+            color: #ff0000;
+        }
+        
+        .shuoming .beizhu {
+            font-size: 16px;
+            color: #FAFAFA;
+        }
+        
+        .buyit {
+            margin: 0 auto;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            cursor: pointer;
+            width: 120px;
+            line-height: 40px;
+            height: 40px;
+            border-radius: 4px;
+            background-color: #3475E0;
+            color: #ffffff;
+        }
+        
+        .huise {
+            background-color: #dddddd;
+            color: #000000;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header id="header">
+
+        <div id="topbar">
+            <div class="container">
+                <div class="social-links">
+                    <a href="https://t.me/elastosname" class="Telegram"><i class="fa fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+
+            <div class="logo float-left">
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <h1 class="text-light"><a href="#intro" class="scrollto"><span>Domain Tokens</span></a></h1>
+                <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
+            </div>
+
+            <nav class="main-nav float-right d-none d-lg-block">
+                <ul>
+                    <li><a href="./index.html">Home</a></li>
+                    <li class="active"><a href="./register.html">Register</a></li>
+                    <li><a href="">Sale</a></li>
+                    <li><a href="">Auction</a></li>
+                    <li><a href="">Account</a></li>
+                </ul>
+            </nav>
+            <!-- .main-nav -->
+
+        </div>
+    </header>
+    <!-- #header -->
+    <div style="height:150px"></div>
+    <div class="container" id="app">
+        <div class="row text-center">
+            <div class="col-sm-12">
+                <div class="shuoming">
+                    <div class="title">Find your domain name</div>
+                    <div class="kuang"><img src="./img/2B9A5A.png" v-if="dname" /><input v-model="dname" /><span><span class="line">|</span>elastos.name</span>
+                        </span>
+                    </div>
+                    <div v-if="dname"><span class="price">Price：</span><span class="priceNum">{{price}}</span>ELA（Estimated）</div>
+                    <div v-if="!dname">Input domain name</div>
+                    <div class="buyit" :class="{huise:!dname}" @click="buyIt">buy it</div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row text-center">
+            <div class="col-sm-12">
+                <div style="color:#7B7B7B">Domain Tokens</div>
+                <p style="color:#7B7B7B;">Powered by <a style="color:#5157DB;border-bottom: 1px solid #5157DB;">elastos.name</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            dname: 'adb',
+            price: '1.1',
+        },
+        methods: {
+            buyIt() {
+                if (this.dname === "") {
+                    return;
+                }
+                alert("buyIt");
+            }
+        },
+        created() {
+
+        }
+    });
+</script>
+
+</html>
