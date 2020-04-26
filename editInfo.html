@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Domain Tokens</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicons -->
+    <link href="img/favicon.png" rel="icon">
+    <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,600,700,700i|Montserrat:300,400,500,600,700" rel="stylesheet">
+
+    <!-- Bootstrap CSS File -->
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Libraries CSS Files -->
+    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Main Stylesheet File -->
+    <link href="css/style.css" rel="stylesheet">
+    <script src="./js/vue.min.js"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        
+        body {
+            background-color: #FEFEFE;
+        }
+        
+        .btn1 {
+            text-align: center;
+            margin: 0 auto;
+            margin-bottom: 5px;
+            cursor: pointer;
+            width: 200px;
+            line-height: 50px;
+            height: 50px;
+            border-radius: 4px;
+            background-color: #F5841F;
+            color: #ffffff;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header id="header">
+
+        <div id="topbar">
+            <div class="container">
+                <div class="social-links">
+                    <a href="https://t.me/elastosname" class="Telegram"><i class="fa fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+
+            <div class="logo float-left">
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <h1 class="text-light"><a href="#intro" class="scrollto"><span>Domain Tokens</span></a></h1>
+                <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
+            </div>
+
+            <nav class="main-nav float-right d-none d-lg-block">
+                <ul>
+                    <li><a href="./index.html">Home</a></li>
+                    <li><a href="./register.html">Register</a></li>
+                    <li><a href="./sale.html">Sale</a></li>
+                    <li><a href="./auction.html">Auction</a></li>
+                    <li class="active"><a href="./account.html">Account</a></li>
+                </ul>
+            </nav>
+            <!-- .main-nav -->
+
+        </div>
+    </header>
+    <!-- #header -->
+    <div style="height:150px"></div>
+    <div class="container" id="app">
+        <div class="row text-center">
+            <div class="col-sm-12">
+                <span style="color: #000000;font-size: 36px;">ABCDEFGH.elastos.name</span>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-sm-6 text-right">
+                <div style="margin-bottom: 5px;"><span style="margin-right: 5px;">DID:</span><input/></div>
+                <div style="margin-bottom: 5px;"><span style="margin-right: 5px;">ELA Address:</span><input/></div>
+                <div style="margin-bottom: 5px;"><span style="margin-right: 5px;">BTC Address:</span><input/></div>
+                <div style="margin-bottom: 5px;"><span style="margin-right: 5px;">ETH Address:</span><input/></div>
+            </div>
+            <div class="col-sm-6 text-left">
+                <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">EMail:</span><input/></div>
+                <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Personal Web:</span><input/></div>
+                <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Description:</span><textarea style="vertical-align:top;resize: none;height: 75px;"></textarea></div>
+            </div>
+        </div>
+
+        <div class="row text-center" style="margin-top: 10px;">
+            <div class="col-sm-5">
+                <img src="./img/line.png" style="width: 100%;" />
+            </div>
+            <div class="col-sm-2">
+                or
+            </div>
+            <div class="col-sm-5">
+                <img src="./img/line.png" style="width: 100%;" />
+            </div>
+        </div>
+
+        <div class="row text-center" style="margin-top: 20px;">
+            <div class="col-sm-12">
+                <img src="./img/elaphant.png" /> <span style="vertical-align: middle;color: #5157DB;border-bottom:1px solid #5157DB;cursor: pointer;">Start Elaphant to fill in quickly</span>
+            </div>
+        </div>
+
+
+        <div class="row text-center" style="margin-top: 40px;margin-bottom: 5px;">
+            <div class="col-sm-12">
+                <div class="btn1" @click="submit">Submit</div>
+            </div>
+        </div>
+
+        <div style="text-align: center;font-weight: bold;">Please confirm your MetaMask wallet already</div>
+        <div style="text-align: center;font-weight: bold;">connected the Elastos Eth sidechain</div>
+        <div style="text-align: center;font-weight: bold;"><img src="./img/meatMask.png">METAMASK</div>
+        <div style="text-align: center;"><img src="./img/wenhao.png"><span style="display:inline-block;border-bottom: 1px solid #dddddd;cursor: pointer;" @click="link">How to setup Metamask</span></div>
+
+        <div class="row text-center" style="margin-top: 50px;">
+            <div class="col-sm-12">
+                <div style="color:#7B7B7B">Domain Tokens</div>
+                <p style="color:#7B7B7B;">Powered by <a style="color:#5157DB;border-bottom: 1px solid #5157DB;">elastos.name</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+
+        },
+        methods: {
+            link() {
+
+            },
+            submit() {
+
+            }
+        },
+        created() {
+
+        }
+    });
+</script>
+
+</html>

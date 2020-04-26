@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Domain Tokens</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicons -->
+    <link href="img/favicon.png" rel="icon">
+    <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,600,700,700i|Montserrat:300,400,500,600,700" rel="stylesheet">
+
+    <!-- Bootstrap CSS File -->
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Libraries CSS Files -->
+    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Main Stylesheet File -->
+    <link href="css/style.css" rel="stylesheet">
+    <script src="./js/vue.min.js"></script>
+    <script src="./js/vue-qrcode.min.js"></script>
+    <script src="./js/vue-clipboard.min.js"></script>
+    <script>
+        Vue.component(VueQrcode.name, VueQrcode);
+    </script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        
+        body {
+            background-color: #FEFEFE;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header id="header">
+
+        <div id="topbar">
+            <div class="container">
+                <div class="social-links">
+                    <a href="https://t.me/elastosname" class="Telegram"><i class="fa fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+
+            <div class="logo float-left">
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <h1 class="text-light"><a href="#intro" class="scrollto"><span>Domain Tokens</span></a></h1>
+                <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
+            </div>
+
+            <nav class="main-nav float-right d-none d-lg-block">
+                <ul>
+                    <li><a href="./index.html">Home</a></li>
+                    <li><a href="./register.html">Register</a></li>
+                    <li><a href="./sale.html">Sale</a></li>
+                    <li><a href="./auction.html">Auction</a></li>
+                    <li class="active"><a href="./account.html">Account</a></li>
+                </ul>
+            </nav>
+            <!-- .main-nav -->
+
+        </div>
+    </header>
+    <!-- #header -->
+
+    <div id="app">
+        <div v-if="isPC">
+            <div style="height:150px"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div style="cursor: pointer;" @click="doCopy('ABCDEFGH .elastos.name')">
+                            ABCDEFGH .elastos.name <img src="./img/externallink.png">
+                        </div>
+
+                        <div style="margin-top: 10px;">
+                            Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World,
+                        </div>
+
+                        <div style="margin: 0 auto;width: 120px;">
+                            <qrcode :value="qrcode" :options="{ width:120 }" style="display:block"></qrcode>
+                        </div>
+                        <div style="font-size: 16px;cursor: pointer;" @click="doCopy('did:ela:ifZjRUsiC244ZhJpBNkQujdSDE9hQRppgb')">did:ela:ifZjRUsiC244ZhJpBNkQujdSDE9hQRppgb<img src="./img/copy.png" /></div>
+
+                        <div style="margin-top: 10px;cursor: pointer;">
+                            <img src="./img/youxiang.png" style="margin-right: 5px;">abc@hotmail.com
+                        </div>
+
+                        <div style="margin-top: 10px;cursor: pointer;">
+                            <img src="./img/link.png" style="margin-right: 5px;"><span style="color: #5157DB;">https://twitter.com/sdfasdfadsf</span>
+                        </div>
+
+                        <div style="margin-top: 10px;cursor: pointer;">
+                            <img src="./img/download.png" style="margin-right: 5px;"><span style="color: #5157DB;">https://abcdefgh.elastos.name/info.json</span>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-8">
+                        <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;">
+                            <div class="col-sm-8">
+                                <div style="margin-top: 10px;"><img src="./img/ela.png" style="margin-right: 5px;">Elastos</div>
+                                <div style="margin-top: 5px;cursor: pointer;" @click="doCopy('SDH28fhbdjcjGHYb4568dh083AFfhyucu')">SDH28fhbdjcjGHYb4568dh083AFfhyucu<img src="./img/copy.png"></div>
+                                <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;">https://abcdefgh.elastos.name/ela.address</div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div style="margin: 0 auto;width: 120px;">
+                                    <qrcode :value="qrcode" :options="{ width:120 }" style="display:block"></qrcode>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;margin-top: 15px;">
+                            <div class="col-sm-8">
+                                <div style="margin-top: 10px;"><img src="./img/btc.png" style="margin-right: 5px;">Bitcoin</div>
+                                <div style="margin-top: 5px;cursor: pointer;" @click="doCopy('SDH28fhbdjcjGHYb4568dh083AFfhyucu')">SDH28fhbdjcjGHYb4568dh083AFfhyucu<img src="./img/copy.png"></div>
+                                <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;">https://abcdefgh.elastos.name/btc.address</div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div style="margin: 0 auto;width: 120px;">
+                                    <qrcode :value="qrcode" :options="{ width:120 }" style="display:block"></qrcode>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;margin-top: 15px;">
+                            <div class="col-sm-8">
+                                <div style="margin-top: 10px;"><img src="./img/eth.png" style="margin-right: 5px;">Ethereum</div>
+                                <div style="margin-top: 5px;cursor: pointer;" @click="doCopy('SDH28fhbdjcjGHYb4568dh083AFfhyucu')">SDH28fhbdjcjGHYb4568dh083AFfhyucu<img src="./img/copy.png"></div>
+                                <div style="margin-top: 5px;color: #5157DB;cursor: pointer;">https://abcdefgh.elastos.name/eth.address</div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div style="margin: 0 auto;width: 120px;">
+                                    <qrcode :value="qrcode" :options="{ width:120 }" style="display:block"></qrcode>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row text-center" style="margin-top: 50px;">
+                    <div class="col-sm-12">
+                        <div style="color:#7B7B7B">Domain Tokens</div>
+                        <p style="color:#7B7B7B;">Powered by <a style="color:#5157DB;border-bottom: 1px solid #5157DB;">elastos.name</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="!isPC">
+            <div style="height:80px"></div>
+            <div class="container" style="width:375px">
+                <div class="row" style="padding: 0px 10px;">
+                    <div class="col-xs-12">
+                        <div style="cursor: pointer;" @click="doCopy('ABCDEFGH .elastos.name')">
+                            ABCDEFGH .elastos.name <img src="./img/externallink.png">
+                        </div>
+                        <div style="font-size: 16px;cursor: pointer;" @click="doCopy('did:ela:ifZjRUsiC244ZhJpBNkQujdSDE9hQRppgb')">did:ela:ifZjRUsiC244ZhJpBNkQujdSDE9hQRppgb<img src="./img/copy.png" /></div>
+
+                        <div style="margin-top: 10px;cursor: pointer;">
+                            <img src="./img/youxiang.png" style="margin-right: 5px;">abc@hotmail.com
+                        </div>
+
+                        <div style="margin-top: 10px;cursor: pointer;">
+                            <img src="./img/link.png" style="margin-right: 5px;"><span style="color: #5157DB;">https://twitter.com/sdfasdfadsf</span>
+                        </div>
+
+                        <div style="margin-top: 10px;cursor: pointer;">
+                            <img src="./img/download.png" style="margin-right: 5px;"><span style="color: #5157DB;">https://abcdefgh.elastos.name/info.json</span>
+                        </div>
+
+                        <div style="margin-top: 10px;" v-if="isShow">
+                            Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World,
+                        </div>
+
+                        <div style="text-align: center;margin-top: 10px;cursor: pointer;" v-if="!isShow" @click="down"><img src="img/down.png" /></div>
+                        <div style="text-align: center;margin-top: 10px;cursor: pointer;" v-if="isShow" @click="up"><img src="img/up.png" /></div>
+                    </div>
+                </div>
+
+
+                <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;padding:10px;margin-top: 10px;">
+                    <div class="col-xs-9">
+                        <div style="margin-top: 10px;"><img src="./img/ela.png" style="margin-right: 5px;">Elastos</div>
+                        <div style="margin-top: 5px;cursor: pointer;font-size: 12px;" @click="doCopy('SDH28fhbdjcjGHYb4568dh083AFfhyucu')">SDH28fhbdjcjGHYb4568dh083AFfhyucu<img src="./img/copy.png"></div>
+                        <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;font-size: 12px;">https://abcdefgh.elastos.name/ela.address</div>
+                    </div>
+                    <div class="col-xs-3">
+                        <div style="margin: 0 auto;width: 60px;">
+                            <qrcode :value="qrcode" :options="{ width:60 }" style="display:block"></qrcode>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;padding: 10px;margin-top: 10px;">
+                    <div class="col-xs-9">
+                        <div style="margin-top: 10px;"><img src="./img/btc.png" style="margin-right: 5px;">Elastos</div>
+                        <div style="margin-top: 5px;cursor: pointer;font-size: 12px;" @click="doCopy('SDH28fhbdjcjGHYb4568dh083AFfhyucu')">SDH28fhbdjcjGHYb4568dh083AFfhyucu<img src="./img/copy.png"></div>
+                        <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;font-size: 12px;">https://abcdefgh.elastos.name/btc.address</div>
+                    </div>
+                    <div class="col-xs-3">
+                        <div style="margin: 0 auto;width: 60px;">
+                            <qrcode :value="qrcode" :options="{ width:60 }" style="display:block"></qrcode>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;padding:10px;margin-top: 10px;">
+                    <div class="col-xs-9">
+                        <div style="margin-top: 10px;"><img src="./img/eth.png" style="margin-right: 5px;">Elastos</div>
+                        <div style="margin-top: 5px;cursor: pointer;font-size: 12px;" @click="doCopy('SDH28fhbdjcjGHYb4568dh083AFfhyucu')">SDH28fhbdjcjGHYb4568dh083AFfhyucu<img src="./img/copy.png"></div>
+                        <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;font-size: 12px;">https://abcdefgh.elastos.name/eth.address</div>
+                    </div>
+                    <div class="col-xs-3">
+                        <div style="margin: 0 auto;width: 60px;">
+                            <qrcode :value="qrcode" :options="{ width:60 }" style="display:block"></qrcode>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row text-center" style="margin-top: 50px;">
+                    <div class="col-sm-12">
+                        <div style="color:#7B7B7B">Domain Tokens</div>
+                        <p style="color:#7B7B7B;">Powered by <a style="color:#5157DB;border-bottom: 1px solid #5157DB;">elastos.name</a></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            qrcode: "xxxxxxxxxxx",
+            isPC: true,
+            isShow: false,
+        },
+        methods: {
+            doCopy(text) {
+                this.$copyText(text).then((e) => {
+                    alert("copy Sucess");
+                }, (e) => {})
+            },
+            up() {
+                this.isShow = false;
+            },
+            down() {
+                this.isShow = true;
+            },
+            getPc() {
+                let userAgentInfo = navigator.userAgent;
+                let Agents = ["Android", "iPhone",
+                    "SymbianOS", "Windows Phone",
+                    "iPad", "iPod"
+                ];
+                let flag = true;
+                for (var v = 0; v < Agents.length; v++) {
+                    if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                        flag = false;
+                        break;
+                    }
+                }
+                return flag;
+            },
+        },
+        created() {
+            this.isPC = this.getPc();
+        }
+    });
+</script>
+
+</html>
