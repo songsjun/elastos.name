@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Domain Tokens</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicons -->
+    <link href="img/favicon.png" rel="icon">
+    <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,600,700,700i|Montserrat:300,400,500,600,700" rel="stylesheet">
+
+    <!-- Bootstrap CSS File -->
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Libraries CSS Files -->
+    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Main Stylesheet File -->
+    <link href="css/style.css" rel="stylesheet">
+    <script src="./js/vue.min.js"></script>
+    <script src="./js/vue-clipboard.min.js"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        
+        body {
+            background-color: #F8F8F8;
+        }
+        
+        .login {
+            text-align: center;
+            margin: 0 auto;
+            margin-top: 50px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            width: 240px;
+            line-height: 50px;
+            height: 50px;
+            border-radius: 4px;
+            background-color: #F5841F;
+            color: #ffffff;
+        }
+        
+        .add {
+            margin-top: 10px;
+            text-align: center;
+            width: 198px;
+            height: 96px;
+            line-height: 96px;
+            background: #FFFFFF;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 26px;
+        }
+        
+        .kuang {
+            margin-top: 10px;
+            padding: 10px;
+            text-align: left;
+            width: 198px;
+            height: 96px;
+            background: #FFFFFF;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+        
+        .btn1 {
+            color: #86A0FC;
+            display: inline-block;
+            width: 40px;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header id="header">
+
+        <div id="topbar">
+            <div class="container">
+                <div class="social-links">
+                    <a href="https://t.me/elastosname" class="Telegram"><i class="fa fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+
+            <div class="logo float-left">
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <h1 class="text-light"><a href="#intro" class="scrollto"><span>Domain Tokens</span></a></h1>
+                <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
+            </div>
+
+            <nav class="main-nav float-right d-none d-lg-block">
+                <ul>
+                    <li><a href="./index.html">Home</a></li>
+                    <li><a href="./register.html">Register</a></li>
+                    <li><a href="./sale.html">Sale</a></li>
+                    <li><a href="./auction.html">Auction</a></li>
+                    <li class="active"><a href="./account.html">Account</a></li>
+                </ul>
+            </nav>
+            <!-- .main-nav -->
+
+        </div>
+    </header>
+    <!-- #header -->
+    <div style="height:150px"></div>
+    <div class="container" id="app">
+        <div v-if="!loginStatus" style="width: 500px;margin: 0 auto;">
+            <div class="row text-center">
+                <div class="col-sm-12" style="text-align: left;margin-bottom: 5px;">
+                    Step 1.Please install the Metamask plugin in your browser.You can get it from .
+                </div>
+
+                <div class="col-sm-12" style="text-align: left;margin-bottom: 5px;">
+                    Step 2.Please connect the Elastos eth sidechain，Here is ths guide.
+                </div>
+
+                <div class="col-sm-12" style="text-align: left;margin-bottom: 5px;">
+                    Step 3.Click below button.Fine!
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="login" @click="login">Login With Metamask</div>
+            </div>
+            <div style="text-align: center;font-weight: bold;">Please confirm your MetaMask wallet already</div>
+            <div style="text-align: center;font-weight: bold;">connected the Elastos Eth sidechain</div>
+            <div style="text-align: center;font-weight: bold;"><img src="./img/meatMask.png">METAMASK</div>
+        </div>
+
+        <div v-if="loginStatus">
+            <div class="row" style="background-color: #ffffff;padding: 10px;border: 1px solid #ffffff;border-radius: 4px;">
+                <div class="col-sm-12">
+                    <span style="font-weight: bold;">Account Address:</span>
+                </div>
+                <div class="col-sm-12" @click="doCopy(selectAddress)">
+                    <span style="margin-left: 10px;cursor: pointer;">{{selectAddress}}</span> <img src="./img/diqiu.png" style="cursor: pointer;" />
+                </div>
+                <div class="col-sm-12">
+                    <span style="font-weight: bold;">Account Balance:</span>
+                </div>
+                <div class="col-sm-12">
+                    <span style="margin-left: 10px;">0.12423ETH / 2.34ELA</span> <span style="color:#86A0FC;margin-left:15px;cursor: pointer;border-bottom:1px solid #86A0FC;" @click="rechargeELA">Recharge ELA</span> <img src="./img/elaphant.png" />
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 15px;">
+                <div class="kuang" v-for="(item) in domainNameArr">
+                    <div style="font-weight: bold;">{{item.name}}</div>
+                    <div style="font-weight: bold;">.elastos.name</div>
+                    <div style="text-align: right;margin-top: 10px;"><span class="btn1" @click="view">view</span><span class="btn1" @click="edit">edit</span><span class="btn1" @click="sale">sale</span></div>
+                </div>
+                <div class="add" @click="add">
+                    + add
+                </div>
+            </div>
+        </div>
+        <div class="row text-center" style="margin-top: 50px;">
+            <div class="col-sm-12">
+                <div style="color:#7B7B7B">Domain Tokens</div>
+                <p style="color:#7B7B7B;">Powered by <a style="color:#5157DB;border-bottom: 1px solid #5157DB;">elastos.name</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            selectAddress: "0x256e2C445B5C55FF5b1b107025d61233A5C89c99",
+            loginStatus: true,
+            domainNameArr: [{
+                "name": "ABCDEFGH"
+            }, {
+                "name": "ABCDEFGH"
+            }, {
+                "name": "ABCDEFGH"
+            }, {
+                "name": "ABCDEFGH"
+            }, {
+                "name": "ABCDEFGH"
+            }],
+        },
+        methods: {
+            doCopy(text) {
+                this.$copyText(text).then((e) => {
+                    alert("copy Sucess");
+                }, (e) => {})
+            },
+            login() {
+                this.loginStatus = true;
+                //alert("click login");
+            },
+            add() {
+
+            },
+            view() {
+                window.location.href = "./view.html";
+            },
+            edit() {
+                window.location.href = "./editInfo.html";
+            },
+            sale() {
+                window.location.href = "./sale.html";
+            },
+            rechargeELA() {
+                window.open(" https://transfer.elaphant.app?dstaddress=" + this.selectAddress);
+            }
+
+        },
+        created() {
+
+        }
+    });
+</script>
+
+</html>
