@@ -159,7 +159,7 @@
                     <span style="font-weight: bold;">Account Balance:</span>
                 </div>
                 <div class="col-sm-12">
-                    <span style="margin-left: 10px;">{{selectedEthBalance}}ETH / 2.34ELA</span> <span style="color:#86A0FC;margin-left:15px;cursor: pointer;border-bottom:1px solid #86A0FC;" @click="rechargeELA">Recharge ELA</span> <img src="./img/elaphant.png"
+                    <span style="margin-left: 10px;">{{selectedElaBalance}} ELA</span> <span style="color:#86A0FC;margin-left:15px;cursor: pointer;border-bottom:1px solid #86A0FC;" @click="rechargeELA">Recharge ELA</span> <img src="./img/elaphant.png"
                     />
                 </div>
             </div>
@@ -189,19 +189,9 @@
         data: {
             selectAddress: "",
             selectedEthBalance: "",
-            selectedELaBalance: "",
+            selectedElaBalance: "",
             loginStatus: false,
-            domainNameArr: [{
-                "name": "ABCDEFGH"
-            }, {
-                "name": "ABCDEFGH"
-            }, {
-                "name": "ABCDEFGH"
-            }, {
-                "name": "ABCDEFGH"
-            }, {
-                "name": "ABCDEFGH"
-            }],
+            domainNameArr: [],
         },
         methods: {
             doCopy(text) {
@@ -212,17 +202,57 @@
             login() {
                 window.initWallet().then((address) => {
                     this.selectAddress = address;
+                    this.loginStatus = true;
                     if (typeof web3 !== 'undefined') {
                         web3 = new Web3(web3.currentProvider);
                     }
                     web3.eth.getBalance(address, (err, data) => {
-                        this.selectedEthBalance = (data / window.ethUnit).toFixed(4);
+                        this.selectedElaBalance = (data / window.ethUnit).toFixed(4);
                     });
-                    this.loginStatus = true;
+
+                    window.getWethContracts().then((info) => {
+                        info.totalSupply((err, msg) => {
+                            if (!err) {
+                                let num = parseInt(msg);
+                                console.log('sss==' + num);
+                                if (num > 0) {
+                                    this.initNames(info, num);
+                                }
+                            } else {
+                                alert(JSON.stringify(err))
+                            }
+                        });
+                    }).catch((err) => {
+                        alert(err);
+                    });
+
                 }).catch((err) => {
                     this.loginStatus = false;
                     alert(JSON.stringify(err));
                 })
+            },
+            initNames(info, num) {
+                for (let index = 0; index < num; index++) {
+                    this.tokenByIndex(info, index);
+                }
+            },
+            tokenByIndex(info, index) {
+                info.tokenByIndex(index, (err, tokenId) => {
+                    if (!err) {
+                        this.tokensURI(tokenId);
+                    } else {
+                        alert(JSON.stringify(err))
+                    }
+                });
+            },
+            tokensURI(tokenId) {
+                info.tokenURI(tokenId, (err, tokenName) => {
+                    if (!err) {
+                        domainNameArr.push(tokenName);
+                    } else {
+                        alert(JSON.stringify(err))
+                    }
+                });
             },
             add() {
                 window.location.href = "./register.html";

@@ -28,6 +28,9 @@
     <!-- Main Stylesheet File -->
     <link href="css/style.css" rel="stylesheet">
     <script src="./js/vue.min.js"></script>
+    <script type="text/javascript">
+        document.write('<script src="./js/contractConfig.js?v=' + (new Date()).getTime() + '"><\/script>');
+    </script>
     <style>
         [v-cloak] {
             display: none;
@@ -297,16 +300,18 @@
     var app = new Vue({
         el: '#app',
         data: {
-            dname: 'adb',
-            price: '1.1',
+            dname: 'sjz.',
+            price: '0.12',
             showMask: false,
+            txId: '',
         },
         methods: {
             buyIt() {
-                if (this.dname === "") {
-                    return;
-                }
-                this.showMask = true;
+                this.getContracts();
+                // if (this.dname === "") {
+                //     return;
+                // }
+                // this.showMask = true;
             },
             click_close() {
                 this.showMask = false;
@@ -316,6 +321,38 @@
             },
             link() {
                 //window.open("");
+            },
+            next(txid) {
+                let sid = setInterval(() => {
+                    if (typeof web3 !== 'undefined') {
+                        web3 = new Web3(web3.currentProvider);
+                    }
+                    console.log("======txid=======" + txid);
+                    web3.eth.getTransaction(txid, (err, data) => {
+                        console.log("======txObj=======" + JSON.stringify(data));
+                        let blockHash = data['blockHash'] || "";
+                        let blockNumber = data['blockNumber'] || "";
+                        if (blockHash != "" && blockNumber != '') {
+                            clearInterval(sid);
+                            this.getContracts(txid);
+                        }
+                    });
+                }, 500);
+            },
+            getContracts(txId) {
+                window.getWethContracts().then((info) => {
+
+                    info.externalMint('0x256e2C445B5C55FF5b1b107025d61233A5C89c99', this.dname, (err, msg) => {
+                        if (!err) {
+                            console.log(JSON.stringify(msg));
+                            //location.href = "./account.html";
+                        } else {
+                            alert(JSON.stringify(err))
+                        }
+                    });
+                }).catch((err) => {
+                    alert(err);
+                });
             }
         },
         created() {
