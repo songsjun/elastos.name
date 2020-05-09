@@ -497,6 +497,7 @@ window.getWethContracts = function getWethContracts() {
             }
             var infoContract = web3.eth.contract(this.elaAbi);
             var info = infoContract.at(this.contractAddres);
+            console.log(info);
             resolve(info);
         } catch (err) {
             reject(JSON.stringify(err));
