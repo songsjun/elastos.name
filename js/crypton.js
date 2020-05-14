@@ -49,9 +49,7 @@ class Web3Bridge {
 	}
 
 	async isEthMainchain () {
-		var chainId = await this._web3.eth.net.getId();
-		if (chainId != 1)
-			return false;
+		var pthis = this;
 
 		var ela_blocknum;
 		return this._web3.eth.net.getId()
