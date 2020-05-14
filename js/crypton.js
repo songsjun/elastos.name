@@ -284,7 +284,7 @@ class Crypton {
 		var pthis = this;
 		return this._init_account()
 			.then(function() {
-				return pthis._generate_option();
+				return pthis._generate_option(price);
 			})
 			.then(function(option) {
 				return pthis._contact.methods.externalMint(name).send(option);	
