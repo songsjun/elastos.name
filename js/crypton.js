@@ -83,9 +83,18 @@ class Web3Bridge {
 	}
 
 	async getAccount () {
+		var pthis = this;
 		return this._web3.eth.getAccounts()
 			.then(function(accounts) {
-				return accounts[0];
+				pthis._account = accounts[0];
+				return pthis._account;
+			});
+	}
+
+	async sign (data) {
+		this._web3.sign(data, this._account)
+			.then (function(s) {
+				return s;
 			});
 	}
 
@@ -102,7 +111,7 @@ class Crypton {
 	}
 
 	async _init_account (force) {
-		if (!force && this._account) return;
+		if (!force && this._account) return this._account;
 
 		var pthis = this;
 		return await this._web3.eth.getAccounts()
@@ -110,6 +119,7 @@ class Crypton {
 				if (!pthis._account || pthis._account != accounts[0]) {
 					pthis._account = accounts[0];
 				}
+				return pthis._account;
 			});
 	}
 
@@ -128,11 +138,8 @@ class Crypton {
 		var pthis = this;
 		return this._init_account()
 			.then(function() {
-				return pthis._generate_option();
-			})
-			.then(function(option) {
         		var tokenId = pthis._web3.utils.hexToNumberString("0x"+sha256(name));
-        		return pthis._contact.methods.ownerOf(tokenId).call(option);
+        		return pthis._contact.methods.ownerOf(tokenId).call();
 			})
 			.catch(function(){
 				return "";
@@ -143,10 +150,7 @@ class Crypton {
 		var pthis = this;
 		return this._init_account()
 			.then(function() {
-				return pthis._generate_option();
-			})
-			.then(function(option) {
-        		return pthis._contact.methods.totalSupply().call(option);
+        		return pthis._contact.methods.totalSupply().call();
 			})
 			.catch(function(){
 				return 0;
@@ -155,22 +159,17 @@ class Crypton {
 
 	async getNameTokens (start, end) {
 		var pthis = this;
-		var option;
 		return this._init_account()
 			.then(function() {
-				return pthis._generate_option();
-			})
-			.then(function(tmp) {
-				option = tmp;
-        		return pthis._contact.methods.totalSupply().call(option);
+        		return pthis._contact.methods.totalSupply().call();
 			})
 			.then(async function(count) {
 				var result = [];
 
 				for (var i=start; i<count && (!end || i<end); i++) {
-					var tokenid = await pthis._contact.methods.tokenByIndex(i).call(option);
-					var owner = await pthis._contact.methods.ownerOf(tokenid).call(option);
-					var name = await pthis._contact.methods.tokenURI(tokenid).call(option);
+					var tokenid = await pthis._contact.methods.tokenByIndex(i).call();
+					var owner = await pthis._contact.methods.ownerOf(tokenid).call();
+					var name = await pthis._contact.methods.tokenURI(tokenid).call();
 					result.push({
 						"tokenId": tokenid,
 						"name": name,
@@ -186,22 +185,17 @@ class Crypton {
 
 	async getOwnerNameTokens (address) {
 		var pthis = this;
-		var option;
 		return this._init_account()
 			.then(function() {
-				return pthis._generate_option();
-			})
-			.then(function(tmp) {
-				option = tmp;
-        		return pthis._contact.methods.balanceOf(address).call(option);
+        		return pthis._contact.methods.balanceOf(address).call();
 			})
 			.then(async function(count) {
 				var result = [];
 
 				for (var i=0; i<count; i++) {
-					var tokenid = await pthis._contact.methods.tokenByIndex(i).call(option);
+					var tokenid = await pthis._contact.methods.tokenOfOwnerByIndex(address, i).call();
 					var owner = address;
-					var name = await pthis._contact.methods.tokenURI(tokenid).call(option);
+					var name = await pthis._contact.methods.tokenURI(tokenid).call();
 					result.push({
 						"tokenId": tokenid,
 						"name": name,
@@ -219,10 +213,7 @@ class Crypton {
 		var pthis = this;
 		return this._init_account()
 			.then(function() {
-				return pthis._generate_option();
-			})
-			.then(function(option) {
-        		return pthis._contact.methods.owner().call(option);
+        		return pthis._contact.methods.owner().call();
 			})
 			.catch(function(){
 				return "";
@@ -233,10 +224,7 @@ class Crypton {
 		var pthis = this;
 		return this._init_account()
 			.then(function() {
-				return pthis._generate_option();
-			})
-			.then(function(option) {
-        		return pthis._contact.methods.implementation_slot().call(option);
+        		return pthis._contact.methods.implementation_slot().call();
 			})
 			.catch(function(){
 				return "";
@@ -246,18 +234,18 @@ class Crypton {
 	async getCurrentPrice (level) {
 		var pthis = this;
 		return this._init_account()
+			// .then(function() {
+			// 	return pthis._generate_option();
+			// })
 			.then(function() {
-				return pthis._generate_option();
-			})
-			.then(function(option) {
 				if (level == 1) {
-					return pthis._contact.methods.price_level1().call(option);
+					return pthis._contact.methods.price_level1().call();
 				}
 				else if (level == 2) {
-					return pthis._contact.methods.price_level2().call(option);
+					return pthis._contact.methods.price_level2().call();
 				}
 				else if (level == 3) {
-					return pthis._contact.methods.price_level3().call(option);
+					return pthis._contact.methods.price_level3().call();
 				}
 			})
 			.then(function(x) {
@@ -276,7 +264,7 @@ class Crypton {
 			})
 			.then(function(option) {
 				var tokenId = pthis._web3.utils.hexToNumberString("0x"+sha256(name));
-        		return pthis._contact.methods.safeTransferFrom(pthis._account, to, tokenId).call(option);
+        		return pthis._contact.methods.safeTransferFrom(pthis._account, to, tokenId).send(option);
 			});
 	}
 
@@ -298,8 +286,7 @@ class Crypton {
 				return pthis._generate_option();
 			})
 			.then(function(option) {
-				var tokenId = pthis._web3.utils.hexToNumberString("0x"+sha256(name));
-				return pthis._contact.methods.mint(to, tokenId).call(option);
+				return pthis._contact.methods.mint(to, name).send(option);
 			});
 	}
 

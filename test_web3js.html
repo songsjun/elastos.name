@@ -39,15 +39,23 @@
 				var address = await crypton.getOwnerOfNameToken("hello");
 				console.log("owner1:"+address);
 
+				var tmpName = "hello"+Math.floor(Math.random() * 10000);
 				// 获取域名的主人，也可以用来测试域名是否可以用，未被注册则返回空
-				var address2 = await crypton.getOwnerOfNameToken("world");
+				var address2 = await crypton.getOwnerOfNameToken(tmpName);
 				console.log("owner2:"+address2);
 
+
 				// 注册名字
-				//await crypton.registerName("hello1", price);
+				//await crypton.registerName(tmpName, ""+(parseFloat(price)*1.01));
+
+				// 直接创建名字
+				//await crypton.generateName(address, tmpName+"admin");
+
+				// 转移名字
+				//await crypton.transfer("0xC2a338A3b841D4Ea313519d1c28001f58ED1b358", tmpName);
 
 				// 获取某个地址持有的名字列表
-				var my = await crypton.getOwnerNameTokens("0x40da0e9AD0f40A6e26eC03c49eCCec01e2B8f9d4");
+				var my = await crypton.getOwnerNameTokens("0xC2a338A3b841D4Ea313519d1c28001f58ED1b358");
 				console.log(my);
 
 				// 获取全部已注册的名字列表

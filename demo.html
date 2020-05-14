@@ -29,6 +29,7 @@
 		var bridge;
 		var crypton;
 		var myAccount;
+		var elastosNameUrl = "";
 
 		var fetchNameList = function () {
 			crypton.getNameTokens(0)
@@ -75,6 +76,58 @@
 				.catch(function(e) {
 					console.log(e);
 				});			
+		};
+
+		var updateDomainInfo = function() {
+
+			var domainInfo = {
+				"name": "demo",
+				"did": "ifZjRUsiC244ZhJpBNkQujdSDE9hQRppgb",
+				"publickey": "033d3b1b74a58d5aeceb3ce886992f091636436d4327f997805f33e140aa7aca5d",
+				"addresses": [
+					{
+						"symbol": "ela",
+						"name": "elastos",
+						"address": "ERFNWNivDhAbozj5izbipCFLBGLv2hjLqJ"
+					},
+					{
+						"symbol": "btc",
+						"name": "bitcoin",
+						"address": "1D8TM5pJG1x3pk7GzTSg3YLHxpUFqnyJB3"
+					},
+					{
+						"symbol": "eth",
+						"name": "ethereum",
+						"address": myAccount
+					}
+				],
+				"personalurl": "https://bing.com",
+				"email": "abc@efg.net",
+				"description": "Hello World",
+				"extradata":"123123123",
+				"blocknumber": await bridge.getWeb3().eth.getBlockNumber()
+			};
+
+			var data = JSON.stringify(domainInfo);
+			bridge.sign(data)
+				.then (function(sign) {
+					var body = {
+						"info": data,
+						"sign": sign,
+						"owner": myAccount
+					};
+
+					return fetch(elastosNameUrl, {
+					    body: JSON.stringify(body),
+					        headers: {
+						      'content-type': 'application/json'
+						    },
+					    method: 'POST'
+					  })
+				})
+				.then(function(rep) {
+					console.log(rep);
+				});
 		};
 
     	window.addEventListener('load', async () => {
