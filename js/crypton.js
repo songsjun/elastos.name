@@ -23,19 +23,28 @@ class Web3Bridge {
 	}
 
 	async isElaSidechain () {
-		var chainId = await this._web3.eth.net.getId();
-		if (chainId != 1)
-			return false;
-
 		var pthis = this;
-		return fetch(elaeth_blocknumber_url)
+
+		var ela_blocknum;
+		return this._web3.eth.net.getId()
+			.then(function(chainId) {
+				if (chainId != 1)
+					return Promise.reject(false);
+				else
+					return fetch(elaeth_blocknumber_url);
+			})
 			.then(function(response) {
 				return response.json();
 			})
 			.then(function(myJson) {
-				return pthis._web3.eth.getBlockNumber().then(function(x) {
-					return Math.abs(parseInt(myJson.result) - x) < 5;
-				});
+				ela_blocknum = parseInt(myJson.result);
+				return pthis._web3.eth.getBlockNumber();
+			})
+			.then(function(blocknum) {
+				return Math.abs(ela_blocknum - blocknum) < 5;
+			})
+			.catch(function(ret) {
+				return ret;
 			});
 	}
 
@@ -44,26 +53,42 @@ class Web3Bridge {
 		if (chainId != 1)
 			return false;
 
-		var pthis = this;
-		return fetch(elaeth_blocknumber_url)
+		var ela_blocknum;
+		return this._web3.eth.net.getId()
+			.then(function(chainId) {
+				if (chainId != 1)
+					return Promise.reject(false);
+				else
+					return fetch(elaeth_blocknumber_url);
+			})
 			.then(function(response) {
 				return response.json();
 			})
 			.then(function(myJson) {
-				return pthis._web3.eth.getBlockNumber().then(function(x) {
-					return Math.abs(parseInt(myJson.result) - x) > 5;
-				});
+				ela_blocknum = parseInt(myJson.result);
+				return pthis._web3.eth.getBlockNumber();
+			})
+			.then(function(blocknum) {
+				return Math.abs(ela_blocknum - blocknum) > 5;
+			})
+			.catch(function(ret) {
+				return ret;
 			});
 
 	}
 
 	async isRopstenchain () {
-		var chainId = await this._web3.eth.net.getId();
-		return chainId == 3;
+		return this._web3.eth.net.getId()
+			.then(function(chainId) {
+				return chainId == 3;
+			});
 	}
 
 	async getAccount () {
-		return this._web3.eth.getAccounts().then((x) => {return x[0]});
+		return this._web3.eth.getAccounts()
+			.then(function(accounts) {
+				return accounts[0];
+			});
 	}
 
 	getWeb3 () {
@@ -81,129 +106,203 @@ class Crypton {
 	async _init_account (force) {
 		if (!force && this._account) return;
 
-		var accounts = await this._web3.eth.getAccounts();
-		if (!this._account || this._account != accounts[0]) {
-			this._account = accounts[0];
-		}
+		var pthis = this;
+		return await this._web3.eth.getAccounts()
+			.then(function(accounts) {
+				if (!pthis._account || pthis._account != accounts[0]) {
+					pthis._account = accounts[0];
+				}
+			});
 	}
 
 	async _generate_option (price) {
-		var gasPrice = await this._web3.eth.getGasPrice();
-
-		if (price)
-			return { from: this._account, gasPrice: gasPrice, gas: 1000000, value: this._web3.utils.toWei(price, "ether") };
-		else
-			return { from: this._account, gasPrice: gasPrice, gas: 1000000, value:'0' };
+		var pthis = this;
+		return this._web3.eth.getGasPrice()
+			.then(function(gasPrice) {
+				if (price)
+					return { from: pthis._account, gasPrice: gasPrice, gas: 1000000, value: pthis._web3.utils.toWei(price, "ether") };
+				else
+					return { from: pthis._account, gasPrice: gasPrice, gas: 1000000, value:'0' };
+			});
 	}
 
 	async getOwnerOfNameToken (name) {
-		await this._init_account();
-		var option = await this._generate_option();
-
-        var tokenId = this._web3.utils.hexToNumberString("0x"+sha256(name));
-		return this._contact.methods.ownerOf(tokenId).call(option).catch(function(){return "";});
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(option) {
+        		var tokenId = pthis._web3.utils.hexToNumberString("0x"+sha256(name));
+        		return pthis._contact.methods.ownerOf(tokenId).call(option);
+			})
+			.catch(function(){
+				return "";
+			});
 	}
 
 	async getTokenNameCount () {
-		await this._init_account();
-		var option = await this._generate_option();
-
-		return this._contact.methods.totalSupply().call(option);	
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(option) {
+        		return pthis._contact.methods.totalSupply().call(option);
+			})
+			.catch(function(){
+				return 0;
+			});
 	}
 
 	async getNameTokens (start, end) {
-		await this._init_account();
-		var option = await this._generate_option();
+		var pthis = this;
+		var option;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(tmp) {
+				option = tmp;
+        		return pthis._contact.methods.totalSupply().call(option);
+			})
+			.then(async function(count) {
+				var result = [];
 
-		var count = await this._contact.methods.totalSupply().call(option);
-		var result = [];
-
-		for (var i=start; i<count && (!end || i<end); i++) {
-			var tokenid = await this._contact.methods.tokenByIndex(i).call(option);
-			var owner = await this._contact.methods.ownerOf(tokenid).call(option);
-			var name = await this._contact.methods.tokenURI(tokenid).call(option);
-			result.push({
-				"tokenId": tokenid,
-				"name": name,
-				"owner": owner
+				for (var i=start; i<count && (!end || i<end); i++) {
+					var tokenid = await pthis._contact.methods.tokenByIndex(i).call(option);
+					var owner = await pthis._contact.methods.ownerOf(tokenid).call(option);
+					var name = await pthis._contact.methods.tokenURI(tokenid).call(option);
+					result.push({
+						"tokenId": tokenid,
+						"name": name,
+						"owner": owner
+					});
+				}
+				return result;
+			})
+			.catch(function(){
+				return [];
 			});
-		}
-		return result;
 	}
 
 	async getOwnerNameTokens (address) {
-		await this._init_account();
-		var option = await this._generate_option();
+		var pthis = this;
+		var option;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(tmp) {
+				option = tmp;
+        		return pthis._contact.methods.balanceOf(address).call(option);
+			})
+			.then(async function(count) {
+				var result = [];
 
-		var count = await this._contact.methods.balanceOf(address).call(option);
-		var result = [];
-
-		for (var i=0; i<count; i++) {
-			var tokenid = await this._contact.methods.tokenOfOwnerByIndex(address, i).call(option);
-			var owner = address;
-			var name = await this._contact.methods.tokenURI(tokenid).call(option);
-			result.push({
-				"tokenId": tokenid,
-				"name": name,
-				"owner": owner
+				for (var i=0; i<count; i++) {
+					var tokenid = await pthis._contact.methods.tokenByIndex(i).call(option);
+					var owner = address;
+					var name = await pthis._contact.methods.tokenURI(tokenid).call(option);
+					result.push({
+						"tokenId": tokenid,
+						"name": name,
+						"owner": owner
+					});
+				}
+				return result;
+			})
+			.catch(function(){
+				return [];
 			});
-		}
-		return result;
 	}
 
 	async getContractOwner () {
-		await this._init_account();
-		var option = await this._generate_option();
-
-		return this._contact.methods.owner().call(option);	
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(option) {
+        		return pthis._contact.methods.owner().call(option);
+			})
+			.catch(function(){
+				return "";
+			});
 	}
 
 	async getImplementContract () {
-		await this._init_account();
-		var option = await this._generate_option();
-
-		return this._contact.methods.owner().call(option);
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(option) {
+        		return pthis._contact.methods.implementation_slot().call(option);
+			})
+			.catch(function(){
+				return "";
+			});
 	}
 
 	async getCurrentPrice (level) {
-		await this._init_account();
-		var option = await this._generate_option();
-
-		var web3 = this._web3;
-		if (level == 1) {
-			return this._contact.methods.price_level1().call(option).then(function(x) {return web3.utils.fromWei(x, "ether")});
-		}
-		else if (level == 2) {
-			return this._contact.methods.price_level2().call(option).then(function(x) {return web3.utils.fromWei(x, "ether")});
-		}
-		else if (level == 3) {
-			return this._contact.methods.price_level3().call(option).then(function(x) {return web3.utils.fromWei(x, "ether")});
-		}
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(option) {
+				if (level == 1) {
+					return pthis._contact.methods.price_level1().call(option);
+				}
+				else if (level == 2) {
+					return pthis._contact.methods.price_level2().call(option);
+				}
+				else if (level == 3) {
+					return pthis._contact.methods.price_level3().call(option);
+				}
+			})
+			.then(function(x) {
+				return pthis._web3.utils.fromWei(x, "ether");
+			})
+			.catch(function(){
+				return -1;
+			});
 	}
 
 	async transfer (to, name) {
-		await this._init_account();
-		var option = await this._generate_option();
-
-		var tokenId = this._web3.utils.hexToNumberString("0x"+sha256(name));
-
-		return this._contact.methods.safeTransferFrom(this._account, to, tokenId).call(option);
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(option) {
+				var tokenId = pthis._web3.utils.hexToNumberString("0x"+sha256(name));
+        		return pthis._contact.methods.safeTransferFrom(pthis._account, to, tokenId).call(option);
+			});
 	}
 
 	async registerName (name, price) {
-		await this._init_account();
-		var option = await this._generate_option(price);
-
-		return this._contact.methods.externalMint(name).send(option);	
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(option) {
+				return pthis._contact.methods.externalMint(name).send(option);	
+			});
 	}
 
 	async generateName (to, name) {
-		await this._init_account();
-		var option = await this._generate_option();
-
-		var tokenId = this._web3.utils.hexToNumberString("0x"+sha256(name));
-
-		return this._contact.methods.mint(to, tokenId).call(option);	
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(option) {
+				var tokenId = pthis._web3.utils.hexToNumberString("0x"+sha256(name));
+				return pthis._contact.methods.mint(to, tokenId).call(option);
+			});
 	}
 
 };
