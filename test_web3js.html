@@ -1,0 +1,67 @@
+<html>
+<head>
+	
+</head>
+<body>
+	<script type="text/javascript" src="js/web3.min.js"></script>
+	<script type="text/javascript" src="js/domain_abi.js"></script>
+	<script type="text/javascript" src="js/sha256.min.js"></script>
+
+	<script type="text/javascript" src="js/crypton.js"></script>
+	
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+	<script type="text/javascript">
+    	window.addEventListener('load', async () => {
+
+    		try {
+
+    			// 初始化Bridge对象
+				var bridge = new Web3Bridge();
+
+				// 测试当前连接的网络
+				var a = await bridge.isEthMainchain();
+				var b = await bridge.isElaSidechain();
+				var c = await bridge.isRopstenchain();
+
+				console.log("eth:"+a+", ela:"+b+", ropsten:"+c);
+				//return;
+
+				
+
+				// 创建合约包装对象
+				var crypton = new Crypton(abiArray, contract_address, bridge.getWeb3());
+
+				// 获取最新价格，1表示1-2个字母，2表示3个字母，3表示4个及以上字母
+				var price = await crypton.getCurrentPrice(3);
+				
+				// 获取域名的主人，也可以用来测试域名是否可以用，已被注册则返回主人地址
+				var address = await crypton.getOwnerOfNameToken("hello");
+				console.log("owner1:"+address);
+
+				// 获取域名的主人，也可以用来测试域名是否可以用，未被注册则返回空
+				var address2 = await crypton.getOwnerOfNameToken("world");
+				console.log("owner2:"+address2);
+
+				// 注册名字
+				// await crypton.registerName("hello", price);
+
+				// 获取某个地址持有的名字列表
+				var my = await crypton.getOwnerNameTokens("0x40da0e9AD0f40A6e26eC03c49eCCec01e2B8f9d4");
+				console.log(my);
+
+				// 获取全部已注册的名字列表
+				var ret = await crypton.getNameTokens(0);
+				console.log(ret);
+
+    		}
+    		catch (e) {
+    			console.log(e);
+    		}
+		});
+
+
+
+	</script>
+</body>
+</html>
