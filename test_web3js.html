@@ -35,8 +35,6 @@
 				var tmpName = "hello"+Math.floor(Math.random() * 10000);
 				var address = "";
 
-				await crypton.transfer("0xC2a338A3b841D4Ea313519d1c28001f58ED1b358", "hello493");
-
 				// 获取域名的主人，也可以用来测试域名是否可以用，未被注册则返回空
 				crypton.getOwnerOfNameToken(tmpName)
 					.then (function(addr) {
