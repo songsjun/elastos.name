@@ -1,7 +1,7 @@
 
 
 var elaeth_blocknumber_url = "https://explorer.elaeth.io/api?module=block&action=eth_block_number";
-var contract_address = "0xdc210024c6e7aa7e0621a0315563a953ec54ae0d";
+var contract_address = "0xfdecdd7e7da24f486be2931ec133a7817d6bc687";
 
 class Web3Bridge {
 
@@ -260,11 +260,10 @@ class Crypton {
 		var pthis = this;
 		return this._init_account()
 			.then(function() {
-				return pthis._generate_option();
+				return pthis._generate_option("0.1");
 			})
 			.then(function(option) {
-				var tokenId = pthis._web3.utils.hexToNumberString("0x"+sha256(name));
-        		return pthis._contact.methods.safeTransferFrom(pthis._account, to, tokenId).send(option);
+        		return pthis._contact.methods.transfer(pthis._account, to, name).send(option);
 			});
 	}
 

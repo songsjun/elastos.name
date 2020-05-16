@@ -32,35 +32,62 @@
 				// 创建合约包装对象
 				var crypton = new Crypton(abiArray, contract_address, bridge.getWeb3());
 
-				// 获取最新价格，1表示1-2个字母，2表示3个字母，3表示4个及以上字母
-				var price = await crypton.getCurrentPrice(3);
-				
-				// 获取域名的主人，也可以用来测试域名是否可以用，已被注册则返回主人地址
-				var address = await crypton.getOwnerOfNameToken("hello");
-				console.log("owner1:"+address);
-
 				var tmpName = "hello"+Math.floor(Math.random() * 10000);
+				var address = "";
+
+				await crypton.transfer("0xC2a338A3b841D4Ea313519d1c28001f58ED1b358", "hello493");
+
 				// 获取域名的主人，也可以用来测试域名是否可以用，未被注册则返回空
-				var address2 = await crypton.getOwnerOfNameToken(tmpName);
-				console.log("owner2:"+address2);
-
-
-				// 注册名字
-				//await crypton.registerName(tmpName, ""+(parseFloat(price)*1.01));
-
-				// 直接创建名字
-				//await crypton.generateName(address, tmpName+"admin");
-
-				// 转移名字
-				//await crypton.transfer("0xC2a338A3b841D4Ea313519d1c28001f58ED1b358", tmpName);
-
-				// 获取某个地址持有的名字列表
-				var my = await crypton.getOwnerNameTokens("0xC2a338A3b841D4Ea313519d1c28001f58ED1b358");
-				console.log(my);
-
-				// 获取全部已注册的名字列表
-				var ret = await crypton.getNameTokens(0);
-				console.log(ret);
+				crypton.getOwnerOfNameToken(tmpName)
+					.then (function(addr) {
+						if (addr == "") 
+							console.log("TESTING: getownerOfNameToken(NotExist) is OK!");
+						// 获取最新价格，1表示1-2个字母，2表示3个字母，3表示4个及以上字母
+						return crypton.getCurrentPrice(3);
+					})
+					.then (function(price) {
+						console.log("getCurrentPrice done.");
+						// 注册名字
+						return crypton.registerName(tmpName, ""+(parseFloat(price)+0.01));
+					})
+					.then (function() {
+						console.log("registerName done.");
+						return crypton.getOwnerOfNameToken(tmpName);
+					})
+					.then (function(addr) {
+						if (addr.length > 0) {
+							address = addr;
+							console.log("TESTING: getownerOfNameToken(EXIST) is OK!");
+							return crypton.generateName(addr, tmpName+"admin");
+						}
+					})
+					.then (function() {
+						console.log("getCurrentPrice done.");
+						// 获取全部已注册的名字列表
+						return crypton.getNameTokens(0);
+					})
+					.then (function(ret) {
+						for (var item of ret) {
+							if (item.name == tmpName+"admin" && item.owner == address)
+								console.log("TESTING: generateName is OK!");
+						}
+						// 转移名字
+						return crypton.transfer("0xC2a338A3b841D4Ea313519d1c28001f58ED1b358", tmpName);
+					})
+					.then (function() {
+						console.log("transfer done.");
+						// 获取某个地址持有的名字列表
+						return crypton.getOwnerNameTokens("0xC2a338A3b841D4Ea313519d1c28001f58ED1b358");
+					})
+					.then (function(ret) {
+						for (var item of ret) {
+							if (item.name == tmpName)
+								console.log("TESTING: registerName and transfer is OK!");
+						}
+					})
+					.catch (function(e) {
+						console.log(e);
+					});
 
     		}
     		catch (e) {
