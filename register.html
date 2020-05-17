@@ -27,6 +27,7 @@
 
     <!-- Main Stylesheet File -->
     <link href="css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/web3.min.js"></script>
     <script src="./js/vue.min.js"></script>
     <script type="text/javascript">
         document.write('<script src="./js/contractConfig.js?v=' + (new Date()).getTime() + '"><\/script>');
@@ -258,7 +259,7 @@
                     <div class="kuang"><img src="./img/2B9A5A.png" v-if="dname" /><input v-model="dname" /><span><span class="line">|</span>elastos.name</span>
                         </span>
                     </div>
-                    <div v-if="dname"><span class="price">Price：</span><span class="priceNum">{{price}}</span>ELA（Estimated）</div>
+                    <!-- <div v-if="dname"><span class="price">Price：</span><span class="priceNum">{{price}}</span>ELA（Estimated）</div> -->
                     <div v-if="!dname">Input domain name</div>
                     <div class="buyit" :class="{huise:!dname}" @click="buyIt">buy it</div>
                 </div>
@@ -300,23 +301,137 @@
     var app = new Vue({
         el: '#app',
         data: {
+            selectAdress: "",
             dname: 'sjz.',
             price: '0.12',
             showMask: false,
             txId: '',
         },
         methods: {
-            buyIt() {
-                window.initWallet().then((address) => {
-                    this.getContracts(address);
-                }).catch((err) => {
-                    alert(JSON.stringify(err));
-                });
+            async _generate_option(price) {
+                return web3.eth.getGasPrice()
+                    .then((gasPrice) => {
+                        if (price)
+                            return {
+                                from: this.selectAdress,
+                                gasPrice: gasPrice,
+                                gas: 1000000,
+                                value: web3.utils.toWei(price, "ether")
+                            };
+                        else
+                            return {
+                                from: this.selectAdress,
+                                gasPrice: gasPrice,
+                                gas: 1000000,
+                                value: '0'
+                            };
+                    });
+            },
+            async pricelevel1() {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                        infoContract.methods.price_level1().call().then((err) => {
+                            price = web3.utils.fromWei(price, "ether");
+                            this._generate_option((parseFloat(price) * 1.01) + "").then((option) => {
+                                this.getContracts(option);
+                            }).catch((err) => {
 
-                // if (this.dname === "") {
-                //     return;
-                // }
-                // this.showMask = true;
+                            });
+                        }).catch((err) => {
+
+                        });
+
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
+            },
+            async pricelevel2() {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                        infoContract.methods.price_level2().call().then((price) => {
+                            price = web3.utils.fromWei(price, "ether");
+                            this._generate_option((parseFloat(price) * 1.01) + "").then((option) => {
+                                this.getContracts(option);
+                            }).catch((err) => {
+
+                            });
+                        }).catch((err) => {
+
+                        });
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
+            },
+            async pricelevel3() {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                        infoContract.methods.price_level3().call().then((price) => {
+                            price = web3.utils.fromWei(price, "ether");
+                            this._generate_option((parseFloat(price) * 1.01) + "").then((option) => {
+                                this.getContracts(option);
+                            }).catch((err) => {
+
+                            });
+                        });
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
+            },
+            async buyIt() {
+                var level = 1;
+                if (this.dname.length < 3) {
+                    alert("It was reserved now.");
+                    return;
+                } else if (this.dname.length == 3) {
+                    level = 2;
+                } else {
+                    level = 3;
+                }
+
+                switch (level) {
+                    case 1:
+                        this.pricelevel1();
+                        break;
+                    case 2:
+                        this.pricelevel2();
+                        break;
+                    case 3:
+                        this.pricelevel3();
+                        break;
+                }
             },
             click_close() {
                 this.showMask = false;
@@ -332,31 +447,38 @@
                     if (typeof web3 !== 'undefined') {
                         web3 = new Web3(web3.currentProvider);
                     }
-                    console.log("======txid=======" + txid);
                     web3.eth.getTransaction(txid, (err, data) => {
-                        console.log("======txObj=======" + JSON.stringify(data));
                         let blockHash = data['blockHash'] || "";
                         let blockNumber = data['blockNumber'] || "";
                         if (blockHash != "" && blockNumber != '') {
                             clearInterval(sid);
-                            this.getContracts(txid);
+                            window.location.href = "./account.html";
                         }
                     });
                 }, 500);
             },
-            getContracts(account) {
-                window.getWethContracts().then((info) => {
-                    let tokenId = this.getTokenId();
-                    let option = {
-                        from: account,
-                        gasPrice: '10000000',
-                        gas: 100000000,
-                        value: web3.toWei(this.price, 'ether'),
-                    };
-                    info.externalMint(tokenId, this.dname).send(option, (err, msg) => {
-
-                    });
-                })
+            async getContracts(option) {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                        infoContract.methods.externalMint(this.dname).send(option, (err, msg) => {
+                            if (!err) {
+                                this.next(msg);
+                            }
+                        });
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
             },
             uuid2(len, radix) {
                 var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
@@ -394,7 +516,11 @@
 
         },
         created() {
+            window.initWallet().then((address) => {
+                this.selectAdress = address;
+            }).catch((err) => {
 
+            });
         }
     });
 </script>

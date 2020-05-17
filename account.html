@@ -214,7 +214,6 @@
                         info.totalSupply((err, msg) => {
                             if (!err) {
                                 let num = parseInt(msg);
-                                console.log('sss==' + num);
                                 if (num > 0) {
                                     this.initNames(info, num);
                                 }
@@ -239,16 +238,33 @@
             tokenByIndex(info, index) {
                 info.tokenByIndex(index, (err, tokenId) => {
                     if (!err) {
-                        this.tokensURI(tokenId);
+                        //this.tokensURI(info, tokenId);
+                        this.ownerOf(info, tokenId);
                     } else {
                         alert(JSON.stringify(err))
                     }
                 });
             },
-            tokensURI(tokenId) {
+            tokensURI(info, tokenId, address) {
                 info.tokenURI(tokenId, (err, tokenName) => {
                     if (!err) {
-                        domainNameArr.push(tokenName);
+                        this.domainNameArr.push({
+                            "tokenId": tokenId,
+                            "name": tokenName,
+                            "owner": address
+                        });
+                    } else {
+                        alert(JSON.stringify(err))
+                    }
+                });
+            },
+            ownerOf(info, tokenId) {
+                info.ownerOf(tokenId, (err, address) => {
+                    if (!err) {
+                        console.log("====" + address);
+                        if (address === this.selectAddress) {
+                            this.tokensURI(info, tokenId, address);
+                        }
                     } else {
                         alert(JSON.stringify(err))
                     }
