@@ -28,6 +28,7 @@
     <!-- Main Stylesheet File -->
     <link href="css/style.css" rel="stylesheet">
     <script type="text/javascript" src="./js/web3.min.js"></script>
+    <script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
     <script src="./js/vue.min.js"></script>
     <script type="text/javascript">
         document.write('<script src="./js/contractConfig.js?v=' + (new Date()).getTime() + '"><\/script>');
@@ -245,13 +246,18 @@
                         await ethereum.enable();
                         let arr = this.objtoarr();
                         this.domainInfo["addresses"] = arr;
-                        console.log("==msg==" + JSON.stringify(this.domainInfo));
                         let signData = JSON.stringify(this.domainInfo);
-                        web3.eth.personal.sign(signData, this.selectAddress).then((msg) => {
-                            console.log("==msgsign==" + msg);
-                            this.ecRecover(signData, msg);
+                        console.log("==signData==" + JSON.stringify(this.domainInfo));
+                        web3.eth.personal.sign(signData, this.selectAddress).then((sign) => {
+                            let body = {
+                                "info": signData,
+                                "sign": sign,
+                                "owner": this.selectAddress
+                            };
+                            console.log("==msgbody==" + JSON.stringify(body));
+                            this.postAjax('https://api.elastos.name/nameInfo/set', body);
                         }).catch((err) => {
-
+                            alert("err:" + JSON.stringify(err));
                         });
                     } catch (error) {
                         // User denied account access...
@@ -287,6 +293,25 @@
                 else {
                     console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
                 }
+            },
+            postAjax(url, data) {
+                return new Promise((resovle, reject) => {
+                    $.ajax({
+                        url: url,
+                        data: JSON.stringify(data),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        type: 'POST',
+                        success: function(data) { //成功回调函数
+                            resovle(data);
+                        },
+                        error: function(err) { //失败回调函数
+                            reject(err);
+                        }
+                    });
+
+
+                })
             },
         },
         created() {
