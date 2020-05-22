@@ -168,7 +168,7 @@
                 <div class="kuang" v-for="(item) in domainNameArr">
                     <div style="font-weight: bold;">{{item.name}}</div>
                     <div style="font-weight: bold;">.elastos.name</div>
-                    <div style="text-align: right;margin-top: 10px;"><span class="btn1" @click="view">view</span><span class="btn1" @click="edit">edit</span><span class="btn1" @click="sale">sale</span></div>
+                    <div style="text-align: right;margin-top: 10px;"><span class="btn1" @click="view(item)">view</span><span class="btn1" @click="edit(item)">edit</span><span class="btn1" @click="sale">sale</span></div>
                 </div>
                 <div class="add" @click="add">
                     + add
@@ -273,11 +273,11 @@
             add() {
                 window.location.href = "./register.html";
             },
-            view() {
-                window.location.href = "./view.html";
+            view(item) {
+                window.location.href = "./view.html?dominName=" + item.name;
             },
-            edit() {
-                window.location.href = "./editInfo.html";
+            edit(item) {
+                window.location.href = "./editInfo.html?dominName=" + item.name;
             },
             sale() {
                 window.location.href = "./sale.html";
