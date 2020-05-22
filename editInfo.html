@@ -27,7 +27,11 @@
 
     <!-- Main Stylesheet File -->
     <link href="css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/web3.min.js"></script>
     <script src="./js/vue.min.js"></script>
+    <script type="text/javascript">
+        document.write('<script src="./js/contractConfig.js?v=' + (new Date()).getTime() + '"><\/script>');
+    </script>
     <style>
         [v-cloak] {
             display: none;
@@ -90,21 +94,21 @@
     <div class="container" id="app">
         <div class="row text-center">
             <div class="col-sm-12">
-                <span style="color: #000000;font-size: 36px;">ABCDEFGH.elastos.name</span>
+                <span style="color: #000000;font-size: 36px;">{{domainInfo.name}}.elastos.name</span>
             </div>
         </div>
 
         <div class="row" style="margin-top: 10px;">
             <div class="col-sm-6 text-right">
-                <div style="margin-bottom: 5px;"><span style="margin-right: 5px;">DID:</span><input/></div>
-                <div style="margin-bottom: 5px;"><span style="margin-right: 5px;">ELA Address:</span><input/></div>
-                <div style="margin-bottom: 5px;"><span style="margin-right: 5px;">BTC Address:</span><input/></div>
-                <div style="margin-bottom: 5px;"><span style="margin-right: 5px;">ETH Address:</span><input/></div>
+                <div style="margin-bottom: 5px;"><span style="margin-right: 5px;">DID:</span><input v-model="domainInfo.did" /></div>
+                <div v-for="(item,key) in coinList">
+                    <div style="margin-bottom: 5px;">{{symbolDes[key].des}}<span style="margin-right: 5px;"></span><input v-model="item.address" /></div>
+                </div>
             </div>
             <div class="col-sm-6 text-left">
-                <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">EMail:</span><input/></div>
-                <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Personal Web:</span><input/></div>
-                <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Description:</span><textarea style="vertical-align:top;resize: none;height: 75px;"></textarea></div>
+                <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">EMail:</span><input v-model="domainInfo.email" /></div>
+                <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Personal Web:</span><input v-model="domainInfo.personalurl" /></div>
+                <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Description:</span><textarea style="vertical-align:top;resize: none;height: 75px;" v-model="domainInfo.description"></textarea></div>
             </div>
         </div>
 
@@ -150,18 +154,148 @@
     var app = new Vue({
         el: '#app',
         data: {
+            selectAddress: "",
+            domainInfo: {
+                "name": "",
+                "did": "ifZjRUsiC244ZhJpBNkQujdSDE9hQRppgb",
+                "publickey": "033d3b1b74a58d5aeceb3ce886992f091636436d4327f997805f33e140aa7aca5d",
+                "personalurl": "https://bing.com",
+                "email": "abc@efg.net",
+                "description": "Hello World",
+                "blocknumber": "123123" //await bridge.getWeb3().eth.getBlockNumber()
+            },
+            coinList: {
+                "ela": {
+                    "symbol": "ela",
+                    "name": "elastos",
+                    "address": "ERFNWNivDhAbozj5izbipCFLBGLv2hjLqJ",
+                },
+                "btc": {
+                    "symbol": "btc",
+                    "name": "bitcoin",
+                    "address": "1D8TM5pJG1x3pk7GzTSg3YLHxpUFqnyJB3",
+                },
+                "eth": {
+                    "symbol": "eth",
+                    "name": "ethereum",
+                    "address": "myAccount",
+                }
+            },
+            symbolDes: {
+                "ela": {
+                    "des": 'ETH Address:'
+                },
+                "btc": {
+                    "des": "BTC Address"
+                },
+                "eth": {
+                    "des": 'ETH Address:'
+                }
+            }
 
         },
         methods: {
+            objtoarr() {
+                let arr = [];
+                for (let key in this.coinList) {
+                    arr.push(this.coinList[key]);
+                }
+                return arr;
+            },
             link() {
 
             },
             submit() {
+                this.getBlockNumber();
+            },
+            GetQueryString(name) {　　　
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                var r = window.location.search.substr(1).match(reg);　　　
+                if (r != null) return (r[2]);　　　
+                return null;
+            },
+            async getBlockNumber() {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        window.web3.eth.getBlockNumber().then((blocknumber) => {
+                            console.log("==msg==" + JSON.stringify(blocknumber));
+                            this.domainInfo["blocknumber"] = blocknumber;
+                            this.sign();
+                        }).catch((err) => {
 
-            }
+                        });
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
+            },
+            async sign() {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        let arr = this.objtoarr();
+                        this.domainInfo["addresses"] = arr;
+                        console.log("==msg==" + JSON.stringify(this.domainInfo));
+                        let signData = JSON.stringify(this.domainInfo);
+                        web3.eth.personal.sign(signData, this.selectAddress).then((msg) => {
+                            console.log("==msgsign==" + msg);
+                            this.ecRecover(signData, msg);
+                        }).catch((err) => {
+
+                        });
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
+            },
+
+            async ecRecover(signdata, msg) {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        web3.eth.personal.ecRecover(signdata, msg).then((address) => {
+                            console.log("==msgRecover==" + address);
+                        }).catch((err) => {
+
+                        });
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
+            },
         },
         created() {
+            this.domainInfo.name = this.GetQueryString("dominName") || "";
+            window.initWallet().then((address) => {
+                this.selectAddress = address;
+            }).catch((err) => {
 
+            });
         }
     });
 </script>
