@@ -28,6 +28,7 @@
     <!-- Main Stylesheet File -->
     <link href="css/style.css" rel="stylesheet">
     <script type="text/javascript" src="./js/web3.min.js"></script>
+    <script src="https://cdn.bootcss.com/lodash.js/4.17.12-pre/lodash.min.js"></script>
     <script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
     <script src="./js/vue.min.js"></script>
     <script type="text/javascript">
@@ -105,11 +106,12 @@
                 <div v-for="(item,key) in coinList">
                     <div style="margin-bottom: 5px;">{{symbolDes[key].des}}<span style="margin-right: 5px;"></span><input v-model="item.address" /></div>
                 </div>
+                <div style="margin-bottom: 5px;">publickey<span style="margin-right: 5px;"></span><input v-model="domainInfo.publickey" /></div>
             </div>
             <div class="col-sm-6 text-left">
                 <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">EMail:</span><input v-model="domainInfo.email" /></div>
                 <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Personal Web:</span><input v-model="domainInfo.personalurl" /></div>
-                <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Description:</span><textarea style="vertical-align:top;resize: none;height: 75px;" v-model="domainInfo.description"></textarea></div>
+                <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Description:</span><textarea style="vertical-align:top;resize: none;height: 120px;" v-model="domainInfo.description"></textarea></div>
             </div>
         </div>
 
@@ -126,7 +128,7 @@
         </div>
 
         <div class="row text-center" style="margin-top: 20px;">
-            <div class="col-sm-12">
+            <div class="col-sm-12" @click="goLogo()">
                 <img src="./img/elaphant.png" /> <span style="vertical-align: middle;color: #5157DB;border-bottom:1px solid #5157DB;cursor: pointer;">Start Elaphant to fill in quickly</span>
             </div>
         </div>
@@ -158,28 +160,28 @@
             selectAddress: "",
             domainInfo: {
                 "name": "",
-                "did": "ifZjRUsiC244ZhJpBNkQujdSDE9hQRppgb",
-                "publickey": "033d3b1b74a58d5aeceb3ce886992f091636436d4327f997805f33e140aa7aca5d",
-                "personalurl": "https://bing.com",
-                "email": "abc@efg.net",
-                "description": "Hello World",
-                "blocknumber": "123123" //await bridge.getWeb3().eth.getBlockNumber()
+                "did": "",
+                "publickey": "",
+                "personalurl": "",
+                "email": "",
+                "description": "",
+                "blocknumber": "" //await bridge.getWeb3().eth.getBlockNumber()
             },
             coinList: {
                 "ela": {
                     "symbol": "ela",
                     "name": "elastos",
-                    "address": "ERFNWNivDhAbozj5izbipCFLBGLv2hjLqJ",
+                    "address": "",
                 },
                 "btc": {
                     "symbol": "btc",
                     "name": "bitcoin",
-                    "address": "1D8TM5pJG1x3pk7GzTSg3YLHxpUFqnyJB3",
+                    "address": "",
                 },
                 "eth": {
                     "symbol": "eth",
                     "name": "ethereum",
-                    "address": "myAccount",
+                    "address": "",
                 }
             },
             symbolDes: {
@@ -192,10 +194,74 @@
                 "eth": {
                     "des": 'ETH Address:'
                 }
+            },
+            schemeConfig: {
+                "AppID": "7d80c7e800f5842b3b8e7ec7318189f66b7fd5b6db13bb80fbd89d2b1c444772c1d0202fea1e9cbabbf3258b3d91685484c02c2ae52d78ca39e2e54593ec81dd",
+                "AppName": "Hackathon",
+                "RandomNumber": "123456789",
+                "DID": "iXzenTELVRDc712tmt2Qvbtk3KcAwV2tU8",
+                "PublicKey": "032f6347b27401dc0bced2de0ab4531e62c496841cd8e67a58c572e3018dcb72d9",
+                "ReturnUrl": "/editInfo.html?dominName=test1",
+                "RequestInfo": "elaaddress,BTCAddress,ETHAddress,Email"
             }
-
         },
         methods: {
+            getUrl() {
+                //获取主机地址
+                var localhostPaht = window.location.protocol + "//" + window.location.host;
+                return localhostPaht;
+            },
+            goLogo() {
+                //构建身份授权协议
+                var url = this.buildIdentity();
+                //拼接大象钱包过度页面
+                var turl = 'https://launch.elaphant.app?appName=Hackathon&appTitle=Hackathon&autoRedirect=True&redirectURL=' + encodeURIComponent(url);
+                //跳转
+                location.href = turl;
+            },
+            buildIdentity() {
+                var baseUrl = this.getUrl();
+                if (baseUrl === "file://") {
+                    baseUrl = 'http://dev1.elapps.net';
+                }
+                this.schemeConfig['ReturnUrl'] = baseUrl + '/editInfo.html?dominName=' + this.domainInfo.name;
+                var url = "elaphant://identity?";
+                _.forEach(this.schemeConfig, function(val, key, index) {
+                    if (key === 'ReturnUrl') {
+                        val = encodeURIComponent(val);
+                    }
+                    url += key + '=' + val + '&';
+                });
+
+                return url.substring(0, url.length - 1);
+            },
+            checkParams() {
+                if (this.domainInfo.did === "") {
+                    alert("input did");
+                    return false;
+                }
+
+                if (this.coinList.ela.address === "") {
+                    alert("input elaAddress");
+                    return false;
+                }
+
+                if (this.coinList.btc.address === "") {
+                    alert("input btcAddress");
+                    return false;
+                }
+
+                if (this.coinList.eth.address === "") {
+                    alert("input ethAddress");
+                    return false;
+                }
+
+                if (this.domainInfo.publickey === "") {
+                    alert("input publickey");
+                    return false;
+                }
+                return true;
+            },
             objtoarr() {
                 let arr = [];
                 for (let key in this.coinList) {
@@ -207,7 +273,9 @@
 
             },
             submit() {
-                this.getBlockNumber();
+                if (this.checkParams()) {
+                    this.getBlockNumber();
+                }
             },
             GetQueryString(name) {　　　
                 var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -221,7 +289,6 @@
                     try {
                         await ethereum.enable();
                         window.web3.eth.getBlockNumber().then((blocknumber) => {
-                            console.log("==msg==" + JSON.stringify(blocknumber));
                             this.domainInfo["blocknumber"] = blocknumber;
                             this.sign();
                         }).catch((err) => {
@@ -247,15 +314,23 @@
                         let arr = this.objtoarr();
                         this.domainInfo["addresses"] = arr;
                         let signData = JSON.stringify(this.domainInfo);
-                        console.log("==signData==" + JSON.stringify(this.domainInfo));
                         web3.eth.personal.sign(signData, this.selectAddress).then((sign) => {
                             let body = {
                                 "info": signData,
                                 "sign": sign,
                                 "owner": this.selectAddress
                             };
-                            console.log("==msgbody==" + JSON.stringify(body));
-                            this.postAjax('https://api.elastos.name/nameInfo/set', body);
+                            this.postAjax('https://api.elastos.name/nameInfo/set', body).then((result) => {
+                                let code = result["code"];
+                                if (code === 200) {
+                                    alert(result["message"]);
+                                    window.location.href = "./view.html?dominName=" + this.domainInfo.name;
+                                } else {
+                                    alert(JSON.stringify(result));
+                                }
+                            }).catch((err) => {
+                                alert("err:" + JSON.stringify(err));
+                            });
                         }).catch((err) => {
                             alert("err:" + JSON.stringify(err));
                         });
@@ -271,17 +346,34 @@
                     console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
                 }
             },
-
             async ecRecover(signdata, msg) {
                 if (window.ethereum) {
                     window.web3 = new Web3(ethereum);
                     try {
                         await ethereum.enable();
-                        web3.eth.personal.ecRecover(signdata, msg).then((address) => {
-                            console.log("==msgRecover==" + address);
-                        }).catch((err) => {
+                        // web3.eth.personal.ecRecover(signdata, msg).then((address) => {
+                        //     console.log("==msgRecover==" + address);
+                        // }).catch((err) => {
 
-                        });
+                        // });
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
+            },
+            async ecRecover(signdata, msg) {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        web3.eth.accounts.privateKeyToAccount(privateKey);
                     } catch (error) {
                         // User denied account access...
                         console.log(error);
@@ -309,13 +401,23 @@
                             reject(err);
                         }
                     });
-
-
-                })
+                });
             },
         },
         created() {
             this.domainInfo.name = this.GetQueryString("dominName") || "";
+            let data = this.GetQueryString("Data") || "";
+            if (data != "") {
+                let dataStr = decodeURIComponent(data);
+                let dataObj = JSON.parse(dataStr);
+                this.domainInfo.did = dataObj["DID"];
+                this.coinList["ela"]["address"] = dataObj["ELAAddress"];
+                this.coinList["btc"]["address"] = dataObj["BTCAddress"];
+                this.coinList["eth"]["address"] = dataObj["ETHAddress"];
+                this.domainInfo.publickey = dataObj["PublicKey"];
+                this.domainInfo.email = dataObj["Email"] || "";
+            }
+            console.log(JSON.stringify(this.coinList));
             window.initWallet().then((address) => {
                 this.selectAddress = address;
             }).catch((err) => {
