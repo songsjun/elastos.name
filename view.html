@@ -28,6 +28,7 @@
     <!-- Main Stylesheet File -->
     <link href="css/style.css" rel="stylesheet">
     <script src="./js/vue.min.js"></script>
+    <script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
     <script src="./js/vue-qrcode.min.js"></script>
     <script src="./js/vue-clipboard.min.js"></script>
     <script>
@@ -40,6 +41,19 @@
         
         body {
             background-color: #FEFEFE;
+        }
+        
+        .btn1 {
+            text-align: center;
+            margin: 0 auto;
+            margin-bottom: 5px;
+            cursor: pointer;
+            width: 200px;
+            line-height: 50px;
+            height: 50px;
+            border-radius: 4px;
+            background-color: #F5841F;
+            color: #ffffff;
         }
     </style>
 
@@ -82,71 +96,69 @@
     <div id="app">
         <div v-if="isPC">
             <div style="height:150px"></div>
-            <div class="container">
+            <div v-if="isShowEdit" class="row text-center" style="margin-top: 40px;margin-bottom: 5px;">
+                <div class="col-sm-12">
+                    <div class="btn1" @click="editInfo">Eidt info</div>
+                </div>
+            </div>
+            <div class="container" v-if="!isShowEdit&&!loading">
                 <div class="row">
                     <div class="col-sm-4">
-                        <div style="cursor: pointer;" @click="doCopy('ABCDEFGH .elastos.name')">
-                            ABCDEFGH .elastos.name <img src="./img/externallink.png">
+                        <div style="cursor: pointer;" @click="doCopy(domainInfo.name)">
+                            {{this.domainInfo.name}}.elastos.name <img src="./img/externallink.png">
                         </div>
 
                         <div style="margin-top: 10px;">
-                            Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World,
+                            {{this.domainInfo.description}}
                         </div>
 
                         <div style="margin: 0 auto;width: 120px;">
-                            <qrcode :value="qrcode" :options="{ width:120 }" style="display:block"></qrcode>
+                            <qrcode :value="this.domainInfo.did" :options="{ width:120 }" style="display:block"></qrcode>
                         </div>
-                        <div style="font-size: 16px;cursor: pointer;" @click="doCopy('did:ela:ifZjRUsiC244ZhJpBNkQujdSDE9hQRppgb')">did:ela:ifZjRUsiC244ZhJpBNkQujdSDE9hQRppgb<img src="./img/copy.png" /></div>
+                        <div style="font-size: 16px;cursor: pointer;" @click="doCopy(this.domainInfo.did)">{{this.domainInfo.did}}<img src="./img/copy.png" /></div>
 
-                        <div style="margin-top: 10px;cursor: pointer;">
-                            <img src="./img/youxiang.png" style="margin-right: 5px;">abc@hotmail.com
-                        </div>
-
-                        <div style="margin-top: 10px;cursor: pointer;">
-                            <img src="./img/link.png" style="margin-right: 5px;"><span style="color: #5157DB;">https://twitter.com/sdfasdfadsf</span>
+                        <div style="margin-top: 10px;cursor: pointer;" v-if="domainInfo.email">
+                            <img src="./img/youxiang.png" style="margin-right: 5px;">{{this.domainInfo.email}}
                         </div>
 
+                        <div style="margin-top: 10px;cursor: pointer;" v-if="domainInfo.personalurl">
+                            <img src="./img/link.png" style="margin-right: 5px;"><span style="color: #5157DB;">{{domainInfo.personalurl}}</span>
+                        </div>
+
                         <div style="margin-top: 10px;cursor: pointer;">
-                            <img src="./img/download.png" style="margin-right: 5px;"><span style="color: #5157DB;">https://abcdefgh.elastos.name/info.json</span>
+                            <img src="./img/download.png" style="margin-right: 5px;"><span style="color: #5157DB;">https://{{this.domainInfo.name}}.elastos.name/info.json</span>
                         </div>
                     </div>
 
                     <div class="col-sm-8">
-                        <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;">
+                        <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;margin-bottom: 10px;" v-for="(item) in domainInfo.addresses">
                             <div class="col-sm-8">
-                                <div style="margin-top: 10px;"><img src="./img/ela.png" style="margin-right: 5px;">Elastos</div>
-                                <div style="margin-top: 5px;cursor: pointer;" @click="doCopy('SDH28fhbdjcjGHYb4568dh083AFfhyucu')">SDH28fhbdjcjGHYb4568dh083AFfhyucu<img src="./img/copy.png"></div>
-                                <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;">https://abcdefgh.elastos.name/ela.address</div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div style="margin: 0 auto;width: 120px;">
-                                    <qrcode :value="qrcode" :options="{ width:120 }" style="display:block"></qrcode>
+                                <div style="margin-top: 10px;" v-if="item.symbol === 'ela'">
+                                    <img src="./img/ela.png" style="margin-right: 5px;">{{item.name}}
+                                </div>
+                                <div style="margin-top: 10px;" v-if="item.symbol === 'btc'">
+                                    <img src="./img/btc.png" style="margin-right: 5px;">{{item.name}}
+                                </div>
+                                <div style="margin-top: 10px;" v-if="item.symbol === 'eth'">
+                                    <img src="./img/eth.png" style="margin-right: 5px;">{{item.name}}
+                                </div>
+                                <div style="margin-top: 5px;cursor: pointer;" @click="doCopy(item.address)">{{item.address}}<img src="./img/copy.png"></div>
+
+                                <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;" v-if="item.symbol === 'ela'">
+                                    https://{{domainInfo.name}}.elastos.name/ela.address
+                                </div>
+
+                                <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;" v-if="item.symbol === 'btc'">
+                                    https://{{domainInfo.name}}.elastos.name/btc.address
+                                </div>
+
+                                <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;" v-if="item.symbol === 'eth'">
+                                    https://{{domainInfo.name}}.elastos.name/eth.address
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;margin-top: 15px;">
-                            <div class="col-sm-8">
-                                <div style="margin-top: 10px;"><img src="./img/btc.png" style="margin-right: 5px;">Bitcoin</div>
-                                <div style="margin-top: 5px;cursor: pointer;" @click="doCopy('SDH28fhbdjcjGHYb4568dh083AFfhyucu')">SDH28fhbdjcjGHYb4568dh083AFfhyucu<img src="./img/copy.png"></div>
-                                <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;">https://abcdefgh.elastos.name/btc.address</div>
-                            </div>
                             <div class="col-sm-4">
                                 <div style="margin: 0 auto;width: 120px;">
-                                    <qrcode :value="qrcode" :options="{ width:120 }" style="display:block"></qrcode>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;margin-top: 15px;">
-                            <div class="col-sm-8">
-                                <div style="margin-top: 10px;"><img src="./img/eth.png" style="margin-right: 5px;">Ethereum</div>
-                                <div style="margin-top: 5px;cursor: pointer;" @click="doCopy('SDH28fhbdjcjGHYb4568dh083AFfhyucu')">SDH28fhbdjcjGHYb4568dh083AFfhyucu<img src="./img/copy.png"></div>
-                                <div style="margin-top: 5px;color: #5157DB;cursor: pointer;">https://abcdefgh.elastos.name/eth.address</div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div style="margin: 0 auto;width: 120px;">
-                                    <qrcode :value="qrcode" :options="{ width:120 }" style="display:block"></qrcode>
+                                    <qrcode :value="item.address" :options="{ width:120 }" style="display:block"></qrcode>
                                 </div>
                             </div>
                         </div>
@@ -164,28 +176,33 @@
 
         <div v-if="!isPC">
             <div style="height:80px"></div>
-            <div class="container" style="width:375px">
+            <div v-if="isShowEdit" class="row text-center" style="margin-top: 40px;margin-bottom: 5px;">
+                <div class="col-sm-12">
+                    <div class="btn1" @click="editInfo">Eidt info</div>
+                </div>
+            </div>
+            <div class="container" style="width:375px" v-if="!isShowEdit&&!loading">
                 <div class="row" style="padding: 0px 10px;">
                     <div class="col-xs-12">
-                        <div style="cursor: pointer;" @click="doCopy('ABCDEFGH .elastos.name')">
-                            ABCDEFGH .elastos.name <img src="./img/externallink.png">
+                        <div style="cursor: pointer;" @click="doCopy(domainInfo.name)">
+                            {{domainInfo.name}}.elastos.name <img src="./img/externallink.png">
                         </div>
-                        <div style="font-size: 16px;cursor: pointer;" @click="doCopy('did:ela:ifZjRUsiC244ZhJpBNkQujdSDE9hQRppgb')">did:ela:ifZjRUsiC244ZhJpBNkQujdSDE9hQRppgb<img src="./img/copy.png" /></div>
+                        <div style="font-size: 16px;cursor: pointer;" @click="doCopy(domainInfo.did)">{{domainInfo.did}}<img src="./img/copy.png" /></div>
 
-                        <div style="margin-top: 10px;cursor: pointer;">
-                            <img src="./img/youxiang.png" style="margin-right: 5px;">abc@hotmail.com
-                        </div>
-
-                        <div style="margin-top: 10px;cursor: pointer;">
-                            <img src="./img/link.png" style="margin-right: 5px;"><span style="color: #5157DB;">https://twitter.com/sdfasdfadsf</span>
+                        <div style="margin-top: 10px;cursor: pointer;" v-if="domainInfo.email">
+                            <img src="./img/youxiang.png" style="margin-right: 5px;">{{domainInfo.email}}
                         </div>
 
+                        <div style="margin-top: 10px;cursor: pointer;" v-if="domainInfo.personalurl">
+                            <img src="./img/link.png" style="margin-right: 5px;"><span style="color: #5157DB;">{{domainInfo.personalurl}}</span>
+                        </div>
+
                         <div style="margin-top: 10px;cursor: pointer;">
-                            <img src="./img/download.png" style="margin-right: 5px;"><span style="color: #5157DB;">https://abcdefgh.elastos.name/info.json</span>
+                            <img src="./img/download.png" style="margin-right: 5px;"><span style="color: #5157DB;">https://{{domainInfo.personalurl}}.elastos.name/info.json</span>
                         </div>
 
                         <div style="margin-top: 10px;" v-if="isShow">
-                            Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World, Hello World,
+                            {{this.domainInfo.description}}
                         </div>
 
                         <div style="text-align: center;margin-top: 10px;cursor: pointer;" v-if="!isShow" @click="down"><img src="img/down.png" /></div>
@@ -196,39 +213,32 @@
 
                 <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;padding:10px;margin-top: 10px;">
                     <div class="col-xs-9">
-                        <div style="margin-top: 10px;"><img src="./img/ela.png" style="margin-right: 5px;">Elastos</div>
-                        <div style="margin-top: 5px;cursor: pointer;font-size: 12px;" @click="doCopy('SDH28fhbdjcjGHYb4568dh083AFfhyucu')">SDH28fhbdjcjGHYb4568dh083AFfhyucu<img src="./img/copy.png"></div>
-                        <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;font-size: 12px;">https://abcdefgh.elastos.name/ela.address</div>
-                    </div>
-                    <div class="col-xs-3">
-                        <div style="margin: 0 auto;width: 60px;">
-                            <qrcode :value="qrcode" :options="{ width:60 }" style="display:block"></qrcode>
+                        <div style="margin-top: 10px;" v-if="item.symbol === 'ela'">
+                            <img src="./img/ela.png" style="margin-right: 5px;">{{item.name}}
+                        </div>
+                        <div style="margin-top: 10px;" v-if="item.symbol === 'btc'">
+                            <img src="./img/btc.png" style="margin-right: 5px;">{{item.name}}
+                        </div>
+                        <div style="margin-top: 10px;" v-if="item.symbol === 'eth'">
+                            <img src="./img/eth.png" style="margin-right: 5px;">{{item.name}}
+                        </div>
+                        <div style="margin-top: 5px;cursor: pointer;" @click="doCopy(item.address)">{{item.address}}<img src="./img/copy.png"></div>
+
+                        <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;" v-if="item.symbol === 'ela'">
+                            https://{{domainInfo.name}}.elastos.name/ela.address
+                        </div>
+
+                        <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;" v-if="item.symbol === 'btc'">
+                            https://{{domainInfo.name}}.elastos.name/btc.address
+                        </div>
+
+                        <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;" v-if="item.symbol === 'eth'">
+                            https://{{domainInfo.name}}.elastos.name/eth.address
                         </div>
                     </div>
-                </div>
-
-                <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;padding: 10px;margin-top: 10px;">
-                    <div class="col-xs-9">
-                        <div style="margin-top: 10px;"><img src="./img/btc.png" style="margin-right: 5px;">Elastos</div>
-                        <div style="margin-top: 5px;cursor: pointer;font-size: 12px;" @click="doCopy('SDH28fhbdjcjGHYb4568dh083AFfhyucu')">SDH28fhbdjcjGHYb4568dh083AFfhyucu<img src="./img/copy.png"></div>
-                        <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;font-size: 12px;">https://abcdefgh.elastos.name/btc.address</div>
-                    </div>
                     <div class="col-xs-3">
                         <div style="margin: 0 auto;width: 60px;">
-                            <qrcode :value="qrcode" :options="{ width:60 }" style="display:block"></qrcode>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;padding:10px;margin-top: 10px;">
-                    <div class="col-xs-9">
-                        <div style="margin-top: 10px;"><img src="./img/eth.png" style="margin-right: 5px;">Elastos</div>
-                        <div style="margin-top: 5px;cursor: pointer;font-size: 12px;" @click="doCopy('SDH28fhbdjcjGHYb4568dh083AFfhyucu')">SDH28fhbdjcjGHYb4568dh083AFfhyucu<img src="./img/copy.png"></div>
-                        <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;font-size: 12px;">https://abcdefgh.elastos.name/eth.address</div>
-                    </div>
-                    <div class="col-xs-3">
-                        <div style="margin: 0 auto;width: 60px;">
-                            <qrcode :value="qrcode" :options="{ width:60 }" style="display:block"></qrcode>
+                            <qrcode :value="item.address" :options="{ width:60 }" style="display:block"></qrcode>
                         </div>
                     </div>
                 </div>
@@ -251,8 +261,36 @@
             qrcode: "xxxxxxxxxxx",
             isPC: true,
             isShow: false,
+            isShowEdit: false,
+            loading: true,
+            domainInfo: {}
         },
         methods: {
+            editInfo() {
+                window.location.href = "./editInfo.html?dominName=" + this.domainInfo.name;
+            },
+            getAjax(url) {
+                return new Promise((resovle, reject) => {
+                    $.ajax({
+                        url: url,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        type: 'GET',
+                        success: function(data) { //成功回调函数
+                            resovle(data);
+                        },
+                        error: function(err) { //失败回调函数
+                            reject(err);
+                        }
+                    });
+                });
+            },
+            GetQueryString(name) {　　　
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                var r = window.location.search.substr(1).match(reg);　　　
+                if (r != null) return (r[2]);　　　
+                return null;
+            },
             doCopy(text) {
                 this.$copyText(text).then((e) => {
                     alert("copy Sucess");
@@ -282,6 +320,20 @@
         },
         created() {
             this.isPC = this.getPc();
+            this.domainInfo.name = this.GetQueryString("dominName") || "";
+            let url = "https://api.elastos.name/nameInfo/get?name=" + this.domainInfo.name;
+            this.getAjax(url).then((result) => {
+                console.log(JSON.stringify(result));
+                let code = result["code"];
+                if (code === 200) {
+                    this.loading = false;
+                    this.domainInfo = result["data"] || "";
+                } else {
+                    this.isShowEdit = true;
+                }
+            }).catch((err) => {
+
+            });
         }
     });
 </script>
