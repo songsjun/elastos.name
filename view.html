@@ -28,6 +28,7 @@
     <!-- Main Stylesheet File -->
     <link href="css/style.css" rel="stylesheet">
     <script src="./js/vue.min.js"></script>
+    <script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
     <script src="./js/vue-qrcode.min.js"></script>
     <script src="./js/vue-clipboard.min.js"></script>
     <script>
@@ -40,6 +41,19 @@
         
         body {
             background-color: #FEFEFE;
+        }
+        
+        .btn1 {
+            text-align: center;
+            margin: 0 auto;
+            margin-bottom: 5px;
+            cursor: pointer;
+            width: 200px;
+            line-height: 50px;
+            height: 50px;
+            border-radius: 4px;
+            background-color: #F5841F;
+            color: #ffffff;
         }
     </style>
 
@@ -82,7 +96,12 @@
     <div id="app">
         <div v-if="isPC">
             <div style="height:150px"></div>
-            <div class="container">
+            <div v-if="isShowEdit" class="row text-center" style="margin-top: 40px;margin-bottom: 5px;">
+                <div class="col-sm-12">
+                    <div class="btn1" @click="editInfo">Eidt info</div>
+                </div>
+            </div>
+            <div class="container" v-if="!isShowEdit&&!loading">
                 <div class="row">
                     <div class="col-sm-4">
                         <div style="cursor: pointer;" @click="doCopy(domainInfo.name)">
@@ -98,12 +117,12 @@
                         </div>
                         <div style="font-size: 16px;cursor: pointer;" @click="doCopy(this.domainInfo.did)">{{this.domainInfo.did}}<img src="./img/copy.png" /></div>
 
-                        <div style="margin-top: 10px;cursor: pointer;">
+                        <div style="margin-top: 10px;cursor: pointer;" v-if="domainInfo.email">
                             <img src="./img/youxiang.png" style="margin-right: 5px;">{{this.domainInfo.email}}
                         </div>
 
-                        <div style="margin-top: 10px;cursor: pointer;">
-                            <img src="./img/link.png" style="margin-right: 5px;"><span style="color: #5157DB;">{{this.domainInfo.personalurl}}</span>
+                        <div style="margin-top: 10px;cursor: pointer;" v-if="domainInfo.personalurl">
+                            <img src="./img/link.png" style="margin-right: 5px;"><span style="color: #5157DB;">{{domainInfo.personalurl}}</span>
                         </div>
 
                         <div style="margin-top: 10px;cursor: pointer;">
@@ -157,7 +176,12 @@
 
         <div v-if="!isPC">
             <div style="height:80px"></div>
-            <div class="container" style="width:375px">
+            <div v-if="isShowEdit" class="row text-center" style="margin-top: 40px;margin-bottom: 5px;">
+                <div class="col-sm-12">
+                    <div class="btn1" @click="editInfo">Eidt info</div>
+                </div>
+            </div>
+            <div class="container" style="width:375px" v-if="!isShowEdit&&!loading">
                 <div class="row" style="padding: 0px 10px;">
                     <div class="col-xs-12">
                         <div style="cursor: pointer;" @click="doCopy(domainInfo.name)">
@@ -165,11 +189,11 @@
                         </div>
                         <div style="font-size: 16px;cursor: pointer;" @click="doCopy(domainInfo.did)">{{domainInfo.did}}<img src="./img/copy.png" /></div>
 
-                        <div style="margin-top: 10px;cursor: pointer;">
+                        <div style="margin-top: 10px;cursor: pointer;" v-if="domainInfo.email">
                             <img src="./img/youxiang.png" style="margin-right: 5px;">{{domainInfo.email}}
                         </div>
 
-                        <div style="margin-top: 10px;cursor: pointer;">
+                        <div style="margin-top: 10px;cursor: pointer;" v-if="domainInfo.personalurl">
                             <img src="./img/link.png" style="margin-right: 5px;"><span style="color: #5157DB;">{{domainInfo.personalurl}}</span>
                         </div>
 
@@ -237,30 +261,30 @@
             qrcode: "xxxxxxxxxxx",
             isPC: true,
             isShow: false,
-            domainInfo: {
-                "name": "test1",
-                "did": "ifZjRUsiC244ZhJpBNkQujdSDE9hQRppgb",
-                "publickey": "033d3b1b74a58d5aeceb3ce886992f091636436d4327f997805f33e140aa7aca5d",
-                "personalurl": "https://bing.com",
-                "email": "abc@efg.net",
-                "description": "Hello World",
-                "blocknumber": 7947685,
-                "addresses": [{
-                    "symbol": "ela",
-                    "name": "elastos",
-                    "address": "ERFNWNivDhAbozj5izbipCFLBGLv2hjLqJ"
-                }, {
-                    "symbol": "btc",
-                    "name": "bitcoin",
-                    "address": "1D8TM5pJG1x3pk7GzTSg3YLHxpUFqnyJB3"
-                }, {
-                    "symbol": "eth",
-                    "name": "ethereum",
-                    "address": "myAccount"
-                }]
-            }
+            isShowEdit: false,
+            loading: true,
+            domainInfo: {}
         },
         methods: {
+            editInfo() {
+                window.location.href = "./editInfo.html?dominName=" + this.domainInfo.name;
+            },
+            getAjax(url) {
+                return new Promise((resovle, reject) => {
+                    $.ajax({
+                        url: url,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        type: 'GET',
+                        success: function(data) { //成功回调函数
+                            resovle(data);
+                        },
+                        error: function(err) { //失败回调函数
+                            reject(err);
+                        }
+                    });
+                });
+            },
             GetQueryString(name) {　　　
                 var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
                 var r = window.location.search.substr(1).match(reg);　　　
@@ -297,6 +321,19 @@
         created() {
             this.isPC = this.getPc();
             this.domainInfo.name = this.GetQueryString("dominName") || "";
+            let url = "https://api.elastos.name/nameInfo/get?name=" + this.domainInfo.name;
+            this.getAjax(url).then((result) => {
+                console.log(JSON.stringify(result));
+                let code = result["code"];
+                if (code === 200) {
+                    this.loading = false;
+                    this.domainInfo = result["data"] || "";
+                } else {
+                    this.isShowEdit = true;
+                }
+            }).catch((err) => {
+
+            });
         }
     });
 </script>
