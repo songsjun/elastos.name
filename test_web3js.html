@@ -27,7 +27,12 @@
 				console.log("eth:"+a+", ela:"+b+", ropsten:"+c);
 				//return;
 
-				
+				var web3 = bridge.getWeb3();
+
+				// 签名测试
+				const sig2 = await bridge.sign("hello");
+				console.log(sig2);
+
 
 				// 创建合约包装对象
 				var crypton = new Crypton(abiArray, contract_address, bridge.getWeb3());

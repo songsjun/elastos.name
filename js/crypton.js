@@ -1,7 +1,7 @@
 
 
 var elaeth_blocknumber_url = "https://explorer.elaeth.io/api?module=block&action=eth_block_number";
-var contract_address = "0xfdecdd7e7da24f486be2931ec133a7817d6bc687";
+var contract_address = "0xf8e35669569671ea8d666f65337ba0fd96868c85";
 
 class Web3Bridge {
 
@@ -92,7 +92,7 @@ class Web3Bridge {
 	}
 
 	async sign (data) {
-		this._web3.sign(data, this._account)
+		return this._web3.eth.personal.sign(data, this._account)
 			.then (function(s) {
 				return s;
 			});
