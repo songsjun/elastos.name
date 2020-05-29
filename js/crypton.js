@@ -1,7 +1,7 @@
 
 
 var elaeth_blocknumber_url = "https://explorer.elaeth.io/api?module=block&action=eth_block_number";
-var contract_address = "0xf8e35669569671ea8d666f65337ba0fd96868c85";
+var contract_address = "0x4138e9b4db5fd34f000ed82901a2f6c448a8f3bf";
 
 class Web3Bridge {
 
@@ -234,9 +234,6 @@ class Crypton {
 	async getCurrentPrice (level) {
 		var pthis = this;
 		return this._init_account()
-			// .then(function() {
-			// 	return pthis._generate_option();
-			// })
 			.then(function() {
 				if (level == 1) {
 					return pthis._contact.methods.price_level1().call();
@@ -250,6 +247,40 @@ class Crypton {
 			})
 			.then(function(x) {
 				return pthis._web3.utils.fromWei(x, "ether");
+			})
+			.catch(function(){
+				return -1;
+			});
+	}
+
+	async getRenewalPrice (name) {
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				if (level == 1) {
+					return pthis._contact.methods.renewal_level1().call();
+				}
+				else if (level == 2) {
+					return pthis._contact.methods.renewal_level2().call();
+				}
+				else if (level == 3) {
+					return pthis._contact.methods.renewal_level3().call();
+				}
+			})
+			.then(function(x) {
+				return pthis._web3.utils.fromWei(x, "ether");
+			})
+			.catch(function(){
+				return -1;
+			});
+	}
+
+	async getExpiration (name) {
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				var tokenId = pthis._web3.utils.hexToNumberString("0x"+sha256(name));
+				return pthis._contact.methods.tokenExpiration(tokenId).call();
 			})
 			.catch(function(){
 				return -1;
@@ -286,6 +317,47 @@ class Crypton {
 			})
 			.then(function(option) {
 				return pthis._contact.methods.mint(to, name).send(option);
+			});
+	}
+
+	async setBasicInfo (name, btc, eth, ela, did, pubkey) {
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(option) {
+				return pthis._contact.methods.setBasicInfo(name, btc, eth, ela, did, pubkey).send(option);
+			});
+	}
+
+	async setKeyword (name, key, value) {
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(option) {
+				return pthis._contact.methods.setKeyword(name, key, value).send(option);
+			});
+	}
+
+	async withdraw (value) {
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(option) {
+				return pthis._contact.methods.withdraw(value).send(option);
+			});
+	}
+
+	async getKeyword (name, key) {
+		var pthis = this;
+		return this._init_account()
+			.then(function(option) {
+				return pthis._contact.methods.getKeyword(name, key).call();
 			});
 	}
 

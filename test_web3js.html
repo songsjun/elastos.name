@@ -29,10 +29,15 @@
 
 				var web3 = bridge.getWeb3();
 
-				// 签名测试
-				const sig2 = await bridge.sign("hello");
-				console.log(sig2);
+				var contact = await web3.eth.ens.getResolver('ethereum.eth');
+				console.log(contact);
 
+				var account = await bridge.getAccount();
+				//var addr = await web3.eth.ens.getAddress("songsjun.eth");
+				//console.log(addr);
+				// 签名测试
+				// const sig2 = await bridge.sign("hello");
+				// console.log(sig2);
 
 				// 创建合约包装对象
 				var crypton = new Crypton(abiArray, contract_address, bridge.getWeb3());
@@ -55,6 +60,17 @@
 					})
 					.then (function() {
 						console.log("registerName done.");
+						return crypton.setBasicInfo(tmpName, "btc1234", "eth1234", "ela1234", "did1234", "pubkey1234");
+					})
+					.then (function() {
+						console.log("setKeyword done.");
+						return crypton.getKeyword(tmpName, "did");
+					})
+					.then (function(value) {
+						console.log("did:"+value);
+						if (value == "did1234")
+							console.log("TESTING: setBasicInfo(...) is OK!");
+
 						return crypton.getOwnerOfNameToken(tmpName);
 					})
 					.then (function(addr) {
@@ -87,10 +103,15 @@
 							if (item.name == tmpName)
 								console.log("TESTING: registerName and transfer is OK!");
 						}
+						return web3.eth.getBalance(contract_address);
+					})
+					.then (function (value) {
+						return crypton.withdraw(value);
 					})
 					.catch (function(e) {
 						console.log(e);
 					});
+
 
     		}
     		catch (e) {
