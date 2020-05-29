@@ -1,7 +1,7 @@
 
 
 var elaeth_blocknumber_url = "https://explorer.elaeth.io/api?module=block&action=eth_block_number";
-var contract_address = "0x4138e9b4db5fd34f000ed82901a2f6c448a8f3bf";
+var contract_address = "0xd2a97f3fe2309c6c3b5fca41f3117c33fe81b031";
 
 class Web3Bridge {
 
