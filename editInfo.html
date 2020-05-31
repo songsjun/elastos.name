@@ -55,6 +55,60 @@
             background-color: #F5841F;
             color: #ffffff;
         }
+        
+        .spinner {
+            display: block;
+            margin: 100px auto 0;
+            width: 150px;
+            text-align: center;
+        }
+        
+        .spinner>div {
+            width: 30px;
+            height: 30px;
+            background-color: #67CF22;
+            border-radius: 100%;
+            display: inline-block;
+            -webkit-animation: bouncedelay 1.4s infinite ease-in-out;
+            animation: bouncedelay 1.4s infinite ease-in-out;
+            /* Prevent first frame from flickering when animation starts */
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
+        
+        .spinner .bounce1 {
+            -webkit-animation-delay: -0.32s;
+            animation-delay: -0.32s;
+        }
+        
+        .spinner .bounce2 {
+            -webkit-animation-delay: -0.16s;
+            animation-delay: -0.16s;
+        }
+        
+        @-webkit-keyframes bouncedelay {
+            0%,
+            80%,
+            100% {
+                -webkit-transform: scale(0.0)
+            }
+            40% {
+                -webkit-transform: scale(1.0)
+            }
+        }
+        
+        @keyframes bouncedelay {
+            0%,
+            80%,
+            100% {
+                transform: scale(0.0);
+                -webkit-transform: scale(0.0);
+            }
+            40% {
+                transform: scale(1.0);
+                -webkit-transform: scale(1.0);
+            }
+        }
     </style>
 
 </head>
@@ -94,61 +148,76 @@
     <!-- #header -->
     <div style="height:150px"></div>
     <div class="container" id="app">
-        <div class="row text-center">
-            <div class="col-sm-12">
-                <span style="color: #000000;font-size: 36px;">{{domainInfo.name}}.elastos.name</span>
-            </div>
+
+        <div class="spinner" v-if="loading">
+
+            <div class="bounce1"></div>
+
+            <div class="bounce2"></div>
+
+            <div class="bounce3"></div>
+        </div>
+        <div class="row text-center" style="color: #0000ff;font-size: 18px;" v-if="loading">
+            <div class="col-sm-12">Transaction confirmation in progress</div>
         </div>
 
-        <div class="row" style="margin-top: 10px;">
-            <div class="col-sm-6 text-right">
-                <div style="margin-bottom: 5px;"><span style="margin-right: 5px;">DID:</span><input v-model="domainInfo.did" /></div>
-                <div v-for="(item,key) in coinList">
-                    <div style="margin-bottom: 5px;">{{symbolDes[key].des}}<span style="margin-right: 5px;"></span><input v-model="item.address" /></div>
+        <div v-if="!loading">
+            <div class="row text-center">
+                <div class="col-sm-12">
+                    <span style="color: #000000;font-size: 36px;">{{domainInfo.name}}.elastos.name</span>
                 </div>
-                <div style="margin-bottom: 5px;">publickey<span style="margin-right: 5px;"></span><input v-model="domainInfo.publickey" /></div>
             </div>
-            <div class="col-sm-6 text-left">
-                <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">EMail:</span><input v-model="domainInfo.email" /></div>
-                <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Personal Web:</span><input v-model="domainInfo.personalurl" /></div>
-                <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Description:</span><textarea style="vertical-align:top;resize: none;height: 120px;" v-model="domainInfo.description"></textarea></div>
-            </div>
-        </div>
 
-        <div class="row text-center" style="margin-top: 10px;">
-            <div class="col-sm-5">
-                <img src="./img/line.png" style="width: 100%;" />
+            <div class="row" style="margin-top: 10px;">
+                <div class="col-sm-6 text-right">
+                    <div style="margin-bottom: 5px;"><span style="margin-right: 5px;">DID:</span><input v-model="domainInfo.did" /></div>
+                    <div v-for="(item,key) in coinList">
+                        <div style="margin-bottom: 5px;">{{symbolDes[key].des}}<span style="margin-right: 5px;"></span><input v-model="item.address" /></div>
+                    </div>
+                    <div style="margin-bottom: 5px;">publickey<span style="margin-right: 5px;"></span><input v-model="domainInfo.publickey" /></div>
+                </div>
+                <div class="col-sm-6 text-left">
+                    <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">EMail:</span><input v-model="domainInfo.email" /></div>
+                    <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Personal Web:</span><input v-model="domainInfo.personalurl" /></div>
+                    <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Description:</span><textarea style="vertical-align:top;resize: none;height: 120px;" v-model="domainInfo.description"></textarea></div>
+                </div>
             </div>
-            <div class="col-sm-2">
-                or
+
+            <div class="row text-center" style="margin-top: 10px;">
+                <div class="col-sm-5">
+                    <img src="./img/line.png" style="width: 100%;" />
+                </div>
+                <div class="col-sm-2">
+                    or
+                </div>
+                <div class="col-sm-5">
+                    <img src="./img/line.png" style="width: 100%;" />
+                </div>
             </div>
-            <div class="col-sm-5">
-                <img src="./img/line.png" style="width: 100%;" />
+
+            <div class="row text-center" style="margin-top: 20px;">
+                <div class="col-sm-12" @click="goLogo()">
+                    <img src="./img/elaphant.png" /> <span style="vertical-align: middle;color: #5157DB;border-bottom:1px solid #5157DB;cursor: pointer;">Start Elaphant to fill in quickly</span>
+                </div>
             </div>
-        </div>
 
-        <div class="row text-center" style="margin-top: 20px;">
-            <div class="col-sm-12" @click="goLogo()">
-                <img src="./img/elaphant.png" /> <span style="vertical-align: middle;color: #5157DB;border-bottom:1px solid #5157DB;cursor: pointer;">Start Elaphant to fill in quickly</span>
+
+            <div class="row text-center" style="margin-top: 40px;margin-bottom: 5px;">
+                <div class="col-sm-12">
+                    <div class="btn1" @click="submit">Submit</div>
+                </div>
             </div>
-        </div>
 
+            <div style="text-align: center;font-weight: bold;">Please confirm your MetaMask wallet already</div>
+            <div style="text-align: center;font-weight: bold;">connected the Elastos Eth sidechain</div>
+            <div style="text-align: center;font-weight: bold;"><img src="./img/meatMask.png">METAMASK</div>
+            <div style="text-align: center;"><img src="./img/wenhao.png"><span style="display:inline-block;border-bottom: 1px solid #dddddd;cursor: pointer;" @click="link">How to setup Metamask</span></div>
 
-        <div class="row text-center" style="margin-top: 40px;margin-bottom: 5px;">
-            <div class="col-sm-12">
-                <div class="btn1" @click="submit">Submit</div>
-            </div>
-        </div>
-
-        <div style="text-align: center;font-weight: bold;">Please confirm your MetaMask wallet already</div>
-        <div style="text-align: center;font-weight: bold;">connected the Elastos Eth sidechain</div>
-        <div style="text-align: center;font-weight: bold;"><img src="./img/meatMask.png">METAMASK</div>
-        <div style="text-align: center;"><img src="./img/wenhao.png"><span style="display:inline-block;border-bottom: 1px solid #dddddd;cursor: pointer;" @click="link">How to setup Metamask</span></div>
-
-        <div class="row text-center" style="margin-top: 50px;">
-            <div class="col-sm-12">
-                <div style="color:#7B7B7B">Domain Tokens</div>
-                <p style="color:#7B7B7B;">Powered by <a style="color:#5157DB;border-bottom: 1px solid #5157DB;">elastos.name</a></p>
+            <div class="row text-center" style="margin-top: 50px;">
+                <div class="col-sm-12">
+                    <div style="color:#7B7B7B">Domain Tokens</div>
+                    <p style="color:#7B7B7B;">Powered by <a style="color:#5157DB;border-bottom: 1px solid #5157DB;">elastos.name</a></p>
+                </div>
             </div>
         </div>
     </div>
@@ -157,6 +226,7 @@
     var app = new Vue({
         el: '#app',
         data: {
+            loading: false,
             selectAddress: "",
             domainInfo: {
                 "name": "",
@@ -186,7 +256,7 @@
             },
             symbolDes: {
                 "ela": {
-                    "des": 'ETH Address:'
+                    "des": 'ela Address:'
                 },
                 "btc": {
                     "des": "BTC Address"
@@ -274,7 +344,12 @@
             },
             submit() {
                 if (this.checkParams()) {
-                    this.getBlockNumber();
+                    this._generate_option("").then((option) => {
+                        this.getContracts(option);
+                    }).catch((err) => {
+
+                    });;
+                    //this.getBlockNumber();
                 }
             },
             GetQueryString(name) {　　　
@@ -346,46 +421,6 @@
                     console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
                 }
             },
-            async ecRecover(signdata, msg) {
-                if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
-                    try {
-                        await ethereum.enable();
-                        // web3.eth.personal.ecRecover(signdata, msg).then((address) => {
-                        //     console.log("==msgRecover==" + address);
-                        // }).catch((err) => {
-
-                        // });
-                    } catch (error) {
-                        // User denied account access...
-                        console.log(error);
-                    }
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
-                }
-                // Non-dapp browsers...
-                else {
-                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
-                }
-            },
-            async ecRecover(signdata, msg) {
-                if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
-                    try {
-                        await ethereum.enable();
-                        web3.eth.accounts.privateKeyToAccount(privateKey);
-                    } catch (error) {
-                        // User denied account access...
-                        console.log(error);
-                    }
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
-                }
-                // Non-dapp browsers...
-                else {
-                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
-                }
-            },
             postAjax(url, data) {
                 return new Promise((resovle, reject) => {
                     $.ajax({
@@ -403,10 +438,108 @@
                     });
                 });
             },
+            getAjax(url) {
+                return new Promise((resovle, reject) => {
+                    $.ajax({
+                        url: url,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        type: 'GET',
+                        success: function(data) { //成功回调函数
+                            resovle(data);
+                        },
+                        error: function(err) { //失败回调函数
+                            reject(err);
+                        }
+                    });
+                });
+            },
+            next(txid) {
+                let sid = setInterval(() => {
+                    if (typeof web3 !== 'undefined') {
+                        web3 = new Web3(web3.currentProvider);
+                    }
+                    web3.eth.getTransaction(txid, (err, data) => {
+                        let blockHash = data['blockHash'] || "";
+                        let blockNumber = data['blockNumber'] || "";
+                        if (blockHash != "" && blockNumber != '') {
+                            this.loading = false;
+                            clearInterval(sid);
+                            this.getBlockNumber();
+                        }
+                    });
+                }, 500);
+            },
+            async getContracts(option) {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                        infoContract.methods.setBasicInfo(this.domainInfo.name, this.coinList.btc.address, this.coinList.eth.address, this.coinList.ela.address, this.domainInfo.did, this.domainInfo.publickey).send(option, (err, msg) => {
+                            if (!err) {
+                                this.loading = true;
+                                this.next(msg);
+                            }
+                        });
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
+            },
+            async _generate_option(price) {
+                return web3.eth.getGasPrice()
+                    .then((gasPrice) => {
+                        if (price)
+                            return {
+                                from: this.selectAddress,
+                                gasPrice: gasPrice,
+                                gas: 1000000,
+                                value: web3.utils.toWei(price, "ether")
+                            };
+                        else
+                            return {
+                                from: this.selectAddress,
+                                gasPrice: gasPrice,
+                                gas: 1000000,
+                                value: '0'
+                            };
+                    });
+            }
         },
         created() {
             this.domainInfo.name = this.GetQueryString("dominName") || "";
             let data = this.GetQueryString("Data") || "";
+            if (data === "") {
+                let url = "https://api.elastos.name/nameInfo/get?name=" + this.domainInfo.name;
+                this.getAjax(url).then((result) => {
+                    console.log(JSON.stringify(result));
+                    let code = result["code"];
+                    if (code === 200) {
+                        //this.domainInfo = result["data"] || "";
+                        let data = result["data"];
+                        this.domainInfo.did = data["did"] || '';
+                        this.coinList["ela"]["address"] = data["addresses"][0]["address"];
+                        this.coinList["btc"]["address"] = data["addresses"][1]["address"];
+                        this.coinList["eth"]["address"] = data["addresses"][2]["address"];
+                        this.domainInfo.publickey = data["publickey"] || '';
+                        this.domainInfo.email = data["email"] || '';
+                        this.domainInfo.personalurl = data["personalurl"] || '';
+                        this.domainInfo.description = data["description"] || '';
+
+                    }
+                }).catch((err) => {
+
+                });
+            }
+
             if (data != "") {
                 let dataStr = decodeURIComponent(data);
                 let dataObj = JSON.parse(dataStr);
@@ -417,7 +550,6 @@
                 this.domainInfo.publickey = dataObj["PublicKey"];
                 this.domainInfo.email = dataObj["Email"] || "";
             }
-            console.log(JSON.stringify(this.coinList));
             window.initWallet().then((address) => {
                 this.selectAddress = address;
             }).catch((err) => {

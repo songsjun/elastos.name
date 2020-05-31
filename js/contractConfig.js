@@ -1,5 +1,5 @@
 window.ethUnit = 1000000000000000000;
-window.contractAddres = "0xfdecdd7e7da24f486be2931ec133a7817d6bc687";
+window.contractAddres = "0xd2a97f3fe2309c6c3b5fca41f3117c33fe81b031";
 window.elaAbi = [{
     "constant": true,
     "inputs": [{
@@ -21,6 +21,17 @@ window.elaAbi = [{
     "outputs": [{
         "name": "",
         "type": "string"
+    }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "constant": true,
+    "inputs": [],
+    "name": "increase_level2",
+    "outputs": [{
+        "name": "",
+        "type": "uint256"
     }],
     "payable": false,
     "stateMutability": "view",
@@ -108,6 +119,17 @@ window.elaAbi = [{
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "constant": true,
+    "inputs": [],
+    "name": "renewal_level3",
+    "outputs": [{
+        "name": "",
+        "type": "uint256"
+    }],
+    "payable": false,
+    "stateMutability": "view",
     "type": "function"
 }, {
     "constant": false,
@@ -199,6 +221,45 @@ window.elaAbi = [{
 }, {
     "constant": true,
     "inputs": [],
+    "name": "renewal_level2",
+    "outputs": [{
+        "name": "",
+        "type": "uint256"
+    }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "constant": true,
+    "inputs": [{
+        "name": "_uri",
+        "type": "string"
+    }, {
+        "name": "_key",
+        "type": "string"
+    }],
+    "name": "getKeyword",
+    "outputs": [{
+        "name": "",
+        "type": "string"
+    }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "constant": true,
+    "inputs": [],
+    "name": "renewal_level1",
+    "outputs": [{
+        "name": "",
+        "type": "uint256"
+    }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "constant": true,
+    "inputs": [],
     "name": "price_level1",
     "outputs": [{
         "name": "",
@@ -220,6 +281,17 @@ window.elaAbi = [{
     }],
     "payable": false,
     "stateMutability": "view",
+    "type": "function"
+}, {
+    "constant": false,
+    "inputs": [{
+        "name": "_uri",
+        "type": "string"
+    }],
+    "name": "renewToken",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
     "type": "function"
 }, {
     "constant": true,
@@ -258,6 +330,23 @@ window.elaAbi = [{
     "stateMutability": "view",
     "type": "function"
 }, {
+    "constant": false,
+    "inputs": [{
+        "name": "_uri",
+        "type": "string"
+    }, {
+        "name": "_key",
+        "type": "string"
+    }, {
+        "name": "_value",
+        "type": "string"
+    }],
+    "name": "setKeyword",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
     "constant": true,
     "inputs": [],
     "name": "symbol",
@@ -280,6 +369,17 @@ window.elaAbi = [{
     "stateMutability": "view",
     "type": "function"
 }, {
+    "constant": true,
+    "inputs": [],
+    "name": "increase_level3",
+    "outputs": [{
+        "name": "",
+        "type": "uint256"
+    }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+}, {
     "constant": false,
     "inputs": [{
         "name": "to",
@@ -292,6 +392,46 @@ window.elaAbi = [{
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "constant": false,
+    "inputs": [{
+        "name": "_uri",
+        "type": "string"
+    }, {
+        "name": "_btc",
+        "type": "string"
+    }, {
+        "name": "_eth",
+        "type": "string"
+    }, {
+        "name": "_ela",
+        "type": "string"
+    }, {
+        "name": "_did",
+        "type": "string"
+    }, {
+        "name": "_pubkey",
+        "type": "string"
+    }],
+    "name": "setBasicInfo",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "constant": true,
+    "inputs": [{
+        "name": "tokenId",
+        "type": "uint256"
+    }],
+    "name": "tokenExpiration",
+    "outputs": [{
+        "name": "",
+        "type": "uint256"
+    }],
+    "payable": false,
+    "stateMutability": "view",
     "type": "function"
 }, {
     "constant": false,
@@ -315,6 +455,17 @@ window.elaAbi = [{
     "type": "function"
 }, {
     "constant": true,
+    "inputs": [],
+    "name": "EXPIRATION",
+    "outputs": [{
+        "name": "",
+        "type": "uint256"
+    }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "constant": true,
     "inputs": [{
         "name": "tokenId",
         "type": "uint256"
@@ -330,6 +481,17 @@ window.elaAbi = [{
 }, {
     "constant": false,
     "inputs": [{
+        "name": "_uri",
+        "type": "string"
+    }],
+    "name": "recycleToken",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "constant": false,
+    "inputs": [{
         "name": "_to",
         "type": "address"
     }, {
@@ -340,6 +502,31 @@ window.elaAbi = [{
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
+    "type": "function"
+}, {
+    "constant": true,
+    "inputs": [{
+        "name": "tokenId",
+        "type": "uint256"
+    }],
+    "name": "tokenPrice",
+    "outputs": [{
+        "name": "",
+        "type": "uint256"
+    }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+}, {
+    "constant": true,
+    "inputs": [],
+    "name": "increase_level1",
+    "outputs": [{
+        "name": "",
+        "type": "uint256"
+    }],
+    "payable": false,
+    "stateMutability": "view",
     "type": "function"
 }, {
     "constant": true,
