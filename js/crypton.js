@@ -170,11 +170,16 @@ class Crypton {
 					var tokenid = await pthis._contact.methods.tokenByIndex(i).call();
 					var owner = await pthis._contact.methods.ownerOf(tokenid).call();
 					var name = await pthis._contact.methods.tokenURI(tokenid).call();
+					var expiration = await pthis._contact.methods.tokenExpiration(tokenid).call();
+					var price = await pthis._contact.methods.tokenPrice(tokenid).call();
 					result.push({
 						"tokenId": tokenid,
 						"name": name,
-						"owner": owner
+						"owner": owner,
+						"expiration": expiration,
+						"price": pthis._web3.utils.fromWei(price, "ether")
 					});
+
 				}
 				return result;
 			})
@@ -196,10 +201,14 @@ class Crypton {
 					var tokenid = await pthis._contact.methods.tokenOfOwnerByIndex(address, i).call();
 					var owner = address;
 					var name = await pthis._contact.methods.tokenURI(tokenid).call();
+					var expiration = await pthis._contact.methods.tokenExpiration(tokenid).call();
+					var price = await pthis._contact.methods.tokenPrice(tokenid).call();
 					result.push({
 						"tokenId": tokenid,
 						"name": name,
-						"owner": owner
+						"owner": owner,
+						"expiration": expiration,
+						"price": pthis._web3.utils.fromWei(price, "ether")
 					});
 				}
 				return result;
