@@ -718,6 +718,12 @@ window.initWallet = function initWallet() {
                 resolve(selectedAddress);
 
             });
+            ethereum.on('accountsChanged', function (accounts) {
+                window.location.href = window.location.href;
+            });
+            ethereum.on('networkChanged', function (accounts) {
+                window.location.href = window.location.href;
+            });
         }
     });
 };
