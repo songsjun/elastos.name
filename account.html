@@ -27,11 +27,15 @@
 
     <!-- Main Stylesheet File -->
     <link href="css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/vue-datepicker.min.js"></script>
+    <script type="text/javascript" src="./js/sha256.min.js"></script>
+    <script type="text/javascript" src="./js/web3.min.js"></script>
     <script src="./js/vue.min.js"></script>
     <script src="./js/vue-clipboard.min.js"></script>
     <script type="text/javascript">
         document.write('<script src="./js/contractConfig.js?v=' + (new Date()).getTime() + '"><\/script>');
     </script>
+
     <style>
         [v-cloak] {
             display: none;
@@ -59,7 +63,7 @@
             margin-top: 10px;
             text-align: center;
             width: 198px;
-            height: 96px;
+            height: 106px;
             line-height: 96px;
             background: #FFFFFF;
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -73,7 +77,7 @@
             padding: 10px;
             text-align: left;
             width: 198px;
-            height: 96px;
+            height: 106px;
             background: #FFFFFF;
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             border-radius: 5px;
@@ -82,9 +86,162 @@
         
         .btn1 {
             color: #86A0FC;
-            display: inline-block;
-            width: 40px;
             cursor: pointer;
+            margin-right: 5px;
+        }
+        
+        .dialog {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0px;
+            top: 0px;
+            z-index: 999;
+        }
+        
+        .arrow_mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            z-index: 998;
+            display: block;
+            background: black;
+            opacity: 0.3;
+            box-shadow: 0px 4px 10px rgba(95, 111, 237, 0.2);
+        }
+        
+        .kuang2 {
+            padding: 20px 0px;
+            position: absolute;
+            width: 375px;
+            left: 50%;
+            top: 50%;
+            margin-left: -185px;
+            margin-top: -200px;
+            background: #FFFFFF;
+            box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
+            border-radius: 5px;
+            z-index: 999;
+        }
+        
+        .close {
+            position: relative;
+            height: 15px;
+            cursor: pointer;
+        }
+        
+        .close img {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            right: 0px;
+            top: 0px;
+            padding: 5px;
+        }
+        
+        .dialog .kuang2 .shuoming {
+            text-align: center;
+        }
+        
+        .dialog .kuang2 .shuoming .first {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+        }
+        
+        .dialog .kuang2 .shuoming .second {
+            margin-top: 25px;
+            text-align: center;
+        }
+        
+        .dialog .kuang2 .shuoming .second .left {
+            display: inline-block;
+            width: 62%;
+            text-align: right;
+            font-size: 16px;
+            color: #dddddd;
+        }
+        
+        .dialog .kuang2 .shuoming .three {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #000000;
+        }
+        
+        .dialog .kuang2 .shuoming .three span {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #ff0000;
+        }
+        
+        .dialog .kuang2 .pay {
+            text-align: center;
+            margin: 0 auto;
+            margin-top: 30px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            width: 90px;
+            line-height: 35px;
+            height: 35px;
+            border-radius: 4px;
+            background-color: #F5841F;
+            color: #ffffff;
+        }
+        
+        .spinner {
+            display: block;
+            margin: 100px auto 0;
+            width: 150px;
+            text-align: center;
+        }
+        
+        .spinner>div {
+            width: 30px;
+            height: 30px;
+            background-color: #67CF22;
+            border-radius: 100%;
+            display: inline-block;
+            -webkit-animation: bouncedelay 1.4s infinite ease-in-out;
+            animation: bouncedelay 1.4s infinite ease-in-out;
+            /* Prevent first frame from flickering when animation starts */
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
+        
+        .spinner .bounce1 {
+            -webkit-animation-delay: -0.32s;
+            animation-delay: -0.32s;
+        }
+        
+        .spinner .bounce2 {
+            -webkit-animation-delay: -0.16s;
+            animation-delay: -0.16s;
+        }
+        
+        @-webkit-keyframes bouncedelay {
+            0%,
+            80%,
+            100% {
+                -webkit-transform: scale(0.0)
+            }
+            40% {
+                -webkit-transform: scale(1.0)
+            }
+        }
+        
+        @keyframes bouncedelay {
+            0%,
+            80%,
+            100% {
+                transform: scale(0.0);
+                -webkit-transform: scale(0.0);
+            }
+            40% {
+                transform: scale(1.0);
+                -webkit-transform: scale(1.0);
+            }
         }
     </style>
 
@@ -125,60 +282,96 @@
     <!-- #header -->
     <div style="height:150px"></div>
     <div class="container" id="app">
-        <div v-if="!loginStatus" style="width: 500px;margin: 0 auto;">
-            <div class="row text-center">
-                <div class="col-sm-12" style="text-align: left;margin-bottom: 5px;">
-                    Step 1.Please install the Metamask plugin in your browser.You can get it from .
-                </div>
 
-                <div class="col-sm-12" style="text-align: left;margin-bottom: 5px;">
-                    Step 2.Please connect the Elastos eth sidechain，Here is ths guide.
-                </div>
+        <div class="spinner" v-if="loading">
 
-                <div class="col-sm-12" style="text-align: left;margin-bottom: 5px;">
-                    Step 3.Click below button.Fine!
-                </div>
-            </div>
-            <div class="row text-center">
-                <div class="login" @click="login">Login With Metamask</div>
-            </div>
-            <div style="text-align: center;font-weight: bold;">Please confirm your MetaMask wallet already</div>
-            <div style="text-align: center;font-weight: bold;">connected the Elastos Eth sidechain</div>
-            <div style="text-align: center;font-weight: bold;"><img src="./img/meatMask.png">METAMASK</div>
+            <div class="bounce1"></div>
+
+            <div class="bounce2"></div>
+
+            <div class="bounce3"></div>
+        </div>
+        <div class="row text-center" style="color: #0000ff;font-size: 18px;" v-if="loading">
+            <div class="col-sm-12">Transaction confirmation in progress</div>
         </div>
 
-        <div v-if="loginStatus">
-            <div class="row" style="background-color: #ffffff;padding: 10px;border: 1px solid #ffffff;border-radius: 4px;">
-                <div class="col-sm-12">
-                    <span style="font-weight: bold;">Account Address:</span>
+        <div v-if="!loading">
+
+            <div v-if="!loginStatus" style="width: 500px;margin: 0 auto;">
+                <div class="row text-center">
+                    <div class="col-sm-12" style="text-align: left;margin-bottom: 5px;">
+                        Step 1.Please install the Metamask plugin in your browser.You can get it from .
+                    </div>
+
+                    <div class="col-sm-12" style="text-align: left;margin-bottom: 5px;">
+                        Step 2.Please connect the Elastos eth sidechain，Here is ths guide.
+                    </div>
+
+                    <div class="col-sm-12" style="text-align: left;margin-bottom: 5px;">
+                        Step 3.Click below button.Fine!
+                    </div>
                 </div>
-                <div class="col-sm-12" @click="doCopy(selectAddress)">
-                    <span style="margin-left: 10px;cursor: pointer;">{{selectAddress}}</span> <img src="./img/diqiu.png" style="cursor: pointer;" />
+                <div class="row text-center">
+                    <div class="login" @click="login">Login With Metamask</div>
                 </div>
-                <div class="col-sm-12">
-                    <span style="font-weight: bold;">Account Balance:</span>
-                </div>
-                <div class="col-sm-12">
-                    <span style="margin-left: 10px;">{{selectedElaBalance}} ELA</span> <span style="color:#86A0FC;margin-left:15px;cursor: pointer;border-bottom:1px solid #86A0FC;" @click="rechargeELA">Recharge ELA</span> <img src="./img/elaphant.png"
-                    />
-                </div>
+                <div style="text-align: center;font-weight: bold;">Please confirm your MetaMask wallet already</div>
+                <div style="text-align: center;font-weight: bold;">connected the Elastos Eth sidechain</div>
+                <div style="text-align: center;font-weight: bold;"><img src="./img/meatMask.png">METAMASK</div>
             </div>
 
-            <div class="row" style="margin-top: 15px;">
-                <div class="kuang" v-for="(item) in domainNameArr">
-                    <div style="font-weight: bold;">{{item.name}}</div>
-                    <div style="font-weight: bold;">.elastos.name</div>
-                    <div style="text-align: right;margin-top: 10px;"><span class="btn1" @click="view(item)">view</span><span class="btn1" @click="edit(item)">edit</span><span class="btn1" @click="sale">sale</span></div>
+            <div v-if="loginStatus">
+                <div class="row" style="background-color: #ffffff;padding: 10px;border: 1px solid #ffffff;border-radius: 4px;">
+                    <div class="col-sm-12">
+                        <span style="font-weight: bold;">Account Address:</span>
+                    </div>
+                    <div class="col-sm-12" @click="doCopy(selectAddress)">
+                        <span style="margin-left: 10px;cursor: pointer;">{{selectAddress}}</span> <img src="./img/diqiu.png" style="cursor: pointer;" />
+                    </div>
+                    <div class="col-sm-12">
+                        <span style="font-weight: bold;">Account Balance:</span>
+                    </div>
+                    <div class="col-sm-12">
+                        <span style="margin-left: 10px;">{{selectedElaBalance}} ELA</span> <span style="color:#86A0FC;margin-left:15px;cursor: pointer;border-bottom:1px solid #86A0FC;" @click="rechargeELA">Recharge ELA</span> <img src="./img/elaphant.png"
+                        />
+                    </div>
                 </div>
-                <div class="add" @click="add">
-                    + add
+
+                <div class="row" style="margin-top: 15px;">
+                    <div class="kuang" v-for="(item) in domainNameArr">
+                        <div style="font-weight: bold;">{{item.name}}</div>
+                        <div style="font-weight: bold;">.elastos.name</div>
+                        <div>{{dateFormat(new Date(item.expiration * 1000), ' yyyy-MM-dd HH:mm:ss')}}</div>
+                        <div style="text-align: right;"><span class="btn1" @click="renew(item)">renew</span><span class="btn1" @click="view(item)">view</span><span class="btn1" @click="edit(item)">edit</span><span class="btn1" @click="transferDialog(item)" style="width: 57px;">transfer</span></div>
+                    </div>
+                    <div class="add" @click="add">
+                        + add
+                    </div>
+                </div>
+            </div>
+            <div class="row text-center" style="margin-top: 50px;">
+                <div class="col-sm-12">
+                    <div style="color:#7B7B7B">CryptoName Tokens</div>
+                    <p style="color:#7B7B7B;">Powered by <a style="color:#5157DB;border-bottom: 1px solid #5157DB;cursor: pointer;">elastos.name</a></p>
                 </div>
             </div>
         </div>
-        <div class="row text-center" style="margin-top: 50px;">
-            <div class="col-sm-12">
-                <div style="color:#7B7B7B">CryptoName Tokens</div>
-                <p style="color:#7B7B7B;">Powered by <a style="color:#5157DB;border-bottom: 1px solid #5157DB;cursor: pointer;">elastos.name</a></p>
+
+        <div class="dialog" v-if="showMask">
+            <div class="arrow_mask" @click="click_close"></div>
+            <div class="kuang2">
+                <div class="close" @click="click_close">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADLSURBVHgB7ZOxDQIhFIaBhtA5giO4ghs4wo2gJZVYUeoIN4IbuIIjOIIdoQH5TUgu5D295ky83N/c8T/+L/AAIRb9rSRleu/X5dPFGC/OuSc1p/grY0yXUrpaax9tXVEhpdROSnnUWt8AoKCo5ZzPWADJoMwQQl9C9wLftPAKRQ1zsCuKQbaCAWzhtx7XKhZMwd+BEdCv4BaO8RgopMRE+n0rJjk8CloBn2pDkT0uwT0XxD+8es/x+igGd3h9CR241QzgJzxpsWheegEfssESO4AuEAAAAABJRU5ErkJggg=="
+                    /></div>
+                <div class="shuoming">
+                    <div class="first">Enter address for the transfer</div>
+                    <div class="second"><input v-model="daddress" /></div>
+                </div>
+
+                <div class="pay" @click="pay">pay</div>
+                <div style="text-align: center;font-weight: bold;">Please confirm your MetaMask wallet already</div>
+                <div style="text-align: center;font-weight: bold;">connected the Elastos Eth sidechain</div>
+                <div style="text-align: center;font-weight: bold;"><img src="./img/meatMask.png">METAMASK</div>
+                <div style="text-align: center;"><img src="./img/wenhao.png"><span style="display:inline-block;border-bottom: 1px solid #dddddd;cursor: pointer;" @click="link">How to setup Metamask</span></div>
             </div>
         </div>
     </div>
@@ -187,13 +380,96 @@
     var app = new Vue({
         el: '#app',
         data: {
+            loading: false,
             selectAddress: "",
             selectedEthBalance: "",
             selectedElaBalance: "",
             loginStatus: false,
             domainNameArr: [],
+            showMask: false,
+            daddress: "0x256e2C445B5C55FF5b1b107025d61233A5C89c99",
+            curItem: "",
         },
         methods: {
+            click_close() {
+                this.showMask = false;
+            },
+            dateFormat(date, sFormat) {
+                let time = {
+                    Year: 0,
+                    TYear: '0',
+                    Month: 0,
+                    TMonth: '0',
+                    Day: 0,
+                    TDay: '0',
+                    Hour: 0,
+                    THour: '0',
+                    hour: 0,
+                    Thour: '0',
+                    Minute: 0,
+                    TMinute: '0',
+                    Second: 0,
+                    TSecond: '0',
+                    Millisecond: 0
+                };
+                time.Year = date.getFullYear();
+                time.TYear = String(time.Year).substr(2);
+                time.Month = date.getMonth() + 1;
+                time.TMonth = time.Month < 10 ? "0" + time.Month : String(time.Month);
+                time.Day = date.getDate();
+                time.TDay = time.Day < 10 ? "0" + time.Day : String(time.Day);
+                time.Hour = date.getHours();
+                time.THour = time.Hour < 10 ? "0" + time.Hour : String(time.Hour);
+                time.hour = time.Hour < 13 ? time.Hour : time.Hour - 12;
+                time.Thour = time.hour < 10 ? "0" + time.hour : String(time.hour);
+                time.Minute = date.getMinutes();
+                time.TMinute = time.Minute < 10 ? "0" + time.Minute : String(time.Minute);
+                time.Second = date.getSeconds();
+                time.TSecond = time.Second < 10 ? "0" + time.Second : String(time.Second);
+                time.Millisecond = date.getMilliseconds();
+
+                return sFormat.replace(/yyyy/ig, String(time.Year))
+                    .replace(/yyy/ig, String(time.Year))
+                    .replace(/yy/ig, time.TYear)
+                    .replace(/y/ig, time.TYear)
+                    .replace(/MM/g, time.TMonth)
+                    .replace(/M/g, String(time.Month))
+                    .replace(/dd/ig, time.TDay)
+                    .replace(/d/ig, String(time.Day))
+                    .replace(/HH/g, time.THour)
+                    .replace(/H/g, String(time.Hour))
+                    .replace(/hh/g, time.Thour)
+                    .replace(/h/g, String(time.hour))
+                    .replace(/mm/g, time.TMinute)
+                    .replace(/m/g, String(time.Minute))
+                    .replace(/ss/ig, time.TSecond)
+                    .replace(/s/ig, String(time.Second))
+                    .replace(/fff/ig, String(time.Millisecond))
+            },
+            renew(item) {
+                this.curItem = item;
+                var level = 1;
+                if (this.curItem.name.length < 3) {
+                    alert("It was reserved now.");
+                    return;
+                } else if (this.curItem.name.length == 3) {
+                    level = 2;
+                } else {
+                    level = 3;
+                }
+
+                switch (level) {
+                    case 1:
+                        this.renewal_level1();
+                        break;
+                    case 2:
+                        this.renewal_level2();
+                        break;
+                    case 3:
+                        this.renewal_level3();
+                        break;
+                }
+            },
             doCopy(text) {
                 this.$copyText(text).then((e) => {
                     alert("copy Sucess");
@@ -203,72 +479,95 @@
                 window.initWallet().then((address) => {
                     this.selectAddress = address;
                     this.loginStatus = true;
+                    localStorage.setItem("domain.tokens.org", JSON.stringify({
+                        "loginStatus": true
+                    }));
                     if (typeof web3 !== 'undefined') {
                         web3 = new Web3(web3.currentProvider);
                     }
                     web3.eth.getBalance(address, (err, data) => {
                         this.selectedElaBalance = (data / window.ethUnit).toFixed(4);
                     });
-
-                    window.getWethContracts().then((info) => {
-                        info.totalSupply((err, msg) => {
-                            if (!err) {
-                                let num = parseInt(msg);
-                                if (num > 0) {
-                                    this.initNames(info, num);
-                                }
-                            } else {
-                                alert(JSON.stringify(err))
-                            }
-                        });
-                    }).catch((err) => {
-                        alert(err);
-                    });
-
+                    this.init();
                 }).catch((err) => {
-                    this.loginStatus = false;
+                    localStorage.setItem("domain.tokens.org", JSON.stringify({
+                        "loginStatus": false
+                    }));
                     alert(JSON.stringify(err));
                 })
             },
-            initNames(info, num) {
+            async init() {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                        infoContract.methods.totalSupply().call().then((msg) => {
+                            let num = parseInt(msg);
+                            if (num > 0) {
+                                this.initNames(infoContract, num);
+                            }
+                        }).catch((err) => {
+
+                        });
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
+            },
+            async initNames(info, num) {
                 for (let index = 0; index < num; index++) {
                     this.tokenByIndex(info, index);
                 }
             },
-            tokenByIndex(info, index) {
-                info.tokenByIndex(index, (err, tokenId) => {
-                    if (!err) {
-                        //this.tokensURI(info, tokenId);
-                        this.ownerOf(info, tokenId);
-                    } else {
-                        alert(JSON.stringify(err))
-                    }
+            async tokenByIndex(info, index) {
+                info.methods.tokenByIndex(index).call().then((tokenId) => {
+                    this.ownerOf(info, tokenId);
+                }).catch((err) => {
+
                 });
             },
-            tokensURI(info, tokenId, address) {
-                info.tokenURI(tokenId, (err, tokenName) => {
-                    if (!err) {
-                        this.domainNameArr.push({
-                            "tokenId": tokenId,
-                            "name": tokenName,
-                            "owner": address
-                        });
-                    } else {
-                        alert(JSON.stringify(err))
-                    }
+            async tokensURI(info, tokenId, address) {
+                info.methods.tokenURI(tokenId).call().then((tokenName) => {
+                    this.getExpiration(info, tokenId, address, tokenName);
+                }).catch((err) => {
+                    alert("===" + JSON.stringify(err));
                 });
             },
-            ownerOf(info, tokenId) {
-                info.ownerOf(tokenId, (err, address) => {
-                    if (!err) {
-                        console.log("====" + address);
-                        if (address === this.selectAddress) {
-                            this.tokensURI(info, tokenId, address);
-                        }
-                    } else {
-                        alert(JSON.stringify(err))
+            async ownerOf(info, tokenId) {
+                info.methods.ownerOf(tokenId).call().then((address) => {
+                    if (address.toUpperCase() == this.selectAddress.toUpperCase()) {
+                        this.tokensURI(info, tokenId, address);
                     }
+                }).catch((err) => {
+
                 });
+            },
+            async _generate_option(price) {
+                return web3.eth.getGasPrice()
+                    .then((gasPrice) => {
+                        if (price)
+                            return {
+                                from: this.selectAddress,
+                                gasPrice: gasPrice,
+                                gas: 1000000,
+                                value: web3.utils.toWei(price, "ether")
+                            };
+                        else
+                            return {
+                                from: this.selectAddress,
+                                gasPrice: gasPrice,
+                                gas: 1000000,
+                                value: '0'
+                            };
+                    });
             },
             add() {
                 window.location.href = "./register.html";
@@ -279,16 +578,159 @@
             edit(item) {
                 window.location.href = "./editInfo.html?dominName=" + item.name;
             },
-            sale() {
-                window.location.href = "./sale.html";
+            transferDialog(item) {
+                this.curItem = item;
+                this.showMask = true;
+            },
+            pay() {
+                if (this.daddress === "") {
+                    alert("Enter address for the transfer")
+                    return false;
+                }
+
+                this._generate_option("0.1").then((option) => {
+                    this.transfer(option);
+                }).catch((err) => {
+
+                });;
+            },
+            async transfer(option) {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                        infoContract.methods.transfer(this.selectAddress, this.daddress, this.curItem.name).send(option, (err, msg) => {
+                            if (!err) {
+                                this.loading = true;
+                                this.showMask = false;
+                                this.next(msg);
+                            }
+                        });
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
+            },
+            link() {
+                //window.open("");
             },
             rechargeELA() {
                 window.open(" https://transfer.elaphant.app?dstaddress=" + this.selectAddress);
+            },
+            async getExpiration(info, tokenId, address, tokenName) {
+                info.methods.tokenExpiration(tokenId).call().then((expiration) => {
+                    this.domainNameArr.push({
+                        "tokenId": tokenId,
+                        "name": tokenName,
+                        "owner": address,
+                        "expiration": expiration
+                    });
+                }).catch((err) => {
+
+                });
+            },
+            next(txid, type) {
+                let sid = setInterval(() => {
+                    if (typeof web3 !== 'undefined') {
+                        web3 = new Web3(web3.currentProvider);
+                    }
+                    web3.eth.getTransaction(txid, (err, data) => {
+                        let blockHash = data['blockHash'] || "";
+                        let blockNumber = data['blockNumber'] || "";
+                        if (blockHash != "" && blockNumber != '') {
+                            this.loading = false;
+                            clearInterval(sid);
+                        }
+                    });
+                }, 500);
+            },
+            async renewal_level3() {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                        infoContract.methods.renewal_level3().call().then((msg) => {
+                            alert("price:" + msg / window.window.ethUnit + "ETH");
+                        }).catch((err) => {
+
+                        });
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
+            },
+            async renewal_level2(option) {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                        infoContract.methods.renewal_level2().call().then((msg) => {
+                            alert("price:" + msg / window.window.ethUnit + "ETH");
+                        }).catch((err) => {
+
+                        });
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
+            },
+            async renewal_level1(option) {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                        infoContract.methods.renewal_level1().call().then((msg) => {
+                            alert("price:" + msg / window.window.ethUnit + "ETH");
+                        }).catch((err) => {
+
+                        });
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
             }
 
         },
         created() {
-
+            let first = localStorage.getItem("domain.tokens.org") || "";
+            if (first === "") {
+                this.loginStatus = false;
+            } else {
+                this.loginStatus = JSON.parse(first)["loginStatus"];
+                this.login();
+            }
         }
     });
 </script>
