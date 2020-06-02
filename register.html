@@ -27,6 +27,7 @@
 
     <!-- Main Stylesheet File -->
     <link href="css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/sha256.min.js"></script>
     <script type="text/javascript" src="./js/web3.min.js"></script>
     <script src="./js/vue.min.js"></script>
     <script type="text/javascript">
@@ -109,109 +110,6 @@
         .huise {
             background-color: #dddddd;
             color: #000000;
-        }
-        
-        .dialog {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            left: 0px;
-            top: 0px;
-            z-index: 999;
-        }
-        
-        .arrow_mask {
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            z-index: 998;
-            display: block;
-            background: black;
-            opacity: 0.3;
-            box-shadow: 0px 4px 10px rgba(95, 111, 237, 0.2);
-        }
-        
-        .kuang2 {
-            padding: 20px 0px;
-            position: absolute;
-            width: 375px;
-            left: 50%;
-            top: 50%;
-            margin-left: -185px;
-            margin-top: -200px;
-            background: #FFFFFF;
-            box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
-            border-radius: 5px;
-            z-index: 999;
-        }
-        
-        .close {
-            position: relative;
-            height: 15px;
-            cursor: pointer;
-        }
-        
-        .close img {
-            position: absolute;
-            width: 22px;
-            height: 22px;
-            right: 0px;
-            top: 0px;
-            padding: 5px;
-        }
-        
-        .dialog .kuang2 .shuoming {
-            text-align: center;
-        }
-        
-        .dialog .kuang2 .shuoming .first {
-            font-size: 18px;
-            font-weight: bold;
-            color: #000000;
-        }
-        
-        .dialog .kuang2 .shuoming .second {
-            margin-top: 5px;
-            display: flex;
-            font-size: 15px;
-            color: #000000;
-            font-weight: bold;
-        }
-        
-        .dialog .kuang2 .shuoming .second .left {
-            display: inline-block;
-            width: 62%;
-            text-align: right;
-            font-size: 16px;
-            color: #dddddd;
-        }
-        
-        .dialog .kuang2 .shuoming .three {
-            margin-top: 30px;
-            font-size: 18px;
-            color: #000000;
-        }
-        
-        .dialog .kuang2 .shuoming .three span {
-            margin-top: 30px;
-            font-size: 18px;
-            color: #ff0000;
-        }
-        
-        .dialog .kuang2 .pay {
-            text-align: center;
-            margin: 0 auto;
-            margin-top: 30px;
-            margin-bottom: 5px;
-            cursor: pointer;
-            width: 90px;
-            line-height: 35px;
-            height: 35px;
-            border-radius: 4px;
-            background-color: #F5841F;
-            color: #ffffff;
         }
         
         .spinner {
@@ -337,29 +235,6 @@
                 <p style="color:#7B7B7B;">Powered by <a style="color:#5157DB;border-bottom: 1px solid #5157DB;">elastos.name</a></p>
             </div>
         </div>
-
-        <div class="dialog" v-if="showMask">
-            <div class="arrow_mask" @click="click_close"></div>
-            <div class="kuang2">
-                <div class="close" @click="click_close">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADLSURBVHgB7ZOxDQIhFIaBhtA5giO4ghs4wo2gJZVYUeoIN4IbuIIjOIIdoQH5TUgu5D295ky83N/c8T/+L/AAIRb9rSRleu/X5dPFGC/OuSc1p/grY0yXUrpaax9tXVEhpdROSnnUWt8AoKCo5ZzPWADJoMwQQl9C9wLftPAKRQ1zsCuKQbaCAWzhtx7XKhZMwd+BEdCv4BaO8RgopMRE+n0rJjk8CloBn2pDkT0uwT0XxD+8es/x+igGd3h9CR241QzgJzxpsWheegEfssESO4AuEAAAAABJRU5ErkJggg=="
-                    /></div>
-                <div class="shuoming">
-                    <div class="first">Please confirm your order</div>
-                    <div class="second"><span class="left">Domain name：</span>abcdefgh</div>
-                    <div class="second"><span class="left">Price(ELA（Estimated）：</span>1.023 ELA</div>
-                    <div class="second"><span class="left">Buffer fee：</span>1 ELA</div>
-                    <div class="three">Amount：<span>2.203</span> ELA</div>
-                </div>
-
-                <div class="pay" @click="pay">pay</div>
-                <div style="text-align: center;font-weight: bold;">Please confirm your MetaMask wallet already</div>
-                <div style="text-align: center;font-weight: bold;">connected the Elastos Eth sidechain</div>
-                <div style="text-align: center;font-weight: bold;"><img src="./img/meatMask.png">METAMASK</div>
-                <div style="text-align: center;"><img src="./img/wenhao.png"><span style="display:inline-block;border-bottom: 1px solid #dddddd;cursor: pointer;" @click="link">How to setup Metamask</span></div>
-            </div>
-        </div>
-
     </div>
 </body>
 <script>
@@ -369,11 +244,30 @@
             selectAdress: "",
             dname: '',
             price: '',
-            showMask: false,
             txId: '',
             loading: false
         },
         methods: {
+            async checkName() {
+                let tokenId = web3.utils.hexToNumberString("0x" + sha256(this.dname));
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                        return infoContract.methods.ownerOf(tokenId).call();
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
+            },
             async _generate_option(price) {
                 return web3.eth.getGasPrice()
                     .then((gasPrice) => {
@@ -399,7 +293,7 @@
                     try {
                         await ethereum.enable();
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
-                        infoContract.methods.price_level1().call().then((err) => {
+                        infoContract.methods.price_level1().call().then((price) => {
                             price = web3.utils.fromWei(price, "ether");
                             this._generate_option((parseFloat(price) * 1.01) + "").then((option) => {
                                 this.getContracts(option);
@@ -486,27 +380,21 @@
                 } else {
                     level = 3;
                 }
-
-                switch (level) {
-                    case 1:
-                        this.pricelevel1();
-                        break;
-                    case 2:
-                        this.pricelevel2();
-                        break;
-                    case 3:
-                        this.pricelevel3();
-                        break;
-                }
-            },
-            click_close() {
-                this.showMask = false;
-            },
-            pay() {
-                this.showMask = false;
-            },
-            link() {
-                //window.open("");
+                this.checkName().then(() => {
+                    alert("domain name exist");
+                }).catch((err) => {
+                    switch (level) {
+                        case 1:
+                            this.pricelevel1();
+                            break;
+                        case 2:
+                            this.pricelevel2();
+                            break;
+                        case 3:
+                            this.pricelevel3();
+                            break;
+                    }
+                });
             },
             next(txid) {
                 let sid = setInterval(() => {
