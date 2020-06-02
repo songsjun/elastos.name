@@ -76,8 +76,8 @@
             margin-top: 10px;
             padding: 10px;
             text-align: left;
-            width: 198px;
-            height: 96px;
+            width: 256px;
+            height: 158px;
             background: #FFFFFF;
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             border-radius: 5px;
@@ -88,7 +88,7 @@
             color: #4567E2;
             cursor: pointer;
             margin-right: 10px;
-            font-size: 11px;
+            font-size: 14px;
         }
         
         .dialog {
@@ -116,10 +116,10 @@
         .kuang2 {
             padding: 20px 0px;
             position: absolute;
-            width: 375px;
+            width: 600px;
             left: 50%;
             top: 50%;
-            margin-left: -185px;
+            margin-left: -300px;
             margin-top: -200px;
             background: #FFFFFF;
             box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
@@ -339,9 +339,9 @@
 
                 <div class="row" style="margin-top: 15px;">
                     <div class="kuang" v-for="(item) in domainNameArr">
-                        <div style="font-weight: bold;font-size: 18px;">{{item.name}}</div>
-                        <div style="font-weight: bold;font-size: 12px;">.elastos.name</div>
-                        <div style="font-size: 9px;border-bottom: 1px solid #E5E5E5;padding-bottom: 5px;">{{dateFormat(new Date(item.expiration * 1000), ' yyyy-MM-dd HH:mm:ss')}}</div>
+                        <div style="font-weight: bold;font-size: 26px;">{{item.name}}</div>
+                        <div style="font-weight: bold;font-size: 16px;">.elastos.name</div>
+                        <div style="font-size: 14px;border-bottom: 1px solid #E0E0E0;padding-bottom: 25px;">{{dateFormat(new Date(item.expiration * 1000), ' yyyy-MM-dd HH:mm:ss')}}</div>
                         <div style="text-align: right;margin-top: -4px;"><span class="btn1" @click="renew(item)">renew</span><span class="btn1" @click="view(item)">view</span><span class="btn1" @click="edit(item)">edit</span><span class="btn1" @click="transferDialog(item)" style="width: 57px;">transfer</span></div>
                     </div>
                     <div class="add" @click="add">
@@ -364,11 +364,11 @@
                     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADLSURBVHgB7ZOxDQIhFIaBhtA5giO4ghs4wo2gJZVYUeoIN4IbuIIjOIIdoQH5TUgu5D295ky83N/c8T/+L/AAIRb9rSRleu/X5dPFGC/OuSc1p/grY0yXUrpaax9tXVEhpdROSnnUWt8AoKCo5ZzPWADJoMwQQl9C9wLftPAKRQ1zsCuKQbaCAWzhtx7XKhZMwd+BEdCv4BaO8RgopMRE+n0rJjk8CloBn2pDkT0uwT0XxD+8es/x+igGd3h9CR241QzgJzxpsWheegEfssESO4AuEAAAAABJRU5ErkJggg=="
                     /></div>
                 <div class="shuoming">
-                    <div class="first">Enter address for the transfer</div>
-                    <div class="second"><input v-model="daddress" /></div>
+                    <div class="first">Enter the address you want to transfer</div>
+                    <div class="second"><input v-model="daddress" style="width:400px"/></div>
                 </div>
 
-                <div class="pay" @click="pay">pay</div>
+                <div class="pay" @click="pay">Submit</div>
                 <div style="text-align: center;font-weight: bold;">Please confirm your MetaMask wallet already</div>
                 <div style="text-align: center;font-weight: bold;">connected the Elastos Eth sidechain</div>
                 <div style="text-align: center;font-weight: bold;"><img src="./img/meatMask.png">METAMASK</div>
