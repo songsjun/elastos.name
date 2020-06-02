@@ -221,7 +221,7 @@
             <div class="col-sm-12">
                 <div class="shuoming">
                     
-                    <div class="kuang"><img src="./img/2B9A5A.png" v-if="goodName" /><input v-model="dname" @input="getPrices"/><span><span class="line">|</span>.elastos.name</span>
+                    <div class="kuang"><img src="./img/2B9A5A.png" v-if="goodName" /><input v-model="dname" @input="getPrices" v-focus/><span><span class="line">|</span>.elastos.name</span>
                         </span>
                     </div>
                     <div v-if="dname"><span class="price">Price：</span><span class="priceNum">{{price}}</span>ELA（Estimated）</div>
@@ -257,12 +257,16 @@
         },
         methods: {
             async getPrices() {
-                if (this.dname.length > 0) {
+                
+                if (this.dname.length > 2) {
                     this.checkName().then(() => {
                         this.goodName = false;
                     }, () => {
                         this.goodName = true;
                     });
+                }
+                else {
+                    this.goodName = false;
                 }
 
                 if (this.dname.length <3) {
