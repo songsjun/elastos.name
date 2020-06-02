@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Domain Tokens</title>
+    <title>CryptoName Tokens</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -186,7 +186,7 @@
 
             <div class="logo float-left">
                 <!-- Uncomment below if you prefer to use an image logo -->
-                <h1 class="text-light"><a href="#intro" class="scrollto"><span>Domain Tokens</span></a></h1>
+                <h1 class="text-light"><a href="#intro" class="scrollto"><span>CryptoName Tokens</span></a></h1>
                 <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
             </div>
 
@@ -220,25 +220,24 @@
         <div class="row text-center" v-if="!loading">
             <div class="col-sm-12">
                 <div class="shuoming">
-                    <div class="title">Find your domain name</div>
+                    <div class="title">Find your name</div>
                     <div class="kuang"><img src="./img/2B9A5A.png" v-if="dname" /><input v-model="dname" /><span><span class="line">|</span>.elastos.name</span>
                         </span>
                     </div>
                     <!-- <div v-if="dname"><span class="price">Price：</span><span class="priceNum">{{price}}</span>ELA（Estimated）</div> -->
-                    <div v-if="!dname">Input domain name</div>
-                    <div class="buyit" :class="{huise:!dname}" @click="buyIt">buy it</div>
+                    <div v-if="!dname">Input name</div>
+                    <div class="buyit" :class="{huise:!dname}" @click="buyIt">Register</div>
                 </div>
             </div>
         </div>
 
-        <div class="container" id="app">
+
             <div class="row text-center" style="position:fixed;width: 100%;bottom:10px">
                 <div class="col-sm-12">
-                    <div style="color:#7B7B7B">Domain Tokens</div>
+                    <div style="color:#7B7B7B">CryptoName Tokens</div>
                     <p style="color:#7B7B7B;">Powered by <a style="color:#5157DB;border-bottom: 1px solid #5157DB;cursor: pointer;" href="https://www.elastos.name">elastos.name</a></p>
                 </div>
             </div>
-        </div>
     </div>
 </body>
 <script>

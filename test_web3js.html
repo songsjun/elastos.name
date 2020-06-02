@@ -1,0 +1,126 @@
+<html>
+<head>
+	
+</head>
+<body>
+	<script type="text/javascript" src="js/web3.min.js"></script>
+	<script type="text/javascript" src="js/domain_abi.js"></script>
+	<script type="text/javascript" src="js/sha256.min.js"></script>
+
+	<script type="text/javascript" src="js/crypton.js"></script>
+	
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+	<script type="text/javascript">
+    	window.addEventListener('load', async () => {
+
+    		try {
+
+    			// 初始化Bridge对象
+				var bridge = new Web3Bridge();
+
+				// 测试当前连接的网络
+				var a = await bridge.isEthMainchain();
+				var b = await bridge.isElaSidechain();
+				var c = await bridge.isRopstenchain();
+
+				console.log("eth:"+a+", ela:"+b+", ropsten:"+c);
+				//return;
+
+				var web3 = bridge.getWeb3();
+
+				var contact = await web3.eth.ens.getResolver('ethereum.eth');
+				console.log(contact);
+
+				var account = await bridge.getAccount();
+				//var addr = await web3.eth.ens.getAddress("songsjun.eth");
+				//console.log(addr);
+				// 签名测试
+				// const sig2 = await bridge.sign("hello");
+				// console.log(sig2);
+
+				// 创建合约包装对象
+				var crypton = new Crypton(abiArray, contract_address, bridge.getWeb3());
+
+				var tmpName = "hello"+Math.floor(Math.random() * 10000);
+				var address = "";
+
+				// 获取域名的主人，也可以用来测试域名是否可以用，未被注册则返回空
+				crypton.getOwnerOfNameToken(tmpName)
+					.then (function(addr) {
+						if (addr == "") 
+							console.log("TESTING: getownerOfNameToken(NotExist) is OK!");
+						// 获取最新价格，1表示1-2个字母，2表示3个字母，3表示4个及以上字母
+						return crypton.getCurrentPrice(3);
+					})
+					.then (function(price) {
+						console.log("getCurrentPrice done.");
+						// 注册名字
+						return crypton.registerName(tmpName, ""+(parseFloat(price)+0.01));
+					})
+					.then (function() {
+						console.log("registerName done.");
+						return crypton.setBasicInfo(tmpName, "btc1234", "eth1234", "ela1234", "did1234", "pubkey1234");
+					})
+					.then (function() {
+						console.log("setKeyword done.");
+						return crypton.getKeyword(tmpName, "did");
+					})
+					.then (function(value) {
+						console.log("did:"+value);
+						if (value == "did1234")
+							console.log("TESTING: setBasicInfo(...) is OK!");
+
+						return crypton.getOwnerOfNameToken(tmpName);
+					})
+					.then (function(addr) {
+						if (addr.length > 0) {
+							address = addr;
+							console.log("TESTING: getownerOfNameToken(EXIST) is OK!");
+							return crypton.generateName(addr, tmpName+"admin");
+						}
+					})
+					.then (function() {
+						console.log("getCurrentPrice done.");
+						// 获取全部已注册的名字列表
+						return crypton.getNameTokens(0);
+					})
+					.then (function(ret) {
+						for (var item of ret) {
+							if (item.name == tmpName+"admin" && item.owner == address)
+								console.log("TESTING: generateName is OK!");
+						}
+						// 转移名字
+						return crypton.transfer("0xC2a338A3b841D4Ea313519d1c28001f58ED1b358", tmpName);
+					})
+					.then (function() {
+						console.log("transfer done.");
+						// 获取某个地址持有的名字列表
+						return crypton.getOwnerNameTokens("0xC2a338A3b841D4Ea313519d1c28001f58ED1b358");
+					})
+					.then (function(ret) {
+						for (var item of ret) {
+							if (item.name == tmpName)
+								console.log("TESTING: registerName and transfer is OK!");
+						}
+						return web3.eth.getBalance(contract_address);
+					})
+					.then (function (value) {
+						return crypton.withdraw(value);
+					})
+					.catch (function(e) {
+						console.log(e);
+					});
+
+
+    		}
+    		catch (e) {
+    			console.log(e);
+    		}
+		});
+
+
+
+	</script>
+</body>
+</html>
