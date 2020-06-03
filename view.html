@@ -74,7 +74,7 @@
 
             <div class="logo float-left">
                 <!-- Uncomment below if you prefer to use an image logo -->
-                <h1 class="text-light"><a href="#intro" class="scrollto"><span>Domain Tokens</span></a></h1>
+                <h1 class="text-light"><a href="#intro" class="scrollto"><span>CryptoName Tokens</span></a></h1>
                 <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
             </div>
 
@@ -167,8 +167,10 @@
 
                 <div class="row text-center" style="margin-top: 50px;">
                     <div class="col-sm-12">
-                        <div style="color:#7B7B7B">Domain Tokens</div>
-                        <p style="color:#7B7B7B;">Powered by <a style="color:#5157DB;border-bottom: 1px solid #5157DB;">elastos.name</a></p>
+                        <div style="color:#7B7B7B">
+                            <img src="img/logo.png" style="height:32px">
+                        </div>
+                        <p style="color:#7B7B7B;">Powered by <strong>elastos.name</strong></p>
                     </div>
                 </div>
             </div>
@@ -265,7 +267,7 @@
         },
         methods: {
             editInfo() {
-                window.location.href = "./editInfo.html?dominName=" + this.domainInfo.name;
+                window.location.href = "./editInfo.html?name=" + this.domainInfo.name;
             },
             getAjax(url) {
                 return new Promise((resovle, reject) => {
@@ -318,7 +320,7 @@
         },
         created() {
             this.isPC = this.getPc();
-            this.domainInfo.name = this.GetQueryString("dominName") || "";
+            this.domainInfo.name = this.GetQueryString("name") || "";
             let url = "https://api.elastos.name/nameInfo/get?name=" + this.domainInfo.name;
             this.getAjax(url).then((result) => {
                 console.log(JSON.stringify(result));

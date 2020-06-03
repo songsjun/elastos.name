@@ -216,8 +216,10 @@
 
 
         <div class="text-center" style="position:fixed;width: 100%;bottom:10px;left:0px">
-            <div style="color:#7B7B7B">CryptoName Tokens</div>
-            <p style="color:#7B7B7B;">Powered by <a style="color:#5157DB;border-bottom: 1px solid #5157DB;cursor: pointer;" href="https://www.elastos.name">elastos.name</a></p>
+            <div style="color:#7B7B7B">
+                <img src="img/logo.png" style="height:32px">
+            </div>
+            <p style="color:#7B7B7B;">Powered by <strong>elastos.name</strong></p>
         </div>
     </div>
 </body>
@@ -270,7 +272,7 @@
                 "RandomNumber": "123456789",
                 "DID": "iXzenTELVRDc712tmt2Qvbtk3KcAwV2tU8",
                 "PublicKey": "032f6347b27401dc0bced2de0ab4531e62c496841cd8e67a58c572e3018dcb72d9",
-                "ReturnUrl": "/editInfo.html?dominName=test1",
+                "ReturnUrl": "/editInfo.html?name=test1",
                 "RequestInfo": "elaaddress,BTCAddress,ETHAddress,Email"
             }
         },
@@ -293,7 +295,7 @@
                 if (baseUrl === "file://") {
                     baseUrl = 'http://dev1.elapps.net';
                 }
-                this.schemeConfig['ReturnUrl'] = baseUrl + '/editInfo.html?dominName=' + this.domainInfo.name;
+                this.schemeConfig['ReturnUrl'] = baseUrl + '/editInfo.html?name=' + this.domainInfo.name;
                 var url = "elaphant://identity?";
                 _.forEach(this.schemeConfig, function(val, key, index) {
                     if (key === 'ReturnUrl') {
@@ -398,7 +400,7 @@
                                 let code = result["code"];
                                 if (code === 200) {
                                     alert(result["message"]);
-                                    window.location.href = "./view.html?dominName=" + this.domainInfo.name;
+                                    window.location.href = "./view.html?name=" + this.domainInfo.name;
                                 } else {
                                     alert(JSON.stringify(result));
                                 }
@@ -514,7 +516,7 @@
             }
         },
         created() {
-            this.domainInfo.name = this.GetQueryString("dominName") || "";
+            this.domainInfo.name = this.GetQueryString("name") || "";
             let data = this.GetQueryString("Data") || "";
             if (data === "") {
                 let url = "https://api.elastos.name/nameInfo/get?name=" + this.domainInfo.name;
