@@ -28,7 +28,7 @@
     <!-- Main Stylesheet File -->
     <link href="css/style.css" rel="stylesheet">
     <script type="text/javascript" src="./js/web3.min.js"></script>
-    <script src="https://cdn.bootcss.com/lodash.js/4.17.12-pre/lodash.min.js"></script>
+    <script src="./js/lodash.min.js"></script>
     <script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
     <script src="./js/vue.min.js"></script>
     <script type="text/javascript">
@@ -168,59 +168,78 @@
                 </div>
             </div>
 
-            <div class="row" style="margin-top: 10px;">
+            <div class="row text-center" style="margin-top: 10px;" v-for="(item,key) in symbolDes">
                 <div class="col-sm-6 text-right">
-                    <div style="margin-bottom: 5px;"><span style="margin-right: 5px;">DID:</span><input v-model="domainInfo.did" /></div>
-                    <div v-for="(item,key) in coinList">
-                        <div style="margin-bottom: 5px;">{{symbolDes[key].des}}<span style="margin-right: 5px;"></span><input v-model="item.address" /></div>
-                    </div>
-                    <div style="margin-bottom: 5px;">publickey<span style="margin-right: 5px;"></span><input v-model="domainInfo.publickey" /></div>
+                    {{item["des"]}}
                 </div>
-                <div class="col-sm-6 text-left">
-                    <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">EMail:</span><input v-model="domainInfo.email" /></div>
-                    <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Personal Web:</span><input v-model="domainInfo.personalurl" /></div>
-                    <div style="margin-bottom: 5px;"><span style="display:inline-block;width: 110px;text-align: right;margin-right: 10px;">Description:</span><textarea style="vertical-align:top;resize: none;height: 120px;" v-model="domainInfo.description"></textarea></div>
+                <div class="col-sm-6 text-left" style="padding-left:0px" v-if="key==='ela'">
+                    <input v-model="coinList['ela']['address']" />
+                </div>
+                <div class="col-sm-6 text-left" style="padding-left:0px" v-else-if="key==='btc'">
+                    <input v-model="coinList['btc']['address']" />
+                </div>
+                <div class="col-sm-6 text-left" style="padding-left:0px" v-else-if="key==='eth'">
+                    <input v-model="coinList['eth']['address']" />
+                </div>
+                <div class="col-sm-6 text-left" style="padding-left:0px" v-else>
+                    <input v-model="domainInfo[key]" />
                 </div>
             </div>
-
+            <div v-for="item in keyValueArr" class="row text-center" style="margin-top: 10px;">
+                <div class="col-sm-6 text-right">
+                    {{item["key"]}}:
+                </div>
+                <div class="col-sm-6 text-left" style="padding-left:0px">
+                    <input v-model="item['value']" />
+                </div>
+            </div>
             <div class="row text-center" style="margin-top: 10px;">
-                <div class="col-sm-5">
-                    <img src="./img/line.png" style="width: 100%;" />
+                <div class="col-sm-6 text-right">
+                    <input placeholder="Please input key" style="width: 145px;" v-model="keyValueObj.key" />
                 </div>
-                <div class="col-sm-2">
-                    or
-                </div>
-                <div class="col-sm-5">
-                    <img src="./img/line.png" style="width: 100%;" />
+                <div class="col-sm-6 text-left" style="padding-left:0px">
+                    <input placeholder="Please input value" v-model="keyValueObj.value" /> <span @click="add" style="cursor: pointer;">+ add</span>
                 </div>
             </div>
-
-            <div class="row text-center" style="margin-top: 20px;">
-                <div class="col-sm-12" @click="goLogo()">
-                    <img src="./img/elaphant.png" /> <span style="vertical-align: middle;color: #5157DB;border-bottom:1px solid #5157DB;cursor: pointer;">Start Elaphant to fill in quickly</span>
-                </div>
+        </div>
+        <div class="row text-center" style="margin-top: 10px;">
+            <div class="col-sm-5">
+                <img src="./img/line.png" style="width: 100%;" />
             </div>
-
-
-            <div class="row text-center" style="margin-top: 40px;margin-bottom: 5px;">
-                <div class="col-sm-12">
-                    <div class="btn1" @click="submit">Submit</div>
-                </div>
+            <div class="col-sm-2">
+                or
             </div>
+            <div class="col-sm-5">
+                <img src="./img/line.png" style="width: 100%;" />
+            </div>
+        </div>
 
-            <div style="text-align: center;font-weight: bold;">Please confirm your MetaMask wallet already</div>
-            <div style="text-align: center;font-weight: bold;">connected the Elastos Eth sidechain</div>
-            <div style="text-align: center;font-weight: bold;"><img src="./img/meatMask.png">METAMASK</div>
-            <div style="text-align: center;"><img src="./img/wenhao.png"><span style="display:inline-block;border-bottom: 1px solid #dddddd;cursor: pointer;" @click="link">How to setup Metamask</span></div>
+        <div class="row text-center" style="margin-top: 20px;">
+            <div class="col-sm-12" @click="goLogo()">
+                <img src="./img/elaphant.png" /> <span style="vertical-align: middle;color: #5157DB;border-bottom:1px solid #5157DB;cursor: pointer;">Start Elaphant to fill in quickly</span>
+            </div>
         </div>
 
 
-        <div class="text-center" style="position:fixed;width: 100%;bottom:10px;left:0px">
-            <div style="color:#7B7B7B">
-                <img src="img/logo.png" style="height:32px">
+        <div class="row text-center" style="margin-top: 40px;margin-bottom: 5px;">
+            <div class="col-sm-12">
+                <div class="btn1" @click="submit">Submit</div>
             </div>
-            <p style="color:#7B7B7B;">Powered by <strong>elastos.name</strong></p>
         </div>
+
+        <div style="text-align: center;font-weight: bold;">Please confirm your MetaMask wallet already</div>
+        <div style="text-align: center;font-weight: bold;">connected the Elastos Eth sidechain</div>
+        <div style="text-align: center;font-weight: bold;"><img src="./img/meatMask.png">METAMASK</div>
+        <div style="text-align: center;"><img src="./img/wenhao.png"><span style="display:inline-block;border-bottom: 1px solid #dddddd;cursor: pointer;" @click="link">How to setup Metamask</span></div>
+    </div>
+
+
+    <div class="text-center" style="position:fixed;width: 100%;bottom:10px;left:0px">
+        <div style="color:#7B7B7B">
+            <img src="img/logo.png" style="height:32px">
+        </div>
+        <p style="color:#7B7B7B;">Powered by <strong>elastos.name</strong></p>
+    </div>
     </div>
 </body>
 <script>
@@ -233,9 +252,6 @@
                 "name": "",
                 "did": "",
                 "publickey": "",
-                "personalurl": "",
-                "email": "",
-                "description": "",
                 "blocknumber": "" //await bridge.getWeb3().eth.getBlockNumber()
             },
             coinList: {
@@ -256,6 +272,9 @@
                 }
             },
             symbolDes: {
+                "did": {
+                    "des": 'DID:'
+                },
                 "ela": {
                     "des": 'ela Address:'
                 },
@@ -264,7 +283,10 @@
                 },
                 "eth": {
                     "des": 'ETH Address:'
-                }
+                },
+                "publickey": {
+                    "des": 'Public key:'
+                },
             },
             schemeConfig: {
                 "AppID": "7d80c7e800f5842b3b8e7ec7318189f66b7fd5b6db13bb80fbd89d2b1c444772c1d0202fea1e9cbabbf3258b3d91685484c02c2ae52d78ca39e2e54593ec81dd",
@@ -274,9 +296,28 @@
                 "PublicKey": "032f6347b27401dc0bced2de0ab4531e62c496841cd8e67a58c572e3018dcb72d9",
                 "ReturnUrl": "/editInfo.html?name=test1",
                 "RequestInfo": "elaaddress,BTCAddress,ETHAddress,Email"
+            },
+            keyValueArr: [],
+            keyValueObj: {
+                "key": "",
+                "value": ""
             }
         },
         methods: {
+            add() {
+                if (this.keyValueObj.key === "") {
+                    alert("please input key");
+                    return false
+                }
+
+                if (this.keyValueObj.value === "") {
+                    alert("please input value");
+                    return false
+                }
+
+                let obj = _.cloneDeep(this.keyValueObj);
+                this.keyValueArr.push(obj);
+            },
             getUrl() {
                 //获取主机地址
                 var localhostPaht = window.location.protocol + "//" + window.location.host;
@@ -349,8 +390,7 @@
                         this.getContracts(option);
                     }).catch((err) => {
 
-                    });;
-                    //this.getBlockNumber();
+                    });
                 }
             },
             GetQueryString(name) {　　　
@@ -389,6 +429,13 @@
                         await ethereum.enable();
                         let arr = this.objtoarr();
                         this.domainInfo["addresses"] = arr;
+                        for (let index = 0; index < this.keyValueArr.length; index++) {
+                            let item = this.keyValueArr[index];
+                            let key = item["key"];
+                            let value = item["value"];
+                            this.domainInfo[key] = value;
+                        }
+                        console.log("==sssss==" + JSON.stringify(this.domainInfo));
                         let signData = JSON.stringify(this.domainInfo);
                         web3.eth.personal.sign(signData, this.selectAddress).then((sign) => {
                             let body = {
@@ -513,6 +560,14 @@
                                 value: '0'
                             };
                     });
+            },
+            handle(coin, list) {
+                for (let index = 0; index < list.length; index++) {
+                    let item = list[index];
+                    if (coin === item["symbol"]) {
+                        return item["address"];
+                    }
+                }
             }
         },
         created() {
@@ -527,14 +582,20 @@
                         //this.domainInfo = result["data"] || "";
                         let data = result["data"];
                         this.domainInfo.did = data["did"] || '';
-                        this.coinList["ela"]["address"] = data["addresses"][0]["address"];
-                        this.coinList["btc"]["address"] = data["addresses"][1]["address"];
-                        this.coinList["eth"]["address"] = data["addresses"][2]["address"];
+                        this.coinList["ela"]["address"] = this.handle("ela", data["addresses"]);
+                        this.coinList["btc"]["address"] = this.handle("btc", data["addresses"]);
+                        this.coinList["eth"]["address"] = this.handle("eth", data["addresses"]);
                         this.domainInfo.publickey = data["publickey"] || '';
-                        this.domainInfo.email = data["email"] || '';
-                        this.domainInfo.personalurl = data["personalurl"] || '';
-                        this.domainInfo.description = data["description"] || '';
+                        for (let key in data) {
+                            if (key != "name" && key != "did" && key != "publickey" && key != "blocknumber" && key != "addresses") {
+                                Vue.set(this.symbolDes, key, {
+                                    "des": key
+                                });
+                                this.domainInfo[key] = data[key] || "";
+                            }
+                        }
 
+                        console.log(JSON.stringify(this.symbolDes));
                     }
                 }).catch((err) => {
 
@@ -549,7 +610,6 @@
                 this.coinList["btc"]["address"] = dataObj["BTCAddress"];
                 this.coinList["eth"]["address"] = dataObj["ETHAddress"];
                 this.domainInfo.publickey = dataObj["PublicKey"];
-                this.domainInfo.email = dataObj["Email"] || "";
             }
             window.initWallet().then((address) => {
                 this.selectAddress = address;
