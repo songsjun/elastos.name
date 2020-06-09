@@ -1,7 +1,7 @@
 
 
 var elaeth_blocknumber_url = "https://explorer.elaeth.io/api?module=block&action=eth_block_number";
-var contract_address = "0xd2a97f3fe2309c6c3b5fca41f3117c33fe81b031";
+var contract_address = "0xd42e88a8e525c049517533f201668225731e7d37";
 
 class Web3Bridge {
 
@@ -367,6 +367,52 @@ class Crypton {
 		return this._init_account()
 			.then(function(option) {
 				return pthis._contact.methods.getKeyword(name, key).call();
+			});
+	}
+
+	async getAllKeywords (name) {
+		var pthis = this;
+		return this._init_account()
+			.then(function(option) {
+				return pthis._contact.methods.getAllKeywords(name).call();
+			});
+	}
+
+	async getNameProfile (name) {
+		var nameInfo = {"name":name};
+		var pthis = this;
+		return this._init_account()
+			.then(function(option) {
+				return pthis._contact.methods.getAllKeywords(name).call();
+			})
+			.then (function(value) {
+				var keys = value.split(",");
+
+				var promises = [];
+
+				for (var key of keys) {
+				
+					(function(k) {
+						promises.push(pthis.getKeyword(name, k).then(function(v) {
+							nameInfo[k] = v;
+						}));
+					})(key);
+				}
+				return Promise.all(promises);
+			})
+			.then (function (ret) {
+				return nameInfo;
+			});
+	}
+
+	async removeKeyword (name, key) {
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(option) {
+				return pthis._contact.methods.removeKeyword(name, key).send(option);
 			});
 	}
 

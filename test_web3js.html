@@ -30,7 +30,6 @@
 				var web3 = bridge.getWeb3();
 
 				var contact = await web3.eth.ens.getResolver('ethereum.eth');
-				console.log(contact);
 
 				var account = await bridge.getAccount();
 				//var addr = await web3.eth.ens.getAddress("songsjun.eth");
@@ -41,6 +40,12 @@
 
 				// 创建合约包装对象
 				var crypton = new Crypton(abiArray, contract_address, bridge.getWeb3());
+
+
+				var nameinfo = await crypton.getNameProfile("hello1700");
+				console.log(nameinfo);
+
+				return;
 
 				var tmpName = "hello"+Math.floor(Math.random() * 10000);
 				var address = "";
@@ -64,13 +69,11 @@
 					})
 					.then (function() {
 						console.log("setKeyword done.");
-						return crypton.getKeyword(tmpName, "did");
+						return crypton.getNameProfile(tmpName);
 					})
-					.then (function(value) {
-						console.log("did:"+value);
-						if (value == "did1234")
+					.then (function(info) {
+						if (info.did == "did1234")
 							console.log("TESTING: setBasicInfo(...) is OK!");
-
 						return crypton.getOwnerOfNameToken(tmpName);
 					})
 					.then (function(addr) {
