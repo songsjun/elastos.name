@@ -681,6 +681,26 @@ h6 {
   color: #8a87b6;
 }
 
+.counter {
+  margin: 30px 0 0 0;
+}
+
+.counters span {
+  font-family: "Montserrat", sans-serif;
+  font-weight: bold;
+  font-size: 48px;
+  display: block;
+  color: #555186;
+}
+
+.counters p {
+  padding: 0;
+  margin: 0 0 20px 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  color: #8a87b6;
+}
+
 /* Call To Action Section
 --------------------------------*/
 
@@ -1461,7 +1481,7 @@ h6 {
 
 @media (min-width: 992px) {
   #intro .intro-info {
-    padding-top: 80px;
+    padding-top: 100px;
   }
 
   #testimonials .testimonial-item p {
