@@ -119,7 +119,9 @@
         <div id="topbar">
             <div class="container">
                 <div class="social-links">
-                    <a href="https://t.me/elastosname" class="Telegram"><i class="fa fa-telegram"></i></a>
+                    <a href="https://twitter.com/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
+                    <a href="https://t.me/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
                 </div>
             </div>
         </div>
@@ -128,7 +130,7 @@
 
             <div class="logo float-left">
                 <!-- Uncomment below if you prefer to use an image logo -->
-                <h1 class="text-light"><a href="#intro" class="scrollto"><span>CryptoName Tokens</span></a></h1>
+                <h1 class="text-light"><a href="#intro" class="scrollto"><span>CryptoName</span></a></h1>
                 <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
             </div>
 
@@ -137,8 +139,10 @@
                     <li><a href="./index.html">Home</a></li>
                     <li><a href="./register.html">Register</a></li>
                     <li><a href="./sale.html">Sale</a></li>
-                    <li><a href="./auction.html">Auction</a></li>
-                    <li class="active"><a href="./account.html">Account</a></li>
+                    <!--li><a href="./auction.html">Auction</a></li-->
+                    <li><a href="./guide.html">Guide</a></li>
+                    <li><a href="./developer.html">Developer</a></li>
+                    <li><a href="./account.html">Account</a></li>
                 </ul>
             </nav>
             <!-- .main-nav -->
@@ -234,13 +238,46 @@
     </div>
 
 
-    <div class="text-center" style="position:fixed;width: 100%;bottom:10px;left:0px">
-        <div style="color:#7B7B7B">
-            <img src="img/logo.png" style="height:32px">
+    <footer id="footer" class="section-bg">
+
+        <div class="container">
+
+            <div class="copyright">
+                <b>contact us:</b>
+                    <a href="https://twitter.com/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
+                    <a href="https://t.me/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
+            </div>
+            <div class="copyright">
+                <div style="color:#7B7B7B">
+                    <img src="img/logo.png" style="height:32px">
+                </div>
+            </div>
         </div>
-        <p style="color:#7B7B7B;">Powered by <strong>elastos.name</strong></p>
-    </div>
-    </div>
+    </footer>
+
+    <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+    <!-- Uncomment below i you want to use a preloader -->
+    <!-- <div id="preloader"></div> -->
+
+    <!-- JavaScript Libraries -->
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/jquery/jquery-migrate.min.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/mobile-nav/mobile-nav.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/isotope/isotope.pkgd.min.js"></script>
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
+    <!-- Contact Form JavaScript File -->
+    <script src="contactform/contactform.js"></script>
+
+    <!-- Template Main Javascript File -->
+    <script src="js/main.js"></script>
 </body>
 <script>
     var app = new Vue({
@@ -435,7 +472,6 @@
                             let value = item["value"];
                             this.domainInfo[key] = value;
                         }
-                        console.log("==sssss==" + JSON.stringify(this.domainInfo));
                         let signData = JSON.stringify(this.domainInfo);
                         web3.eth.personal.sign(signData, this.selectAddress).then((sign) => {
                             let body = {
@@ -574,41 +610,40 @@
             this.domainInfo.name = this.GetQueryString("name") || "";
             let data = this.GetQueryString("Data") || "";
             if (data === "") {
-                let url = "https://api.elastos.name/nameInfo/get?name=" + this.domainInfo.name;
+                let url = "https://"+this.domainInfo.name+".elastos.name/info.json";
                 this.getAjax(url).then((result) => {
-                    console.log(JSON.stringify(result));
-                    let code = result["code"];
-                    if (code === 200) {
+                    //console.log(JSON.stringify(result));
+                    // let code = result["code"];
+                    // if (code === 200) {
                         //this.domainInfo = result["data"] || "";
-                        let data = result["data"];
-                        this.domainInfo.did = data["did"] || '';
-                        this.coinList["ela"]["address"] = this.handle("ela", data["addresses"]);
-                        this.coinList["btc"]["address"] = this.handle("btc", data["addresses"]);
-                        this.coinList["eth"]["address"] = this.handle("eth", data["addresses"]);
-                        this.domainInfo.publickey = data["publickey"] || '';
+                        let data = JSON.stringify(result);
+                        // this.domainInfo.did = data["did"] || '';
+                        // this.coinList["ela.address"] = data["ela.address"];
+                        // this.coinList["btc.address"] = data["btc.address"];
+                        // this.coinList["eth.address"] = data["eth.address"];
+                        // this.domainInfo.publickey = data["publickey"] || '';
                         for (let key in data) {
-                            if (key != "name" && key != "did" && key != "publickey" && key != "blocknumber" && key != "addresses") {
-                                Vue.set(this.symbolDes, key, {
-                                    "des": key
-                                });
-                                this.domainInfo[key] = data[key] || "";
-                            }
+                            // if (key != "name" && key != "did" && key != "publickey" && key != "blocknumber" && key != "addresses") {
+                            //     Vue.set(this.symbolDes, key, {
+                            //         "des": key
+                            //     });
+                            // }
+                            this.domainInfo[key] = data[key] || "";
                         }
 
-                        console.log(JSON.stringify(this.symbolDes));
                     }
-                }).catch((err) => {
+                ).catch((err) => {
 
-                });
+              });
             }
 
             if (data != "") {
                 let dataStr = decodeURIComponent(data);
                 let dataObj = JSON.parse(dataStr);
                 this.domainInfo.did = dataObj["DID"];
-                this.coinList["ela"]["address"] = dataObj["ELAAddress"];
-                this.coinList["btc"]["address"] = dataObj["BTCAddress"];
-                this.coinList["eth"]["address"] = dataObj["ETHAddress"];
+                this.coinList["ela.address"] = data["ela.address"];
+                this.coinList["btc.address"] = data["btc.address"];
+                this.coinList["eth.address"] = data["eth.address"];
                 this.domainInfo.publickey = dataObj["PublicKey"];
             }
             window.initWallet().then((address) => {

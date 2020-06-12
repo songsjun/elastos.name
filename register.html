@@ -177,7 +177,9 @@
         <div id="topbar">
             <div class="container">
                 <div class="social-links">
-                    <a href="https://t.me/elastosname" class="Telegram"><i class="fa fa-telegram"></i></a>
+                    <a href="https://twitter.com/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
+                    <a href="https://t.me/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
                 </div>
             </div>
         </div>
@@ -186,7 +188,7 @@
 
             <div class="logo float-left">
                 <!-- Uncomment below if you prefer to use an image logo -->
-                <h1 class="text-light"><a href="#intro" class="scrollto"><span>CryptoName Tokens</span></a></h1>
+                <h1 class="text-light"><a href="#intro" class="scrollto"><span>CryptoName</span></a></h1>
                 <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
             </div>
 
@@ -195,7 +197,9 @@
                     <li><a href="./index.html">Home</a></li>
                     <li class="active"><a href="./register.html">Register</a></li>
                     <li><a href="./sale.html">Sale</a></li>
-                    <li><a href="./auction.html">Auction</a></li>
+                    <!--li><a href="./auction.html">Auction</a></li-->
+                    <li><a href="./guide.html">Guide</a></li>
+                    <li><a href="./developer.html">Developer</a></li>
                     <li><a href="./account.html">Account</a></li>
                 </ul>
             </nav>
@@ -204,7 +208,7 @@
         </div>
     </header>
     <!-- #header -->
-    <div style="height:300px"></div>
+    <div style="height:150px"></div>
     <div class="container" id="app" style="height: 400px">
         <div class="spinner" v-if="loading">
 
@@ -221,7 +225,7 @@
             <div class="col-sm-12">
                 <div class="shuoming">
                     
-                    <div class="kuang"><img src="./img/2B9A5A.png" v-if="goodName" /><input v-model="dname" @input="getPrices" v-focus/><span><span class="line">|</span>.elastos.name</span>
+                    <div class="kuang"><img src="./img/2B9A5A.png" v-if="goodName" /><input v-model="dname" @input="getPrices" v-focus/><span><span class="line">|</span>.CryptoName.org</span>
                         </span>
                     </div>
                     <div v-if="dname"><span class="price">Price：</span><span class="priceNum">{{price}}</span>ELA（Estimated）</div>
@@ -231,14 +235,26 @@
             </div>
         </div>
 
-
-        <div class="text-center" style="position:fixed;width: 100%;bottom:10px;left:0px">
-            <div style="color:#7B7B7B">
-                <img src="img/logo.png" style="height:32px">
-            </div>
-            <p style="color:#7B7B7B;">Powered by <strong>elastos.name</strong></p>
-        </div>
     </div>
+
+    <footer id="footer" class="section-bg">
+
+        <div class="container">
+
+            <div class="copyright">
+                <b>contact us:</b>
+                    <a href="https://twitter.com/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
+                    <a href="https://t.me/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
+            </div>
+            <div class="copyright">
+                <div style="color:#7B7B7B">
+                    <img src="img/logo.png" style="height:32px">
+                </div>
+            </div>
+        </div>
+    </footer>
+    
 </body>
 <script>
 
