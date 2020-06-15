@@ -1257,10 +1257,6 @@ h6 {
 --------------------------------------------------------------*/
 
 #footer {
-    position: fixed;
-    width: 100%;
-    left: 0px;
-    bottom: 0px;
     padding: 0 0 30px 0;
     font-size: 14px;
     background: #fff;
