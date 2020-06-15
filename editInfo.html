@@ -577,7 +577,7 @@
                                 this.getAjax('https://api.elastos.name/nameInfo/set?name=' + this.domainName).then((result) => {
                                     let code = result["code"];
                                     if (code === 200) {
-                                        alert(result["message"]);
+                                        console.log(result["message"]);
                                         this.keyValueArr = [];
                                         this.init();
                                     } else {
@@ -590,7 +590,7 @@
                                 this.getAjax('https://api.elastos.name/nameInfo/set?name=' + this.domainName).then((result) => {
                                     let code = result["code"];
                                     if (code === 200) {
-                                        alert(result["message"]);
+                                        console.log(result["message"]);
                                         this.keyValueArr = [];
                                         this.init();
                                     } else {
@@ -603,7 +603,7 @@
                                 this.getAjax('https://api.elastos.name/nameInfo/set?name=' + this.domainName).then((result) => {
                                     let code = result["code"];
                                     if (code === 200) {
-                                        alert(result["message"]);
+                                        console.log(result["message"]);
                                         window.location.href = "./view.html?name=" + this.domainName;
                                     } else {
                                         alert(JSON.stringify(result));
