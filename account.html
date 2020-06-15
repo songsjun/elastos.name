@@ -559,9 +559,9 @@
             },
             async ownerOf(info, tokenId) {
                 info.methods.ownerOf(tokenId).call().then((address) => {
-                    //if (address.toUpperCase() == this.selectAddress.toUpperCase()) {
-                    this.tokensURI(info, tokenId, address);
-                    //}
+                    if (address.toUpperCase() == this.selectAddress.toUpperCase()) {
+                        this.tokensURI(info, tokenId, address);
+                    }
                 }).catch((err) => {
 
                 });

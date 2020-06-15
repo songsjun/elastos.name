@@ -117,7 +117,7 @@
                         <div style="margin: 0 auto;width: 120px;">
                             <qrcode :value="this.domainInfo.did" :options="{ width:120 }" style="display:block"></qrcode>
                         </div>
-                        <div style="font-size: 16px;cursor: pointer;" @click="doCopy(this.domainInfo.did)">{{this.domainInfo.did}}<img src="./img/copy.png" /></div>
+                        <div style="font-size: 16px;cursor: pointer;" @click="doCopy(this.domainInfo.did)">{{this.domainInfo.did}}<img src="./img/copy.png" style="width: 24px;" /></div>
 
                         <div style="margin-top: 10px;cursor: pointer;" v-if="domainInfo.email">
                             <img src="./img/youxiang.png" style="margin-right: 5px;">{{this.domainInfo.email}}
@@ -144,7 +144,7 @@
                                 <div style="margin-top: 10px;" v-if="item.symbol === 'eth'">
                                     <img src="./img/eth.png" style="margin-right: 5px;">{{item.name}}
                                 </div>
-                                <div style="margin-top: 5px;cursor: pointer;" @click="doCopy(item.address)">{{item.address}}<img src="./img/copy.png"></div>
+                                <div style="margin-top: 5px;cursor: pointer;" @click="doCopy(item.address)">{{item.address}}<img src="./img/copy.png" style="width: 24px;"></div>
 
                                 <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;" v-if="item.symbol === 'ela'">
                                     https://{{domainInfo.name}}.elastos.name/ela.address
@@ -191,7 +191,7 @@
                         <div style="cursor: pointer;" @click="doCopy(domainInfo.name)">
                             {{domainInfo.name}}.elastos.name <img src="./img/externallink.png">
                         </div>
-                        <div style="font-size: 16px;cursor: pointer;" @click="doCopy(domainInfo.did)">{{domainInfo.did}}<img src="./img/copy.png" /></div>
+                        <div style="font-size: 16px;cursor: pointer;" @click="doCopy(domainInfo.did)">{{domainInfo.did}}<img src="./img/copy.png" style="width: 24px;" /></div>
 
                         <div style="margin-top: 10px;cursor: pointer;" v-if="domainInfo.email">
                             <img src="./img/youxiang.png" style="margin-right: 5px;">{{domainInfo.email}}
@@ -226,7 +226,7 @@
                         <div style="margin-top: 10px;" v-if="item.symbol === 'eth'">
                             <img src="./img/eth.png" style="margin-right: 5px;">{{item.name}}
                         </div>
-                        <div style="margin-top: 5px;cursor: pointer;" @click="doCopy(item.address)">{{item.address}}<img src="./img/copy.png"></div>
+                        <div style="margin-top: 5px;cursor: pointer;" @click="doCopy(item.address)">{{item.address}}<img src="./img/copy.png" style="width: 24px;"></div>
 
                         <div style="margin-top: 5px;;color: #5157DB;cursor: pointer;" v-if="item.symbol === 'ela'">
                             https://{{domainInfo.name}}.elastos.name/ela.address
