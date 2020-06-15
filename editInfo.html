@@ -252,7 +252,7 @@
                     <input v-model="item['value']" style="width:100%;" />
                 </div>
                 <div class="col-sm-2 text-left">
-                    <span @click="add" style="cursor: pointer;"> save</span>
+                    <span @click="edit(item)" style="cursor: pointer;"> save</span>
                 </div>
             </div>
             <div class="row text-center" style="margin-top: 10px;">
@@ -371,6 +371,25 @@
                 this.$copyText(text).then((e) => {
                     alert("copy Sucess");
                 }, (e) => {})
+            },
+            edit(item) {
+                console.log("======" + JSON.stringify(item));
+                if (item.key === "") {
+                    alert("please input key");
+                    return false
+                }
+
+                if (item.value === "") {
+                    alert("please input value");
+                    return false
+                }
+
+                this.curKeyValueObj = _.cloneDeep(item);
+                this._generate_option("").then((option) => {
+                    this.setKeyword(this.curKeyValueObj, option);
+                }).catch((err) => {
+
+                });
             },
             add() {
                 if (this.keyValueObj.key === "") {
