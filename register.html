@@ -217,7 +217,7 @@
             <div class="col-sm-12">Transaction confirmation in progress</div>
         </div>
         <div class="parent" v-if="!loading">
-            <div class="kuang"><img src="./img/2B9A5A.png" v-if="goodName" /> <img src="./img/serach.png" v-if="!goodName" style="margin-right: 5px;" /><input v-model="dname" @input="getPrices" v-focus/><span><span class="line">|</span>.CryptoName.org</span>
+            <div class="kuang"><img src="./img/2B9A5A.png" v-if="goodName" /> <img src="./img/serach.png" v-if="!goodName" style="margin-right: 5px;height:24px; width:24px" /><input v-model="dname" @input="getPrices" v-focus/><span><span class="line">|</span>.CryptoName.org</span>
                 </span>
             </div>
             <div v-if="dname" style="margin-top: 10px;"><span class="price">Price：</span><span class="priceNum">{{price}}</span>ELA（Estimated）</div>
