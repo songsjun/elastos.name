@@ -2,17 +2,19 @@
 
 ## Introduction
 
-CryptoName is a name card based on **elastos side chain**. The user can store his public info on it. Everyone who knew his name can access this info. So we think the info of CryptoName is a public profile of the user. 
+CryptoName is a personal name storage business card  based on **elastos side chain**. It enables the user to store their public profile info within it. If you know the CryptoName you can access the info stored within. The  CryptoName info is the public profile of the user.
 
-The storage structure of CryptoName likes a Key/Value storage. The user can set a keyword as the Key, and same time input the value as its content.
+The storage structure of CryptoName is like a Key/Value storage. The user can set a keyword as the Key, and at the same time input the value as its content.
 
-So if others, including apps, want to access some info of the user, you can get them by the keywords.
+So if others, including apps, want to access some info of the user, you can access them by using the keywords.
 
-By default, the CryptoName has included "btc.address", "etc.address", "ela.address", "did", and "publickey" keywords. If you need more fields are on CryptoName, you can ask the user to set it. We support 50 fields on the CryptoName. 
+By default, the CryptoName has included "btc.address", "eth.address", "ela.address", ustd.address, "did", and "publickey" keywords. If you need more fields on CryptoName, you can ask the user to set it. We support 50 fields within the CryptoName.
 
-The user can edit his "profile" on https://CryptoName.org, that's very easy.
+The user can edit their "profile" on https://CryptoName.org, it's very simple. 
 
-If you want to help the user to set his CryptoName, you need to support a standard Web3 provider in your app and need support elastos side chain wallet too.
+If you want to help the user to set their CryptoName, you need to support a standard Web3 provider in your app, and it also needs to support the elastos side chain wallet. 
+
+
 
 ## Interface
 
@@ -124,22 +126,20 @@ Response:
 
 ### Use Cases
 
-##### Case 1: The crypto wallet can support it for user sending assets.
+##### Case 1: The crypto wallet can support users to send assets via the CryptoName. 
 
-*The elephant wallet already supported CryptoName, you can send crypto assets to you friend via his CryptoName.
+*****The elephant wallet already supports CryptoName, you can send crypto assets to your friends by simply inserting their CryptoName in the address bar.
 
-
-
-##### Case 2: Chat App can support it for searching and adding friend
+##### Case 2: Chat App's can support CryptoName, of which enables the user to search and add friends. 
 
 
 
-##### Case 3: You can bind your DID with your CryptoName, that's very friendly for others.
+##### Case 3: You can bind your DID with your CryptoName, this makes it simple for others to use. 
 
 
 
-##### Case 4: You can bind your IP with CryptoName, that's your own Domain Name.
+##### Case 4: You can bind your IP address with a CryptoName, that's your own Domain Name.
 
 
 
-##### Case 5: If you are a well known person or a company, you can public your Email on your CryptoName
+##### Case 5: If you are a well known person or a company, you can make public your Email using your CryptoName.
