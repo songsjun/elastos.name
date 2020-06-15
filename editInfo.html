@@ -31,6 +31,7 @@
     <script src="./js/lodash.min.js"></script>
     <script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
     <script src="./js/vue.min.js"></script>
+    <script src="./js/vue-clipboard.min.js"></script>
     <script type="text/javascript">
         document.write('<script src="./js/contractConfig.js?v=' + (new Date()).getTime() + '"><\/script>');
     </script>
@@ -109,6 +110,24 @@
                 -webkit-transform: scale(1.0);
             }
         }
+        
+        .shuoming {
+            height: 38px;
+            background: #F1F6FA;
+            line-height: 38px;
+            text-align: left;
+        }
+        
+        .save {
+            display: inline-block;
+            background: #347AF0;
+            border-radius: 23px;
+            width: 150px;
+            height: 40px;
+            line-height: 40px;
+            color: #ffffff;
+            cursor: pointer;
+        }
     </style>
 
 </head>
@@ -167,33 +186,87 @@
 
         <div v-if="!loading">
             <div class="row text-center">
-                <div class="col-sm-12">
-                    <span style="color: #000000;font-size: 36px;">{{domainInfo.name}}.elastos.name</span>
-                </div>
-            </div>
-
-            <div class="row text-center" style="margin-top: 10px;" v-for="(value,key) in domainInfo">
-                <div class="col-sm-6 text-right">
-                    {{key}}:
-                </div>
-                <div class="col-sm-6 text-left" style="padding-left:0px">
-                    <input v-model="value" />
-                </div>
-            </div>
-            <div v-for="item in keyValueArr" class="row text-center" style="margin-top: 10px;">
-                <div class="col-sm-6 text-right">
-                    {{item["key"]}}:
-                </div>
-                <div class="col-sm-6 text-left" style="padding-left:0px">
-                    <input v-model="item['value']" />
+                <div class="col-sm-12 text-left" style="border-bottom: 2px solid #C4C4C4;;">
+                    <span style="color: #000000;font-size: 36px;">{{domainName}}</span>.CryptoName.org
                 </div>
             </div>
             <div class="row text-center" style="margin-top: 10px;">
-                <div class="col-sm-6 text-right">
-                    <input placeholder="Please input key" style="width: 145px;" v-model="keyValueObj.key" />
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-8 shuoming">
+                    Default keys
+                </div>
+                <div class="col-sm-2 shuoming">
+
+                </div>
+            </div>
+
+            <div class="row text-center" style="margin-top: 10px;" v-for="(value,key) in defaultKeys">
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-2 text-left">
+                    {{key}}:
                 </div>
                 <div class="col-sm-6 text-left" style="padding-left:0px">
-                    <input placeholder="Please input value" v-model="keyValueObj.value" /> <span @click="add" style="cursor: pointer;">+ add</span>
+                    <input v-model="defaultKeys[key]" style="width: 100%;" />
+                </div>
+                <div class="col-sm-2 text-left" @click="doCopy(value)">
+                    <img src="./img/copy.png" style="width: 24px;">
+                </div>
+            </div>
+
+            <div class="row text-center" style="margin-top: 10px;">
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-8">
+                    <span class="save" @click="submit">Save</span>
+                </div>
+                <div class="col-sm-2">
+
+                </div>
+            </div>
+
+
+            <div class="row text-center" style="margin-top: 10px;">
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-8 shuoming">
+                    Extended keys
+                </div>
+                <div class="col-sm-2 shuoming">
+
+                </div>
+            </div>
+            <div v-for="item in keyValueArr" class="row text-center" style="margin-top: 10px;">
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-2 text-left">
+                    {{item["key"]}}:
+                </div>
+                <div class="col-sm-6 text-left" style="padding-left:0px">
+                    <input v-model="item['value']" style="width:100%;" />
+                </div>
+                <div class="col-sm-2 text-left">
+                    <span @click="add" style="cursor: pointer;"> save</span>
+                </div>
+            </div>
+            <div class="row text-center" style="margin-top: 10px;">
+                <div class="col-sm-2">
+
+                </div>
+                <div class="col-sm-4 text-right">
+                    <input placeholder="Please input key" style="width:100%;" v-model="keyValueObj.key" />
+                </div>
+                <div class="col-sm-4 text-left" style="padding-left:0px">
+                    <input placeholder="Please input value" v-model="keyValueObj.value" style="width:100%;" />
+                </div>
+                <div class="col-sm-2 text-left">
+                    <span @click="add" style="cursor: pointer;"> save</span>
                 </div>
             </div>
         </div>
@@ -212,13 +285,6 @@
         <div class="row text-center" style="margin-top: 20px;">
             <div class="col-sm-12" @click="goLogo()">
                 <img src="./img/elaphant.png" /> <span style="vertical-align: middle;color: #5157DB;border-bottom:1px solid #5157DB;cursor: pointer;">Start Elaphant to fill in quickly</span>
-            </div>
-        </div>
-
-
-        <div class="row text-center" style="margin-top: 40px;margin-bottom: 5px;">
-            <div class="col-sm-12">
-                <div class="btn1" @click="submit">Submit</div>
             </div>
         </div>
 
@@ -274,8 +340,8 @@
         data: {
             loading: false,
             selectAddress: "",
-            domainInfo: {
-                "name": "",
+            domainName: "",
+            defaultKeys: {
                 "did": "",
                 "publickey": "",
                 "btc.address": "",
@@ -295,9 +361,17 @@
             keyValueObj: {
                 "key": "",
                 "value": ""
+            },
+            curKeyValueObj: {
+
             }
         },
         methods: {
+            doCopy(text) {
+                this.$copyText(text).then((e) => {
+                    alert("copy Sucess");
+                }, (e) => {})
+            },
             add() {
                 if (this.keyValueObj.key === "") {
                     alert("please input key");
@@ -309,8 +383,12 @@
                     return false
                 }
 
-                let obj = _.cloneDeep(this.keyValueObj);
-                this.keyValueArr.push(obj);
+                this.curKeyValueObj = _.cloneDeep(this.keyValueObj);
+                this._generate_option("").then((option) => {
+                    this.setKeyword(this.curKeyValueObj, option);
+                }).catch((err) => {
+
+                });
             },
             getUrl() {
                 //获取主机地址
@@ -330,7 +408,7 @@
                 if (baseUrl === "file://") {
                     baseUrl = 'http://dev1.elapps.net';
                 }
-                this.schemeConfig['ReturnUrl'] = baseUrl + '/editInfo.html?name=' + this.domainInfo.name;
+                this.schemeConfig['ReturnUrl'] = baseUrl + '/editInfo.html?name=' + this.domainName;
                 var url = "elaphant://identity?";
                 _.forEach(this.schemeConfig, function(val, key, index) {
                     if (key === 'ReturnUrl') {
@@ -342,8 +420,8 @@
                 return url.substring(0, url.length - 1);
             },
             checkParams() {
-                for (let key in this.domainInfo) {
-                    if (this.domainInfo[key] === "") {
+                for (let key in this.defaultKeys) {
+                    if (this.defaultKeys[key] === "") {
                         alert("input " + key);
                         return false;
                     }
@@ -351,7 +429,6 @@
                 return true;
             },
             submit() {
-                console.log(this.checkParams());
                 if (this.checkParams()) {
                     this._generate_option("").then((option) => {
                         this.getContracts(option);
@@ -365,23 +442,6 @@
                 var r = window.location.search.substr(1).match(reg);　　　
                 if (r != null) return (r[2]);　　　
                 return null;
-            },
-            postAjax(url, data) {
-                return new Promise((resovle, reject) => {
-                    $.ajax({
-                        url: url,
-                        data: JSON.stringify(data),
-                        dataType: 'json',
-                        contentType: 'application/json',
-                        type: 'POST',
-                        success: function(data) { //成功回调函数
-                            resovle(data);
-                        },
-                        error: function(err) { //失败回调函数
-                            reject(err);
-                        }
-                    });
-                });
             },
             getAjax(url) {
                 return new Promise((resovle, reject) => {
@@ -399,7 +459,7 @@
                     });
                 });
             },
-            next(txid) {
+            next(txid, type) {
                 let sid = setInterval(() => {
                     if (typeof web3 !== 'undefined') {
                         web3 = new Web3(web3.currentProvider);
@@ -410,20 +470,31 @@
                         if (blockHash != "" && blockNumber != '') {
                             this.loading = false;
                             clearInterval(sid);
-                            let body = {
-                                "name": this.domainInfo.name
-                            };
-                            this.postAjax('https://api.elastos.name/nameInfo/set', body).then((result) => {
-                                let code = result["code"];
-                                if (code === 200) {
-                                    alert(result["message"]);
-                                    window.location.href = "./view.html?name=" + this.domainInfo.name;
-                                } else {
-                                    alert(JSON.stringify(result));
-                                }
-                            }).catch((err) => {
-                                alert("err:" + JSON.stringify(err));
-                            });
+                            if (type === "setKeyword") {
+                                this.getAjax('https://api.elastos.name/nameInfo/set?name=' + this.domainName).then((result) => {
+                                    let code = result["code"];
+                                    if (code === 200) {
+                                        alert(result["message"]);
+                                        this.keyValueArr.push(this.curKeyValueObj);
+                                    } else {
+                                        alert(JSON.stringify(result));
+                                    }
+                                }).catch((err) => {
+                                    alert("err:" + JSON.stringify(err));
+                                });
+                            } else if (type === "setBasicInfo") {
+                                this.getAjax('https://api.elastos.name/nameInfo/set?name=' + this.domainName).then((result) => {
+                                    let code = result["code"];
+                                    if (code === 200) {
+                                        alert(result["message"]);
+                                        window.location.href = "./view.html?name=" + this.domainName;
+                                    } else {
+                                        alert(JSON.stringify(result));
+                                    }
+                                }).catch((err) => {
+                                    alert("err:" + JSON.stringify(err));
+                                });
+                            }
                         }
                     });
                 }, 500);
@@ -434,12 +505,10 @@
                     try {
                         await ethereum.enable();
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
-                        console.log("====11111====" + this.domainInfo["btc.address"]);
-                        alert("====11111====" + this.domainInfo["btc.address"]);
-                        infoContract.methods.setBasicInfo(this.domainInfo.name, this.domainInfo["btc.address"], this.domainInfo["eth.address"], this.domainInfo["ela.address"], this.domainInfo.did, this.domainInfo.publickey).send(option, (err, msg) => {
+                        infoContract.methods.setBasicInfo(this.domainName, this.defaultKeys["btc.address"], this.defaultKeys["eth.address"], this.defaultKeys["ela.address"], this.defaultKeys.did, this.defaultKeys.publickey).send(option, (err, msg) => {
                             if (!err) {
                                 this.loading = true;
-                                this.next(msg);
+                                this.next(msg, "setBasicInfo");
                             }
                         });
                     } catch (error) {
@@ -472,16 +541,54 @@
                                 value: '0'
                             };
                     });
+            },
+
+            async setKeyword(item, option) {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        await ethereum.enable();
+                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                        infoContract.methods.setKeyword(this.domainName, item.key, item.value).send(option, (err, msg) => {
+                            if (!err) {
+                                this.loading = true;
+                                this.next(msg, "setKeyword");
+                            }
+                        });
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
             }
         },
         created() {
-            this.domainInfo.name = this.GetQueryString("name") || "";
+            this.domainName = this.GetQueryString("name") || "";
             let data = this.GetQueryString("Data") || "";
             if (data === "") {
-                let url = "https://api.elastos.name/nameInfo/get?name=" + this.domainInfo.name;
+                let url = "https://api.elastos.name/nameInfo/get?name=" + this.domainName;
                 this.getAjax(url).then((result) => {
                     if (result["code"] === 200) {
-                        this.domainInfo = result["data"];
+                        let domainInfo = result["data"];
+                        this.defaultKeys["did"] = domainInfo["did"];
+                        this.defaultKeys["publickey"] = domainInfo["publickey"];
+                        this.defaultKeys["btc.address"] = domainInfo["btc.address"];
+                        this.defaultKeys["ela.address"] = domainInfo["ela.address"];
+                        this.defaultKeys["eth.address"] = domainInfo["eth.address"];
+                        for (let key in domainInfo) {
+                            if (key != "did" && key != "publickey" && key != "btc.address" && key != "eth.address" && key != "ela.address" && key != "name") {
+                                this.keyValueArr.push({
+                                    "key": key,
+                                    "value": domainInfo[key]
+                                });
+                            }
+                        }
                     }
                 }).catch((err) => {
 
@@ -491,11 +598,11 @@
             if (data != "") {
                 let dataStr = decodeURIComponent(data);
                 let dataObj = JSON.parse(dataStr);
-                this.domainInfo.did = dataObj["DID"];
-                this.domainInfo["ela.address"] = data["ela.address"];
-                this.domainInfo["btc.address"] = data["btc.address"];
-                this.domainInfo["eth.address"] = data["eth.address"];
-                this.domainInfo.publickey = dataObj["PublicKey"];
+                this.defaultKeys.did = dataObj["DID"];
+                this.defaultKeys["ela.address"] = dataObj["ELAAddress"];
+                this.defaultKeys["btc.address"] = dataObj["BTCAddress"];
+                this.defaultKeys["eth.address"] = dataObj["ETHAddress"];
+                this.defaultKeys.publickey = dataObj["PublicKey"];
             }
             window.initWallet().then((address) => {
                 this.selectAddress = address;
