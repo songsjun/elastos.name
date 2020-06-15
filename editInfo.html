@@ -172,21 +172,12 @@
                 </div>
             </div>
 
-            <div class="row text-center" style="margin-top: 10px;" v-for="(item,key) in symbolDes">
+            <div class="row text-center" style="margin-top: 10px;" v-for="(value,key) in domainInfo">
                 <div class="col-sm-6 text-right">
-                    {{item["des"]}}
+                    {{key}}:
                 </div>
-                <div class="col-sm-6 text-left" style="padding-left:0px" v-if="key==='ela'">
-                    <input v-model="coinList['ela']['address']" />
-                </div>
-                <div class="col-sm-6 text-left" style="padding-left:0px" v-else-if="key==='btc'">
-                    <input v-model="coinList['btc']['address']" />
-                </div>
-                <div class="col-sm-6 text-left" style="padding-left:0px" v-else-if="key==='eth'">
-                    <input v-model="coinList['eth']['address']" />
-                </div>
-                <div class="col-sm-6 text-left" style="padding-left:0px" v-else>
-                    <input v-model="domainInfo[key]" />
+                <div class="col-sm-6 text-left" style="padding-left:0px">
+                    <input v-model="value" />
                 </div>
             </div>
             <div v-for="item in keyValueArr" class="row text-center" style="margin-top: 10px;">
@@ -234,19 +225,17 @@
         <div style="text-align: center;font-weight: bold;">Please confirm your MetaMask wallet already</div>
         <div style="text-align: center;font-weight: bold;">connected the Elastos Eth sidechain</div>
         <div style="text-align: center;font-weight: bold;"><img src="./img/meatMask.png">METAMASK</div>
-        <div style="text-align: center;"><img src="./img/wenhao.png"><span style="display:inline-block;border-bottom: 1px solid #dddddd;cursor: pointer;" @click="link">How to setup Metamask</span></div>
+        <div style="text-align: center;"><img src="./img/wenhao.png"><span style="display:inline-block;border-bottom: 1px solid #dddddd;cursor: pointer;">How to setup Metamask</span></div>
     </div>
 
-
+    <div style="height:150px"></div>
     <footer id="footer" class="section-bg">
-
         <div class="container">
-
             <div class="copyright">
                 <b>contact us:</b>
-                    <a href="https://twitter.com/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
-                    <a href="https://t.me/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
-                    <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
+                <a href="https://twitter.com/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
+                <a href="https://t.me/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
+                <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
             </div>
             <div class="copyright">
                 <div style="color:#7B7B7B">
@@ -289,41 +278,9 @@
                 "name": "",
                 "did": "",
                 "publickey": "",
-                "blocknumber": "" //await bridge.getWeb3().eth.getBlockNumber()
-            },
-            coinList: {
-                "ela": {
-                    "symbol": "ela",
-                    "name": "elastos",
-                    "address": "",
-                },
-                "btc": {
-                    "symbol": "btc",
-                    "name": "bitcoin",
-                    "address": "",
-                },
-                "eth": {
-                    "symbol": "eth",
-                    "name": "ethereum",
-                    "address": "",
-                }
-            },
-            symbolDes: {
-                "did": {
-                    "des": 'DID:'
-                },
-                "ela": {
-                    "des": 'ela Address:'
-                },
-                "btc": {
-                    "des": "BTC Address"
-                },
-                "eth": {
-                    "des": 'ETH Address:'
-                },
-                "publickey": {
-                    "des": 'Public key:'
-                },
+                "btc.address": "",
+                "ela.address": "",
+                "eth.address": "",
             },
             schemeConfig: {
                 "AppID": "7d80c7e800f5842b3b8e7ec7318189f66b7fd5b6db13bb80fbd89d2b1c444772c1d0202fea1e9cbabbf3258b3d91685484c02c2ae52d78ca39e2e54593ec81dd",
@@ -385,43 +342,16 @@
                 return url.substring(0, url.length - 1);
             },
             checkParams() {
-                if (this.domainInfo.did === "") {
-                    alert("input did");
-                    return false;
-                }
-
-                if (this.coinList.ela.address === "") {
-                    alert("input elaAddress");
-                    return false;
-                }
-
-                if (this.coinList.btc.address === "") {
-                    alert("input btcAddress");
-                    return false;
-                }
-
-                if (this.coinList.eth.address === "") {
-                    alert("input ethAddress");
-                    return false;
-                }
-
-                if (this.domainInfo.publickey === "") {
-                    alert("input publickey");
-                    return false;
+                for (let key in this.domainInfo) {
+                    if (this.domainInfo[key] === "") {
+                        alert("input " + key);
+                        return false;
+                    }
                 }
                 return true;
             },
-            objtoarr() {
-                let arr = [];
-                for (let key in this.coinList) {
-                    arr.push(this.coinList[key]);
-                }
-                return arr;
-            },
-            link() {
-
-            },
             submit() {
+                console.log(this.checkParams());
                 if (this.checkParams()) {
                     this._generate_option("").then((option) => {
                         this.getContracts(option);
@@ -435,75 +365,6 @@
                 var r = window.location.search.substr(1).match(reg);　　　
                 if (r != null) return (r[2]);　　　
                 return null;
-            },
-            async getBlockNumber() {
-                if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
-                    try {
-                        await ethereum.enable();
-                        window.web3.eth.getBlockNumber().then((blocknumber) => {
-                            this.domainInfo["blocknumber"] = blocknumber;
-                            this.sign();
-                        }).catch((err) => {
-
-                        });
-                    } catch (error) {
-                        // User denied account access...
-                        console.log(error);
-                    }
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
-                }
-                // Non-dapp browsers...
-                else {
-                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
-                }
-            },
-            async sign() {
-                if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
-                    try {
-                        await ethereum.enable();
-                        let arr = this.objtoarr();
-                        this.domainInfo["addresses"] = arr;
-                        for (let index = 0; index < this.keyValueArr.length; index++) {
-                            let item = this.keyValueArr[index];
-                            let key = item["key"];
-                            let value = item["value"];
-                            this.domainInfo[key] = value;
-                        }
-                        let signData = JSON.stringify(this.domainInfo);
-                        web3.eth.personal.sign(signData, this.selectAddress).then((sign) => {
-                            let body = {
-                                "info": signData,
-                                "sign": sign,
-                                "owner": this.selectAddress
-                            };
-                            this.postAjax('https://api.elastos.name/nameInfo/set', body).then((result) => {
-                                let code = result["code"];
-                                if (code === 200) {
-                                    alert(result["message"]);
-                                    window.location.href = "./view.html?name=" + this.domainInfo.name;
-                                } else {
-                                    alert(JSON.stringify(result));
-                                }
-                            }).catch((err) => {
-                                alert("err:" + JSON.stringify(err));
-                            });
-                        }).catch((err) => {
-                            alert("err:" + JSON.stringify(err));
-                        });
-                    } catch (error) {
-                        // User denied account access...
-                        console.log(error);
-                    }
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
-                }
-                // Non-dapp browsers...
-                else {
-                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
-                }
             },
             postAjax(url, data) {
                 return new Promise((resovle, reject) => {
@@ -549,7 +410,20 @@
                         if (blockHash != "" && blockNumber != '') {
                             this.loading = false;
                             clearInterval(sid);
-                            this.getBlockNumber();
+                            let body = {
+                                "name": this.domainInfo.name
+                            };
+                            this.postAjax('https://api.elastos.name/nameInfo/set', body).then((result) => {
+                                let code = result["code"];
+                                if (code === 200) {
+                                    alert(result["message"]);
+                                    window.location.href = "./view.html?name=" + this.domainInfo.name;
+                                } else {
+                                    alert(JSON.stringify(result));
+                                }
+                            }).catch((err) => {
+                                alert("err:" + JSON.stringify(err));
+                            });
                         }
                     });
                 }, 500);
@@ -560,7 +434,9 @@
                     try {
                         await ethereum.enable();
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
-                        infoContract.methods.setBasicInfo(this.domainInfo.name, this.coinList.btc.address, this.coinList.eth.address, this.coinList.ela.address, this.domainInfo.did, this.domainInfo.publickey).send(option, (err, msg) => {
+                        console.log("====11111====" + this.domainInfo["btc.address"]);
+                        alert("====11111====" + this.domainInfo["btc.address"]);
+                        infoContract.methods.setBasicInfo(this.domainInfo.name, this.domainInfo["btc.address"], this.domainInfo["eth.address"], this.domainInfo["ela.address"], this.domainInfo.did, this.domainInfo.publickey).send(option, (err, msg) => {
                             if (!err) {
                                 this.loading = true;
                                 this.next(msg);
@@ -596,54 +472,29 @@
                                 value: '0'
                             };
                     });
-            },
-            handle(coin, list) {
-                for (let index = 0; index < list.length; index++) {
-                    let item = list[index];
-                    if (coin === item["symbol"]) {
-                        return item["address"];
-                    }
-                }
             }
         },
         created() {
             this.domainInfo.name = this.GetQueryString("name") || "";
             let data = this.GetQueryString("Data") || "";
             if (data === "") {
-                let url = "https://"+this.domainInfo.name+".elastos.name/info.json";
+                let url = "https://api.elastos.name/nameInfo/get?name=" + this.domainInfo.name;
                 this.getAjax(url).then((result) => {
-                    //console.log(JSON.stringify(result));
-                    // let code = result["code"];
-                    // if (code === 200) {
-                        //this.domainInfo = result["data"] || "";
-                        let data = JSON.stringify(result);
-                        // this.domainInfo.did = data["did"] || '';
-                        // this.coinList["ela.address"] = data["ela.address"];
-                        // this.coinList["btc.address"] = data["btc.address"];
-                        // this.coinList["eth.address"] = data["eth.address"];
-                        // this.domainInfo.publickey = data["publickey"] || '';
-                        for (let key in data) {
-                            // if (key != "name" && key != "did" && key != "publickey" && key != "blocknumber" && key != "addresses") {
-                            //     Vue.set(this.symbolDes, key, {
-                            //         "des": key
-                            //     });
-                            // }
-                            this.domainInfo[key] = data[key] || "";
-                        }
-
+                    if (result["code"] === 200) {
+                        this.domainInfo = result["data"];
                     }
-                ).catch((err) => {
+                }).catch((err) => {
 
-              });
+                });
             }
 
             if (data != "") {
                 let dataStr = decodeURIComponent(data);
                 let dataObj = JSON.parse(dataStr);
                 this.domainInfo.did = dataObj["DID"];
-                this.coinList["ela.address"] = data["ela.address"];
-                this.coinList["btc.address"] = data["btc.address"];
-                this.coinList["eth.address"] = data["eth.address"];
+                this.domainInfo["ela.address"] = data["ela.address"];
+                this.domainInfo["btc.address"] = data["btc.address"];
+                this.domainInfo["eth.address"] = data["eth.address"];
                 this.domainInfo.publickey = dataObj["PublicKey"];
             }
             window.initWallet().then((address) => {

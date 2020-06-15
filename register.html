@@ -31,7 +31,7 @@
     <script type="text/javascript" src="./js/web3.min.js"></script>
     <script src="./js/vue.min.js"></script>
     <script type="text/javascript">
-        document.write('<script src="./js/contractConfig.js?v=' + (new Date()).getTime() + '"><\/script>');
+        document.write('<script src="./js/contractConfig.js?v=20"><\/script>');
     </script>
     <style>
         [v-cloak] {
@@ -42,64 +42,10 @@
             background-color: #FEFEFE;
         }
         
-        .shuoming {
-            width: 575px;
-            margin: 0 auto;
-        }
-        
-        .shuoming .title {
-            font-size: 26px;
-            font-weight: bold;
-            color: #656565;
-            margin-bottom: 10px;
-        }
-        
-        .shuoming .kuang {
-            border: 1px solid #E5E5E5;
-            margin-bottom: 10px;
-            border-radius: 10px;
-        }
-        
-        .shuoming .kuang img {
-            width: 32px;
-            margin-top: -4px;
-        }
-        
-        .shuoming .kuang input {
-            border: 0;
-            outline: none;
-            background-color: rgba(0, 0, 0, 0);
-            width: 400px;
-            height: 40px;
-        }
-        
-        .shuoming .kuang .line {
-            display: inline-block;
-            margin-right: 5px;
-            color: #ffffff;
-        }
-        
-        .shuoming .price {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        
-        .shuoming .priceNum {
-            display: inline-block;
-            margin-right: 3px;
-            font-size: 16px;
-            color: #ff0000;
-        }
-        
-        .shuoming .beizhu {
-            font-size: 16px;
-            color: #FAFAFA;
-        }
-        
         .buyit {
             margin: 0 auto;
-            margin-top: 30px;
-            margin-bottom: 30px;
+            margin-top: 12px;
+            margin-bottom: 40px;
             cursor: pointer;
             width: 120px;
             line-height: 40px;
@@ -167,6 +113,55 @@
                 -webkit-transform: scale(1.0);
             }
         }
+        
+        .parent {
+            width: 585px;
+            height: 60px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+            text-align: center;
+        }
+        
+        .parent .kuang {
+            line-height: 50px;
+            height: 50px;
+            border: 1px solid #E5E5E5;
+            border-radius: 10px;
+        }
+        
+        .parent .kuang img {
+            width: 32px;
+            margin-top: -4px;
+        }
+        
+        .parent .kuang input {
+            border: 0;
+            outline: none;
+            background-color: rgba(0, 0, 0, 0);
+            width: 400px;
+            height: 40px;
+        }
+        
+        .parent .price {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .parent .priceNum {
+            display: inline-block;
+            margin-right: 3px;
+            font-size: 16px;
+            color: #ff0000;
+        }
+        
+        .parent .kuang .line {
+            display: inline-block;
+            margin-right: 5px;
+        }
     </style>
 
 </head>
@@ -221,20 +216,14 @@
         <div class="row text-center" style="color: #0000ff;font-size: 18px;" v-if="loading">
             <div class="col-sm-12">Transaction confirmation in progress</div>
         </div>
-        <div class="row text-center align-items-centerjustify-content-center login-center" v-if="!loading">
-            <div class="col-sm-12">
-                <div class="shuoming">
-                    
-                    <div class="kuang"><img src="./img/2B9A5A.png" v-if="goodName" /><input v-model="dname" @input="getPrices" v-focus/><span><span class="line">|</span>.CryptoName.org</span>
-                        </span>
-                    </div>
-                    <div v-if="dname"><span class="price">Price：</span><span class="priceNum">{{price}}</span>ELA（Estimated）</div>
-                    
-                    <div class="buyit" :class="{huise:!dname}" @click="buyIt">Register</div>
-                </div>
+        <div class="parent">
+            <div class="kuang"><img src="./img/2B9A5A.png" v-if="goodName" /><input v-model="dname" @input="getPrices" v-focus/><span><span class="line">|</span>.CryptoName.org</span>
+                </span>
             </div>
-        </div>
+            <div v-if="dname" style="margin-top: 10px;"><span class="price">Price：</span><span class="priceNum">{{price}}</span>ELA（Estimated）</div>
 
+            <div class="buyit" :class="{huise:!dname}" @click="buyIt">Register</div>
+        </div>
     </div>
 
     <footer id="footer" class="section-bg">
@@ -243,9 +232,9 @@
 
             <div class="copyright">
                 <b>contact us:</b>
-                    <a href="https://twitter.com/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
-                    <a href="https://t.me/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
-                    <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
+                <a href="https://twitter.com/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
+                <a href="https://t.me/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
+                <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
             </div>
             <div class="copyright">
                 <div style="color:#7B7B7B">
@@ -254,10 +243,9 @@
             </div>
         </div>
     </footer>
-    
+
 </body>
 <script>
-
     var app = new Vue({
         el: '#app',
         data: {
@@ -273,29 +261,26 @@
         },
         methods: {
             async getPrices() {
-                
+
                 if (this.dname.length > 2) {
                     this.checkName().then(() => {
                         this.goodName = false;
                     }, () => {
                         this.goodName = true;
                     });
-                }
-                else {
+                } else {
                     this.goodName = false;
                 }
 
-                if (this.dname.length <3) {
+                if (this.dname.length < 3) {
                     this.price = this.price1;
-                }
-                else if (this.dname.length == 3) {
+                } else if (this.dname.length == 3) {
                     this.price = this.price2;
-                }
-                else if (this.dname.length > 3) {
+                } else if (this.dname.length > 3) {
                     this.price = this.price3;
                 }
 
-                this.price = Math.ceil(this.price*10000)/10000;
+                this.price = Math.ceil(this.price * 10000) / 10000;
                 if (this.price > 0) return;
 
                 var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);

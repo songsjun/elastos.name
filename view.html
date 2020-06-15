@@ -133,7 +133,7 @@
                     </div>
 
                     <div class="col-sm-8">
-                        <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;margin-bottom: 10px;" v-for="(item) in domainInfo.addresses">
+                        <div class="row" style="border: 1px solid #E5E5E5;box-sizing: border-box;border-radius: 4px;margin-bottom: 10px;" v-for="(item) in addresses">
                             <div class="col-sm-8">
                                 <div style="margin-top: 10px;" v-if="item.symbol === 'ela'">
                                     <img src="./img/ela.png" style="margin-right: 5px;">{{item.name}}
@@ -257,12 +257,12 @@
 
             <div class="copyright">
                 <b>contact us:</b>
-                    <a href="https://twitter.com/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
-                    <a href="https://t.me/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
-                    <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
+                <a href="https://twitter.com/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
+                <a href="https://t.me/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
+                <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
 
-                
-                
+
+
             </div>
             <div class="copyright">
                 <div style="color:#7B7B7B">
@@ -271,7 +271,7 @@
             </div>
         </div>
     </footer>
-    
+
 </body>
 <script>
     var app = new Vue({
@@ -282,7 +282,8 @@
             isShow: false,
             isShowEdit: false,
             loading: true,
-            domainInfo: {}
+            domainInfo: {},
+            addresses: []
         },
         methods: {
             editInfo() {
@@ -347,6 +348,27 @@
                 if (code === 200) {
                     this.loading = false;
                     this.domainInfo = result["data"] || "";
+                    if (this.domainInfo != '') {
+                        this.addresses.push({
+                            "symbol": "ela",
+                            "name": "ELA",
+                            "address": this.domainInfo["ela.address"]
+                        });
+
+                        this.addresses.push({
+                            "symbol": "btc",
+                            "name": "BTC",
+                            "address": this.domainInfo["btc.address"]
+                        });
+
+                        this.addresses.push({
+                            "symbol": "eth",
+                            "name": "ETH",
+                            "address": this.domainInfo["eth.address"]
+                        });
+                    } else {
+                        this.addresses = [];
+                    }
                 } else {
                     this.isShowEdit = true;
                 }

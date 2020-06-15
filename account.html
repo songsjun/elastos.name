@@ -372,19 +372,16 @@
             </div>
         </div>
     </div>
-    
+
     <footer id="footer" class="section-bg">
 
         <div class="container">
 
             <div class="copyright">
                 <b>contact us:</b>
-                    <a href="https://twitter.com/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
-                    <a href="https://t.me/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
-                    <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
-
-                
-                
+                <a href="https://twitter.com/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
+                <a href="https://t.me/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
+                <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
             </div>
             <div class="copyright">
                 <div style="color:#7B7B7B">
@@ -393,7 +390,7 @@
             </div>
         </div>
     </footer>
-    
+
 </body>
 <script>
     var app = new Vue({
@@ -562,9 +559,9 @@
             },
             async ownerOf(info, tokenId) {
                 info.methods.ownerOf(tokenId).call().then((address) => {
-                    if (address.toUpperCase() == this.selectAddress.toUpperCase()) {
-                        this.tokensURI(info, tokenId, address);
-                    }
+                    //if (address.toUpperCase() == this.selectAddress.toUpperCase()) {
+                    this.tokensURI(info, tokenId, address);
+                    //}
                 }).catch((err) => {
 
                 });
