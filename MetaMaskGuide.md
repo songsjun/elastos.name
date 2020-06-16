@@ -58,11 +58,9 @@ Please copy that private key to MetaMask. Note, please double check the address 
 
 ### 4. To recharge MetaMask
 
-You can directly transfer ELA/ETHSC to your MetaMask address. If you have no ELA/ETHSC, you can use the below URL to convert ELA into your MetaMask wallet.
+Now that you are connected to the Elastos sidechain through Metamask
 
-```
-https://transfer.elaphant.app/?dstaddress=[Your_MetaMask_Address]
-```
+Go to [**Account**](https://cryptoname.org/account.html) and press **Recharge** **ELA**
 
 
 
