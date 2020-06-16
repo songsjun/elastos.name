@@ -16,6 +16,30 @@ Use the URL below to download & install the Metamask Wallet.
 
 
 
+Network Name: 
+
+```
+ELA Sidechain
+```
+
+Symbol: 
+
+```
+ELA
+```
+
+New RPC URL: 
+
+```
+https://mainrpc.elaeth.io
+```
+
+Block Explorer URL: 
+
+```
+https://explorer.elaeth.io
+```
+
 Above is the network setting.
 
 
