@@ -80,8 +80,11 @@
                   <div class="card-header">{{k}}</div>
                   <div class="card-body">
                     <h5 class="card-title">{{v}}</h5>
+                    
+                    <a href="#" class="btn btn-info btn-sm" @click="doCopy(v)">Copy</a>
+                  </div>
+                  <div class="card-footer bg-transparent">
                     <p class="card-text">https://{{domainInfo.name}}.cryptoname.org/{{k}}</p>
-                    <a href="#" class="btn btn-info btn-sm">Copy</a>
                   </div>
                 </div>
             </div>
@@ -144,10 +147,13 @@
                 if (r != null) return (r[2]);　　　
                 return null;
             },
-            doCopy(text) {
-                this.$copyText(text).then((e) => {
-                    alert("copy Sucess");
-                }, (e) => {})
+            doCopy(val) {
+                this.$copyText(val).then(function (e) {
+                    console.log(e)
+                }, function (e) {
+                   alert('Can not copy',e.text)
+                   console.log(e)
+                })
             },
             up() {
                 this.isShow = false;
