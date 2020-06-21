@@ -30,7 +30,13 @@
     <script type="text/javascript" src="./js/vue-datepicker.min.js"></script>
     <script type="text/javascript" src="./js/sha256.min.js"></script>
     <script type="text/javascript" src="./js/web3.min.js"></script>
+    <script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="./lib/bootstrap/js/bootstrap_4_5.min.js"></script>
+    <script type="text/javascript" src="./lib/bootstrap/js/bootstrap_4_5.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/jquery-easy-loading/dist/jquery.loading.min.js"></script>
     <script src="./js/vue.min.js"></script>
+    <script src="./js/qrcode.min.js"></script>
     <script src="./js/vue-clipboard.min.js"></script>
     <script type="text/javascript">
         document.write('<script src="./js/contractConfig.js?v=' + (new Date()).getTime() + '"><\/script>');
@@ -244,6 +250,10 @@
                 -webkit-transform: scale(1.0);
             }
         }
+
+        #addressimg img {
+            margin: 0 auto;
+        }
     </style>
 
 </head>
@@ -330,14 +340,16 @@
                         <span style="font-weight: bold;">Account Address:</span>
                     </div>
                     <div class="col-sm-12" @click="doCopy(selectAddress)">
-                        <span style="margin-left: 10px;cursor: pointer;">{{selectAddress}}</span> <img src="./img/diqiu.png" style="cursor: pointer;" />
+                        <span style="margin-left: 10px;cursor: pointer;">{{selectAddress}}</span>
+                        <img src="./img/diqiu.png" style="cursor: pointer; width:16px;" />
                     </div>
                     <div class="col-sm-12">
                         <span style="font-weight: bold;">Account Balance:</span>
                     </div>
                     <div class="col-sm-12">
-                        <span style="margin-left: 10px;">{{selectedElaBalance}} ELA</span> <span style="color:#86A0FC;margin-left:15px;cursor: pointer;border-bottom:1px solid #86A0FC;" @click="rechargeELA">Recharge ELA</span> <img src="./img/elaphant.png"
-                        />
+                        <span style="margin-left: 10px;">{{selectedElaBalance}} ELA</span> 
+                        <button type="button" class="btn btn-link" data-toggle="modal" @click="DepositELA()">Deposit</button>
+                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#withdrawDiag">Withdraw</button>
                     </div>
                 </div>
 
@@ -373,6 +385,61 @@
                 <div style="text-align: center;"><img src="./img/wenhao.png"><span style="display:inline-block;border-bottom: 1px solid #dddddd;cursor: pointer;" @click="link">How to setup Metamask</span></div>
             </div>
         </div>
+
+        <div class="modal fade" id="depositDiag" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Deposit to ELA sidechain</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body row">
+                <div  class="col-sm-12" >
+                    <div id="addressimg" class="align-middle" >
+                    </div>
+                </div>
+                <p style="text-align: center; width:100%; margin-top: 15px;" @click="doCopy(depsoitMainchainAddress)">
+                    {{depsoitMainchainAddress}}
+                </p>
+                <p style="text-align: center; color:blue; font-size:0.8rem; width:100%; margin:15px;">
+                    {{depositState}}
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="withdrawDiag" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Withdraw to ELA mainchain</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Withdraw Amount:</label>
+                    <input type="text" class="form-control" id="recipient-name"  v-model="withdrawAmount">
+                    <label for="recipient-name" class="col-form-label">Mainchain Address:</label>
+                    <input type="text" class="form-control" id="recipient-name"  v-model="withDrawMainchainAddress">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" @click="WithdrawELA()">Go</button>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
 
     <footer id="footer" class="section-bg">
@@ -400,13 +467,17 @@
         data: {
             loading: false,
             selectAddress: "",
-            selectedEthBalance: "",
+            withdrawAmount: "",
             selectedElaBalance: "",
             loginStatus: false,
             domainNameArr: [],
             showMask: false,
             daddress: "",
             curItem: "",
+            depsoitMainchainAddress: "",
+            withDrawMainchainAddress:"",
+            exchangeId:0,
+            depositState:""
         },
         methods: {
             click_close() {
@@ -504,7 +575,7 @@
                         web3 = new Web3(web3.currentProvider);
                     }
                     web3.eth.getBalance(address, (err, data) => {
-                        this.selectedElaBalance = (data / window.ethUnit).toFixed(4);
+                       this.withdrawAmount = this.selectedElaBalance = (data / window.ethUnit).toFixed(4);
                     });
                     this.init();
                 }).catch((err) => {
@@ -640,8 +711,123 @@
             link() {
                 //window.open("");
             },
-            rechargeELA() {
-                window.open(" https://transfer.elaphant.app?dstaddress=" + this.selectAddress);
+            checkDepsoitResult() {
+                if (this.exchangeId == 0) {
+                    this.depositState = "Waiting to transfer ELA to the above address";
+                    return;
+                }
+                var pthis = this;
+
+                fetch("https://transfer.elaphant.net/api/1/ela_exchange/"+this.selectAddress+"/tx/"+this.exchangeId)
+                    .then((ret) => ret.json())
+                    .then(function(ret) {
+                        
+                        switch(ret.data.state) {
+                            case "renewal_waiting":
+                                pthis.depositState = "Waiting to transfer ELA to the above address";
+                                break;
+                            case "renewal_timeout":
+                                pthis.depositState = "Never received your ELA. If you have already transferred, please join the Telegram group and contact the admin for processing. (exchangeId:"+ret.data.exchangeId+")";
+                                break;
+                            case "transferring":
+                                pthis.depositState = "Your transfer has been received and is transferring to the sidechain";
+                                break;
+                            case "transfer_finish":
+                                pthis.depositState = "Completed, please refresh your wallet."
+                                break;
+                            case "transfer_failed":
+                                pthis.depositState = "Transaction failed, please join the Telegram group and contact the admin for processing(exchangeId:"+ret.data.exchangeId+").";
+                                break;
+                            case "backing":
+                                pthis.depositState = "Refunding";
+                                break;
+                            case "back_finish":
+                                pthis.depositState = "refunded";
+                                break;
+                            case "back_failed":
+                                pthis.depositState = "Refund failed, please join the Telegram group and contact the admin for processing(exchangeId:"+ret.data.exchangeId+").";
+                                break;
+                            case "direct_transferring":
+                                pthis.depositState = "Cross-chain transfer in progress";
+                                break;
+                            case "direct_transferring_wait_gather":
+                                pthis.depositState = "Cross-chain transfer in progress";
+                                break;
+                            case "direct_transfer_finish":
+                                pthis.depositState = "Cross-chain transfer completed.";
+                                break;
+                            case "direct_transfer_failed":
+                                pthis.depositState = "Cross-chain transfer failed.(exchangeId:"+ret.data.exchangeId+")";
+                                break;
+                        }
+                    });
+
+            },
+            DepositELA() {
+
+                this.exchangeId = 0;
+                this.checkDepsoitResult();
+                var req = {
+                    "user_did": this.selectAddress,
+                    "src_chain_id": 1,
+                    "back_addr": "EYH69rRAfDQ2HRa35bmYRh6UoAZ8u3n7ZJ",
+                    "dst_chain_id": 3,
+                    "dst_addr": this.selectAddress
+                };
+
+                fetch("https://transfer.elaphant.net/api/1/ela_exchange/generator", {
+                    body: JSON.stringify(req),
+                    headers: {
+                      'user-agent': 'Mozilla/4.0 MDN Example',
+                      'content-type': 'application/json'
+                    },
+                    method: 'POST'
+                }).then((rep) => rep.json())
+                .then((ret) => {
+                    this.depsoitMainchainAddress = ret.data.src_chain_addr;
+                    $("#addressimg").html("");
+                    var qrcode = new QRCode(document.getElementById("addressimg"), ret.data.src_chain_addr);
+                    $('#depositDiag').modal('show');
+                    this.exchangeId = ret.data.exchange_id;
+
+                });
+
+                //window.open(" https://transfer.elaphant.app?dstaddress=" + this.selectAddress);
+            },
+            WithdrawELA() {
+                var req = {
+                    "user_did": this.selectAddress,
+                    "src_chain_id": 3,
+                    "back_addr": this.selectAddress,
+                    "dst_chain_id": 1,
+                    "dst_addr": this.withDrawMainchainAddress
+                };
+
+                //var balance = this.selectedElaBalance;
+                fetch("https://transfer.elaphant.net/api/1/ela_exchange/generator", {
+                    body: JSON.stringify(req),
+                    headers: {
+                      'user-agent': 'Mozilla/4.0 MDN Example',
+                      'content-type': 'application/json'
+                    },
+                    method: 'POST'
+                }).then((rep) => rep.json())
+                .then((ret) => {
+                    var transaction = ({
+                        from: web3.givenProvider.selectedAddress,
+                        to: ret.data.src_chain_addr,
+                        value: web3.utils.toWei(this.withdrawAmount, "ether")
+                      });
+
+                    $("#withdrawDiag").loading('toggle');
+                    web3.eth.sendTransaction(transaction)
+                    .then(()=>{
+                        $("#withdrawDiag").loading('stop');
+                        $("#withdrawDiag").modal('hide');
+                    });
+                });
+
+                //window.open(" https://transfer.elaphant.app?dstaddress=" + this.selectAddress);
             },
             async getExpiration(info, tokenId, address, tokenName) {
                 info.methods.tokenExpiration(tokenId).call().then((expiration) => {
@@ -741,6 +927,7 @@
             }
 
         },
+
         created() {
             let first = localStorage.getItem("domain.tokens.org") || "";
             if (first === "") {
@@ -749,7 +936,15 @@
                 this.loginStatus = JSON.parse(first)["loginStatus"];
                 this.login();
             }
+            ethereum.enable().then(() => {
+                window.web3 = new Web3(ethereum);
+            });
+
+            setInterval(this.checkDepsoitResult, 1000);
         }
+    });
+    $('#depositDiag').on('hidden.bs.modal', function (e) {
+        app._data.exchangeId = 0;
     });
 </script>
 

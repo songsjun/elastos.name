@@ -77,14 +77,13 @@
         <div class="container" v-if="!loading">
             <div class="card-columns w-auto">
                 <div class="card p-3" v-for="(v, k) in domainInfo">
-                  <div class="card-header">{{k}}</div>
+                  <div class="card-header"><b>{{k}}</b></div>
                   <div class="card-body">
                     <h5 class="card-title">{{v}}</h5>
-                    
                     <a href="#" class="btn btn-info btn-sm" @click="doCopy(v)">Copy</a>
                   </div>
                   <div class="card-footer bg-transparent">
-                    <p class="card-text">https://{{domainInfo.name}}.cryptoname.org/{{k}}</p>
+                    <p class="card-text"><a href="#" @click="doCopy('https://'+domainInfo.name+'.cryptoname.org/'+k)">https://{{domainInfo.name}}.cryptoname.org/{{k}}</a></p>
                   </div>
                 </div>
             </div>
