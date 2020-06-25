@@ -1,16 +1,18 @@
 # MetaMask Guide
 
-### 1. Install MetaMask
+### 1. Install MetaMask and Elaphant wallet app.
 
-You must have installed the Chrome, Firefox or Brave browser.
+First you need a PC/ Laptop with Chrome, Firefox or Brave browser installed. Then download and install Metamask Wallet from here –
 
-Use the URL below to download & install the Metamask Wallet.
+https://metamask.io
 
-<https://metamask.io/>
+Secondly you need an android / IOS device with Elaphant wallet installed, download here –
+
+https://elephantwallet.app/
 
 
 
-### 2. Connect to the Elastos sidechain
+### 2. Connect to the Elastos sidechain.
 
 <img src="img/s4.png" width="240"/><img src="img/s3.png" width="240"/>
 
@@ -19,7 +21,7 @@ Use the URL below to download & install the Metamask Wallet.
 Network Name: 
 
 ```
-ELA Sidechain
+ELA sidechain
 ```
 
 Symbol: 
@@ -44,11 +46,11 @@ Above is the network setting.
 
 
 
-### 3. Create a wallet or import a wallet
+### 3. Create a wallet or import a wallet.
 
 <img src="img/s2.png" width="240"/>
 
-If you want to import your elephant wallet to MetaMask, you will first need your private key. You can open <https://elaphant.app/mnemonic.html> and enter your mnemonics, the page will generate your private key in the below table.
+If you want to import your Elaphant wallet to MetaMask, you will first need your private key. Click this link https://elaphant.app/mnemonic.html and enter your Elaphant wallet mnemonics, the page will then generate your private key below.
 
 <img src="img/s1.png" />
 
@@ -56,22 +58,28 @@ Please copy that private key to MetaMask. Note, please double check the address 
 
 
 
-### 4. To recharge MetaMask
+### 4. Send ELA to your CryptoName Metatamask account.
 
-Now that you are connected to the Elastos sidechain through Metamask
+You are now connected to the Elastos sidechain through Metamask, the next step is to send ELA from your Elaphant wallet to your CryptoName account.
 
-Go to [**Account**](https://cryptoname.org/account.html) and press **Recharge** **ELA**
+Go to your CryptoName Account on the PC/Laptop and press Deposit, a QR code will appear on the screen.
 
+Now using the Elephant wallet on your device click send and scan the QR code, enter the amount of ELA and click Send.
 
+After a few minutes the ELA should appear in you CryptoName Account.
 
-### 5. Enjoy!
+Set up complete.
 
-Congratulation, you are ready for getting a CryptoName. 
+You are now ready to purchase your CryptoName's.
 
-You can find your name in the [Register](https://cryptoname.org/register.html)
+You can now search and purchase your names in the [**Register**](https://cryptoname.org/register.html).
 
-You can manage your names in the [Account](https://cryptoname.org/account.html)
+You can manage your names in the [**Account**](https://cryptoname.org/account.html).
 
-You can also set your name in there.
+Enjoy !
 
-Enjoy it.
+### 5. How to return ELA from your CryptoName Account back to your Elephant wallet.
+
+On the CryptoName Account page on the PC/Laptop click Withdraw. Enter the amount of ELA and the address of the Elephant wallet, and click send.
+
+After a few minutes minutes the ELA will appear in the Elephant wallet on the device.
