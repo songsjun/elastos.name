@@ -66,10 +66,10 @@
                 <h1 class="text-light">
                     <a href="#intro" >
                         <span style="font-size: 3rem"><b>{{domainInfo.name}}</b></span>
-                        <span style="font-size: 1.5rem" v-if="isPC">.CryptoName.org</span>
+                        <span style="font-size: 1.5rem" v-if="isPC">.elastos.name</span>
                     </a>
                 </h1>
-                <p v-if="!isPC"><a href="#intro"><span style="font-size: 1.5rem">.CryptoName.org</span></a></p>
+                <p v-if="!isPC"><a href="#intro"><span style="font-size: 1.5rem">.elastos.name</span></a></p>
             </div>
         </div>
 
@@ -83,7 +83,7 @@
                     <a href="#" class="btn btn-info btn-sm" @click="doCopy(v)">Copy</a>
                   </div>
                   <div class="card-footer bg-transparent">
-                    <p class="card-text"><a href="#" @click="doCopy('https://'+domainInfo.name+'.cryptoname.org/'+k)">https://{{domainInfo.name}}.cryptoname.org/{{k}}</a></p>
+                    <p class="card-text"><a href="#" @click="doCopy('https://'+domainInfo.name+'.elastos.name/'+k)">https://{{domainInfo.name}}.elastos.name/{{k}}</a></p>
                   </div>
                 </div>
             </div>
