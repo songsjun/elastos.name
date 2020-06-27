@@ -80,6 +80,8 @@ Enjoy !
 
 ### 5. How to return ELA from your CryptoName Account back to your Elephant wallet.
 
-On the CryptoName Account page on the PC/Laptop click Withdraw. Enter the amount of ELA and the address of the Elephant wallet, and click send.
+On the CryptoName Account page on the PC/Laptop click Withdraw. Enter the amount of ELA and  
+
+the address of the Elephant wallet, and click send. At present the maximum amount you can send is 2 ELA per transaction, we are working to increase this. 
 
 After a few minutes minutes the ELA will appear in the Elephant wallet on the device.
