@@ -217,7 +217,7 @@
             <div class="col-sm-12">Transaction confirmation in progress</div>
         </div>
         <div class="parent" v-if="!loading">
-            <div class="kuang"><img src="./img/2B9A5A.png" v-if="goodName" /> <img src="./img/serach.png" v-if="!goodName" style="margin-right: 5px;height:24px; width:24px" /><input v-model="dname" @input="getPrices" v-focus/><span><span class="line">|</span>.elastos.name</span>
+            <div class="kuang"><img src="./img/wrong.png" v-if="goodName==2" /> <img src="./img/right.png" v-if="goodName==1" /><img src="./img/serach.png" v-if="goodName==0" style="margin-right: 5px;height:24px; width:24px" /><input v-model="dname" @input="getPrices" placeholder="Only supports a-z and 0-9" v-focus onkeyup="this.value=this.value.replace(/[^a-z0-9]/g,'');"/><span><span class="line">|</span>.elastos.name</span>
                 </span>
             </div>
             <div v-if="dname" style="margin-top: 10px;"><span class="price">Price：</span><span class="priceNum">{{price}}</span>ELA（Estimated）</div>
@@ -250,7 +250,7 @@
         el: '#app',
         data: {
             selectAdress: "",
-            goodName: false,
+            goodName: 0,
             dname: '',
             price: 0.0,
             price1: 0,
@@ -264,12 +264,15 @@
 
                 if (this.dname.length > 2) {
                     this.checkName().then(() => {
-                        this.goodName = false;
+                        this.goodName = 2;
                     }, () => {
-                        this.goodName = true;
+                        this.goodName = 1;
                     });
-                } else {
-                    this.goodName = false;
+                } else if (this.dname.length == 0) {
+                    this.goodName = 0;
+                }
+                else {
+                    this.goodName = 2;
                 }
 
                 if (this.dname.length < 3) {
