@@ -33,7 +33,7 @@
     <script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="./lib/bootstrap/js/bootstrap_4_5.min.js"></script>
     <script type="text/javascript" src="./lib/bootstrap/js/bootstrap_4_5.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2.4.2/dist/umd/popper.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/jquery-easy-loading/dist/jquery.loading.min.js"></script>
     <script src="./js/vue.min.js"></script>
     <script src="./js/qrcode.min.js"></script>
@@ -426,7 +426,7 @@
               <div class="modal-body">
                 <form>
                   <div class="form-group">
-                    <label for="recipient-name" class="col-form-label">Withdraw Amount (2 ELA max):</label>
+                    <label for="recipient-name" class="col-form-label">Withdraw Amount:</label>
                     <input type="number" step="0.00000000001" max="2.0" class="form-control" id="recipient-name"  v-model="withdrawAmount" max="20">
                     <label for="recipient-name" class="col-form-label">Mainchain Address:</label>
                     <input type="text" class="form-control" id="recipient-name"  v-model="withDrawMainchainAddress">
@@ -577,7 +577,7 @@
                     var pthis = this;
                     web3.eth.getBalance(address, (err, data) => {
                         pthis.selectedElaBalance = (data / window.ethUnit).toFixed(5);
-                        pthis.withdrawAmount = (data / window.ethUnit).toFixed(5) - 0.00003;
+                        pthis.withdrawAmount = (data / window.ethUnit).toFixed(5) - 0.0012;
                         
                         pthis.init();
                     })
@@ -799,41 +799,73 @@
                 //window.open(" https://transfer.elaphant.app?dstaddress=" + this.selectAddress);
             },
             WithdrawELA() {
-                var req = {
-                    "user_did": this.selectAddress,
-                    "src_chain_id": 3,
-                    "back_addr": this.selectAddress,
-                    "dst_chain_id": 1,
-                    "dst_addr": this.withDrawMainchainAddress
-                };
 
-                var pthis = this;
+                $("#withdrawDiag").loading('toggle');
 
-                //var balance = this.selectedElaBalance;
-                fetch("https://transfer.elaphant.net/api/1/ela_exchange/generator", {
-                    body: JSON.stringify(req),
-                    headers: {
-                      'user-agent': 'Mozilla/4.0 MDN Example',
-                      'content-type': 'application/json'
-                    },
-                    method: 'POST'
-                }).then((rep) => rep.json())
-                .then((ret) => {
-                    var transaction = ({
-                        from: web3.givenProvider.selectedAddress,
-                        to: ret.data.src_chain_addr,
-                        value: web3.utils.toWei(pthis.withdrawAmount+"", "ether")
-                      });
+                var contract = new web3.eth.Contract([{"constant":false,"inputs":[{"name":"_addr","type":"string"},{"name":"_amount","type":"uint256"},{"name":"_fee","type":"uint256"}],"name":"receivePayload","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_addr","type":"string"},{"indexed":false,"name":"_amount","type":"uint256"},{"indexed":false,"name":"_crosschainamount","type":"uint256"},{"indexed":true,"name":"_sender","type":"address"}],"name":"PayloadReceived","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_sender","type":"address"},{"indexed":false,"name":"_amount","type":"uint256"},{"indexed":true,"name":"_black","type":"address"}],"name":"EtherDeposited","type":"event"}]);
+                contract.options.address = "0xC445f9487bF570fF508eA9Ac320b59730e81e503";
+                var cdata  = contract.methods.receivePayload(this.withDrawMainchainAddress, web3.utils.toWei(this.withdrawAmount+"", "ether"), "100000000000000").encodeABI();
+                var tx = {data: cdata, to: contract.options.address, from: this.selectAddress};
+                tx.value = web3.utils.toWei(this.withdrawAmount+"", "ether");
 
-                    $("#withdrawDiag").loading('toggle');
-                    web3.eth.sendTransaction(transaction)
-                    .then(()=>{
+                web3.eth.sendTransaction(tx)
+                    .then(() => {
                         $("#withdrawDiag").loading('stop');
                         $("#withdrawDiag").modal('hide');
                     }, () => {
                         $("#withdrawDiag").loading('stop');
                     });
-                });
+
+                // web3.eth.accounts.sign(tx).then((res)=>{
+                //    console.log("coming");
+                //    stx = res;
+                //    console.log(stx.rawTransaction);
+                //    web3.eth.sendSignedTransaction(stx.rawTransaction)
+                //     .then(() => {
+                //         $("#withdrawDiag").loading('stop');
+                //         $("#withdrawDiag").modal('hide');
+                //     }, () => {
+                //         $("#withdrawDiag").loading('stop');
+                //     })
+                // });
+
+
+
+                // var req = {
+                //     "user_did": this.selectAddress,
+                //     "src_chain_id": 3,
+                //     "back_addr": this.selectAddress,
+                //     "dst_chain_id": 1,
+                //     "dst_addr": this.withDrawMainchainAddress
+                // };
+
+                // var pthis = this;
+
+                // //var balance = this.selectedElaBalance;
+                // fetch("https://transfer.elaphant.net/api/1/ela_exchange/generator", {
+                //     body: JSON.stringify(req),
+                //     headers: {
+                //       'user-agent': 'Mozilla/4.0 MDN Example',
+                //       'content-type': 'application/json'
+                //     },
+                //     method: 'POST'
+                // }).then((rep) => rep.json())
+                // .then((ret) => {
+                //     var transaction = ({
+                //         from: web3.givenProvider.selectedAddress,
+                //         to: ret.data.src_chain_addr,
+                //         value: web3.utils.toWei(pthis.withdrawAmount+"", "ether")
+                //       });
+
+                //     $("#withdrawDiag").loading('toggle');
+                //     web3.eth.sendTransaction(transaction)
+                //     .then(()=>{
+                //         $("#withdrawDiag").loading('stop');
+                //         $("#withdrawDiag").modal('hide');
+                //     }, () => {
+                //         $("#withdrawDiag").loading('stop');
+                //     });
+                // });
 
                 //window.open(" https://transfer.elaphant.app?dstaddress=" + this.selectAddress);
             },
