@@ -60,11 +60,11 @@ Please copy that private key to MetaMask. Note, please double check the address 
 
 ### 4. Send ELA to your CryptoName Metatamask account.
 
-You are now connected to the Elastos sidechain through Metamask, the next step is to send ELA from your Elaphant wallet to your CryptoName account.
+You are now connected to the Elastos sidechain through Metamask, the next step is to send ELA from your Elaphant wallet to your CryptoName Account.
 
-Go to your CryptoName Account on the PC/Laptop and press Deposit, a QR code will appear on the screen.
+Go to your CryptoName [**Account**](https://cryptoname.org/account.html) on the PC/Laptop and press Deposit, a QR code will appear on the screen.
 
-Now using the Elephant wallet on your device click send and scan the QR code, enter the amount of ELA and click Send.
+Now using the Elaphant wallet on your device click send and scan the QR code, enter the amount of ELA and click Send.
 
 After a few minutes the ELA should appear in you CryptoName Account.
 
@@ -76,12 +76,36 @@ You can now search and purchase your names in the [**Register**](https://crypton
 
 You can manage your names in the [**Account**](https://cryptoname.org/account.html).
 
-Enjoy !
+
 
 ### 5. How to return ELA from your CryptoName Account back to your Elephant wallet.
 
-On the CryptoName Account page on the PC/Laptop click Withdraw. Enter the amount of ELA and  
+On the CryptoName [**Account**](https://cryptoname.org/account.html) page on the PC/Laptop click Withdraw. Enter the amount of ELA and the address of the Elephant wallet, and click send.
 
-the address of the Elephant wallet, and click send. At present the maximum amount you can send is 2 ELA per transaction, we are working to increase this. 
+After a few minutes minutes the ELA will appear in the Elaphant wallet on the device.
 
-After a few minutes minutes the ELA will appear in the Elephant wallet on the device.
+
+
+### 6. How to Purchase/Register your CryptoName.
+
+On the CryptoName website on your PC/Laptop click the [**Register**](https://cryptoname.org/register.html) link. Then enter your chosen name in the registration bar, if the name is available you will see a green tick and the estimated price below.
+
+To proceed click the Register button below the price, the Metamask wallet will now pop up, you now need to click Confirm within the Metamask wallet. Wait a few minutes and your CryptoName will appear within the Account page.
+
+To link your CryptoName to your Elaphant wallet, got to the Account page and click Edit on your chosen name. At the bottom of the page click "Start Elaphant to fill in quickly" .
+
+A QR code will now appear on the screen, using the Elaphant Wallet on the device, scan the QR code( see images for the location of the Qr scanner within the Elaphant wallet)
+
+<img src="img/s5.png" width="240"/><img src="img/s6.png" width="240"/>
+
+Once this process is complete click the Save button within the edit page on your PC/Laptop. And that's it, people will now only need to enter your CryptoName to send you ELA, ETH, BTC.
+
+
+
+### 7. How to transfer your CryptoName.
+
+Within the CryptoName [**Account**](https://cryptoname.org/account.html) page on the PC/Laptop click Transfer on the CryptoName you want to transfer. You will now need to enter the receivers Account Address (this can be found in their CryptoName Account page), then click Submit.
+
+The Metamask wallet will now pop up, click Confirm. Wait a while and it will appear in the receivers CryptoName Account page.
+
+Please note, you can only transfer your CryptoName, to another registered CryptoName account.
