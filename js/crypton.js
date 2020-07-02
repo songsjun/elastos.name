@@ -1,6 +1,21 @@
 
 class Crypton {
 
+	static async QueryName(name) {
+		return fetch("https://"+name+".elastos.name/info.json")
+  			.then(response => response.json())
+			.then (result => {
+				return result;
+			});
+	}
+
+	static async QueryKey(name, key) {
+		return fetch("https://"+name+".elastos.name/"+key)
+			.then (result => {
+				return result.text();
+			});
+	}
+
 	constructor (abiArray, contractAddress, web3) {
 		this._web3 = web3;
 		this._contact = new this._web3.eth.Contract(abiArray, contractAddress);

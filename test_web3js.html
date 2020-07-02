@@ -16,6 +16,13 @@
 
     		try {
 
+    			var ss = await Crypton.QueryName("songsjun");
+    			console.log(ss.name);
+    			var ela = await Crypton.QueryKey("songsjun", "ela.address");
+    			console.log(ela);
+
+    			return;
+
     			// 初始化Bridge对象
 				var bridge = new Web3Bridge();
 

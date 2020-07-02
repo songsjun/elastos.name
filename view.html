@@ -186,6 +186,10 @@
                 if (code === 200) {
                     this.loading = false;
                     this.domainInfo = result["data"] || "";
+                    for (var index in this.domainInfo) {
+                        if (this.domainInfo[index] == "")
+                            delete this.domainInfo[index];
+                    }
                 } else {
                     this.isShowEdit = true;
                 }
