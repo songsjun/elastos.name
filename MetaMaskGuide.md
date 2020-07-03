@@ -58,7 +58,7 @@ Please copy that private key to MetaMask. Note, please double check the address 
 
 
 
-### 4. Send ELA to your CryptoName Metatamask account.
+### 4. Send ELA to your CryptoName Metamask account.
 
 You are now connected to the Elastos sidechain through Metamask, the next step is to send ELA from your Elaphant wallet to your CryptoName Account.
 
