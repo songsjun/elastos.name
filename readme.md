@@ -33,13 +33,33 @@ ABI file:
 <script type="text/javascript" src="https://cryptoname.org/js/domain_abi.js"></script>
 ```
 
-JS APIs file: 
+JS file:
+
+```
+ https://cryptoname.org/js/crypton.js
+```
+
+Sample:
 
 ```
 <script type="text/javascript" src="https://cryptoname.org/js/crypton.js"></script>
 <script>
     var crypton = new Crypton(abiArray, contractAddress, web3);
 </script>
+```
+
+npm install:
+
+```
+npm install cryptoname
+```
+
+Sample:
+
+```
+import { Crypton } from "cryptoname";
+let nameObject = await Crypton.QueryName('songsjun');
+let elaAddress = await Crypton.QueryKey('songsjun', 'ela.address');
 ```
 
 
@@ -120,6 +140,22 @@ Response:
 
 ```
 029bad2e7ab4ff62c42bfba47499f8f89b2accaf08b678884438af04f826a0af8a
+```
+
+
+
+##### Method 4: Using npm
+
+```
+npm install cryptoname
+```
+
+
+
+```
+import { Crypton } from "cryptoname";
+let nameObject = await Crypton.QueryName('songsjun');
+let elaAddress = await Crypton.QueryKey('songsjun', 'ela.address');
 ```
 
 
