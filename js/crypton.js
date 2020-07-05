@@ -218,6 +218,20 @@ class Crypton {
 			});
 	}
 
+	async renew (to, name) {
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis.getRenewalPrice(name);
+			})
+			.then(function(price) {
+				return pthis._generate_option(price);
+			})
+			.then(function(option) {
+        		return pthis._contact.methods.renewToken(pthis._account, to, name).send(option);
+			});
+	}
+
 	async registerName (name, price) {
 		var pthis = this;
 		return this._init_account()
