@@ -838,59 +838,6 @@
                     }, () => {
                         $("#withdrawDiag").loading('stop');
                     });
-
-                // web3.eth.accounts.sign(tx).then((res)=>{
-                //    console.log("coming");
-                //    stx = res;
-                //    console.log(stx.rawTransaction);
-                //    web3.eth.sendSignedTransaction(stx.rawTransaction)
-                //     .then(() => {
-                //         $("#withdrawDiag").loading('stop');
-                //         $("#withdrawDiag").modal('hide');
-                //     }, () => {
-                //         $("#withdrawDiag").loading('stop');
-                //     })
-                // });
-
-
-
-                // var req = {
-                //     "user_did": this.selectAddress,
-                //     "src_chain_id": 3,
-                //     "back_addr": this.selectAddress,
-                //     "dst_chain_id": 1,
-                //     "dst_addr": this.withDrawMainchainAddress
-                // };
-
-                // var pthis = this;
-
-                // //var balance = this.selectedElaBalance;
-                // fetch("https://transfer.elaphant.net/api/1/ela_exchange/generator", {
-                //     body: JSON.stringify(req),
-                //     headers: {
-                //       'user-agent': 'Mozilla/4.0 MDN Example',
-                //       'content-type': 'application/json'
-                //     },
-                //     method: 'POST'
-                // }).then((rep) => rep.json())
-                // .then((ret) => {
-                //     var transaction = ({
-                //         from: web3.givenProvider.selectedAddress,
-                //         to: ret.data.src_chain_addr,
-                //         value: web3.utils.toWei(pthis.withdrawAmount+"", "ether")
-                //       });
-
-                //     $("#withdrawDiag").loading('toggle');
-                //     web3.eth.sendTransaction(transaction)
-                //     .then(()=>{
-                //         $("#withdrawDiag").loading('stop');
-                //         $("#withdrawDiag").modal('hide');
-                //     }, () => {
-                //         $("#withdrawDiag").loading('stop');
-                //     });
-                // });
-
-                //window.open(" https://transfer.elaphant.app?dstaddress=" + this.selectAddress);
             },
             async getExpiration(info, tokenId, address, tokenName) {
                 info.methods.tokenExpiration(tokenId).call().then((expiration) => {
@@ -922,36 +869,101 @@
             async renewal_level3() {
                 if (window.ethereum) {
                     window.web3 = new Web3(ethereum);
-                    try {
-                        await ethereum.enable();
-                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
-                        infoContract.methods.renewal_level3().call().then((msg) => {
-                            alert("price:" + msg / window.window.ethUnit + "ETH");
-                        }).catch((err) => {
 
-                        });
-                    } catch (error) {
-                        // User denied account access...
-                        console.log(error);
-                    }
+                    await ethereum.enable();
                 } else if (window.web3) {
                     window.web3 = new Web3(web3.currentProvider);
                 }
-                // Non-dapp browsers...
                 else {
                     console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                    return;
                 }
+                var pthis = this;
+
+                var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                infoContract.methods.renewal_level3().call().then((price) => {
+                    return pthis._generate_option(web3.utils.fromWei(price, "ether"))
+                }).then((option) => {
+                    return pthis.callRenewName(option);
+                }).catch((err) => {
+                    console.log(err);
+                });
             },
             async renewal_level2(option) {
                 if (window.ethereum) {
                     window.web3 = new Web3(ethereum);
+
+                    await ethereum.enable();
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                    return;
+                }
+                var pthis = this;
+
+                var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                infoContract.methods.renewal_level2().call().then((price) => {
+                    return pthis._generate_option(web3.utils.fromWei(price, "ether"))
+                }).then((option) => {
+                    return pthis.callRenewName(option);
+                }).catch((err) => {
+                    console.log(err);
+                });
+            },
+            async renewal_level1(option) {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+
+                    await ethereum.enable();
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                    return;
+                }
+
+                var pthis = this;
+
+                var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                infoContract.methods.renewal_level1().call().then((price) => {
+                    return pthis._generate_option(web3.utils.fromWei(price, "ether"))
+                }).then((option) => {
+                    return pthis.callRenewName(option);
+                }).catch((err) => {
+                    console.log(err);
+                });
+            },
+            next(txid) {
+                let sid = setInterval(() => {
+                    if (typeof web3 !== 'undefined') {
+                        web3 = new Web3(web3.currentProvider);
+                    }
+                    web3.eth.getTransaction(txid, (err, data) => {
+                        let blockHash = data['blockHash'] || "";
+                        let blockNumber = data['blockNumber'] || "";
+                        if (blockHash != "" && blockNumber != '') {
+                            this.loading = false;
+                            clearInterval(sid);
+                            window.location.href = "./account.html";
+                        }
+                    });
+                }, 500);
+            },
+            async callRenewName(option) {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
                     try {
+                        var pthis = this;
                         await ethereum.enable();
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
-                        infoContract.methods.renewal_level2().call().then((msg) => {
-                            alert("price:" + msg / window.window.ethUnit + "ETH");
-                        }).catch((err) => {
-
+                        infoContract.methods.renewToken(this.curItem.name).send(option, (err, msg) => {
+                            if (!err) {
+                                pthis.loading = true;
+                                pthis.next(msg);
+                            }
                         });
                     } catch (error) {
                         // User denied account access...
@@ -965,29 +977,6 @@
                     console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
                 }
             },
-            async renewal_level1(option) {
-                if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
-                    try {
-                        await ethereum.enable();
-                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
-                        infoContract.methods.renewal_level1().call().then((msg) => {
-                            alert("price:" + msg / window.window.ethUnit + "ETH");
-                        }).catch((err) => {
-
-                        });
-                    } catch (error) {
-                        // User denied account access...
-                        console.log(error);
-                    }
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
-                }
-                // Non-dapp browsers...
-                else {
-                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
-                }
-            }
 
         },
 
