@@ -618,7 +618,7 @@
                     try {
                         await ethereum.enable();
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
-                        infoContract.methods.totalSupply().call().then((msg) => {
+                        infoContract.methods.balanceOf(this.selectAddress).call().then((msg) => {
                             let num = parseInt(msg);
                             if (num > 0) {
                                 this.initNames(infoContract, num);
@@ -644,8 +644,9 @@
                 }
             },
             async tokenByIndex(info, index) {
-                info.methods.tokenByIndex(index).call().then((tokenId) => {
-                    this.ownerOf(info, tokenId);
+                info.methods.tokenOfOwnerByIndex(this.selectAddress, index).call().then((tokenId) => {
+                    this.tokensURI(info, tokenId, this.selectAddress);
+                    //this.ownerOf(info, tokenId);
                 }).catch((err) => {
 
                 });
