@@ -84,7 +84,7 @@
                     <h5 class="card-title">{{v}}</h5>
                     <a href="#" class="btn btn-info btn-sm" @click="doCopy(v)">Copy</a>
                     <a href="#" class="btn btn-info btn-sm" @click="doOpen(v)" v-if="v && v.indexOf('http')==0">Open</a>
-                    <a href="#" class="btn btn-info btn-sm" id="#depsoitBtn" @click="depsoitAddr=v;depsoitToken=k.substring(0, k.indexOf('.address'));$('#depsoitDailog').modal('show')" data-target="#depsoitDailog" data-token="k" data-addr="v" v-if="k && k.indexOf('.address')!=-1">Deposit</a>
+                    <a href="#" class="btn btn-info btn-sm" id="#depsoitBtn" @click="depsoitAddr=v;depsoitToken=k.substring(0, k.indexOf('.address')).toUpperCase();$('#depsoitDailog').modal('show')" data-target="#depsoitDailog" v-if="k && k.indexOf('.address')!=-1">Deposit</a>
                   </div>
                   <div class="card-footer bg-transparent">
                     <p class="card-text"><a href="#" @click="doCopy('https://'+domainInfo.name+'.elastos.name/'+k)">https://{{domainInfo.name}}.elastos.name/{{k}}</a></p>
