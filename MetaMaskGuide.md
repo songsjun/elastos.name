@@ -92,7 +92,7 @@ On the CryptoName website on your PC/Laptop click the [**Register**](https://cry
 
 To proceed click the Register button below the price, the Metamask wallet will now pop up, you now need to click Confirm within the Metamask wallet. Wait a few minutes and your CryptoName will appear within the Account page.
 
-To link your CryptoName to your Elaphant wallet, got to the Account page and click Edit on your chosen name. At the bottom of the page click "Start Elaphant to fill in quickly" .
+To link your CryptoName to your Elaphant wallet, go to the Account page and click Edit on your chosen name. At the bottom of the page click "Start Elaphant to fill in quickly" .
 
 A QR code will now appear on the screen, using the Elaphant Wallet on the device, scan the QR code( see images for the location of the Qr scanner within the Elaphant wallet)
 
