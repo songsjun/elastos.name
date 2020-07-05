@@ -989,8 +989,8 @@
                 this.loginStatus = false;
             } else {
                 this.loginStatus = JSON.parse(first)["loginStatus"];
-                this.login();
             }
+            this.login();
             ethereum.enable().then(() => {
                 window.web3 = new Web3(ethereum);
             });
