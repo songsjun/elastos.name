@@ -29,6 +29,8 @@
     <link href="css/style.css" rel="stylesheet">
     <script src="./js/vue.min.js"></script>
     <script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="./lib/bootstrap/js/bootstrap_4_5.min.js"></script>
+    <script type="text/javascript" src="./lib/bootstrap/js/bootstrap_4_5.bundle.min.js"></script>
     <script src="./js/vue-qrcode.min.js"></script>
     <script src="./js/vue-clipboard.min.js"></script>
     <script>
@@ -64,12 +66,12 @@
         <div class="container" style="margin-top: 20px;word-break:break-all;">
             <div class="logo ">
                 <h1 class="text-light">
-                    <a href="#intro" >
+                    <a href="#" @click="doCopy(domainInfo.name+'.elastos.name')">
                         <span style="font-size: 3rem"><b>{{domainInfo.name}}</b></span>
                         <span style="font-size: 1.5rem" v-if="isPC">.elastos.name</span>
                     </a>
                 </h1>
-                <p v-if="!isPC"><a href="#intro"><span style="font-size: 1.5rem">.elastos.name</span></a></p>
+                <p v-if="!isPC"><a href="#"><span style="font-size: 1.5rem">.elastos.name</span></a></p>
             </div>
         </div>
 
@@ -81,6 +83,8 @@
                   <div class="card-body">
                     <h5 class="card-title">{{v}}</h5>
                     <a href="#" class="btn btn-info btn-sm" @click="doCopy(v)">Copy</a>
+                    <a href="#" class="btn btn-info btn-sm" @click="doOpen(v)" v-if="v && v.indexOf('http')==0">Open</a>
+                    <a href="#" class="btn btn-info btn-sm" id="#depsoitBtn" @click="depsoitAddr=v;depsoitToken=k.substring(0, k.indexOf('.address'));$('#depsoitDailog').modal('show')" data-target="#depsoitDailog" data-token="k" data-addr="v" v-if="k && k.indexOf('.address')!=-1">Deposit</a>
                   </div>
                   <div class="card-footer bg-transparent">
                     <p class="card-text"><a href="#" @click="doCopy('https://'+domainInfo.name+'.elastos.name/'+k)">https://{{domainInfo.name}}.elastos.name/{{k}}</a></p>
@@ -88,6 +92,33 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="depsoitDailog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Depsoit {{depsoitToken}} to</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <p>{{depsoitAddr}}</p>
+                    <label for="recipient-name" class="col-form-label">Amount:</label>
+                    <input type="text" class="form-control" id="amount" value="0.1">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" @click="doDeposit()">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
     </div>
     <footer id="footer" class="section-bg">
 
@@ -96,7 +127,7 @@
             <div class="copyright">
                 <b>contact us:</b>
                 <a href="https://t.me/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
-                <a href="https://twitter.com/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
+                <a href="https://twitter.com/CryptoNameOrg" class="twitter"><i class="fa fa-twitter"></i></a>
                 <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
             </div>
             <div class="copyright">
@@ -106,6 +137,23 @@
             </div>
         </div>
     </footer>
+    <!-- JavaScript Libraries -->
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/jquery/jquery-migrate.min.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/mobile-nav/mobile-nav.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/isotope/isotope.pkgd.min.js"></script>
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
+    <!-- Contact Form JavaScript File -->
+    <script src="contactform/contactform.js"></script>
+
+    <!-- Template Main Javascript File -->
+    <script src="js/main.js"></script>
 
 </body>
 <script>
@@ -118,6 +166,8 @@
             isShowEdit: false,
             loading: true,
             domainInfo: {},
+            depsoitAddr: "",
+            depsoitToken: "",
             addresses: []
         },
         methods: {
@@ -153,6 +203,18 @@
                    alert('Can not copy',e.text)
                    console.log(e)
                 })
+            },
+            doOpen(val) {
+                window.open(val, "_blank");
+            },
+            doDeposit() {
+                var token = this.depsoitToken;
+                var address = this.depsoitAddr;
+                var amount = $("#amount").val();
+
+                var tokenName = token.substring(0, token.indexOf(".address"));
+                var url = "https://launch.elaphant.app/?appName=CryptoName&appTitle=CryptoName&autoRedirect=True&redirectURL=elaphant%3A%2F%2Felapay%3FDID%3DibxNTG1hBPK1rZuoc8fMy4eFQ96UYDAQ4J%26AppID%3Dac89a6a3ff8165411c8426529dccde5cd44d5041407bf249b57ae99a6bfeadd60f74409bd5a3d81979805806606dd2d55f6979ca467982583ac734cf6f55a290%26AppName%3DMini%2520Apps%26Description%3DMini%2520Apps%26PublicKey%3D034c51ddc0844ff11397cc773a5b7d94d5eed05e7006fb229cf965b47f19d27c55%26OrderID%3DCryptoName%26CoinName%3D"+tokenName+"%26ReceivingAddress%3D"+address+"%26ReturnUrl%3Dhttps%3A%2F%2F"+this.domainInfo.name+".elastos.name%26Amount%3D"+amount;
+                window.open(url, "_blank");
             },
             up() {
                 this.isShow = false;

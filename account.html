@@ -33,7 +33,7 @@
     <script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="./lib/bootstrap/js/bootstrap_4_5.min.js"></script>
     <script type="text/javascript" src="./lib/bootstrap/js/bootstrap_4_5.bundle.min.js"></script>
-    <script src="https://unpkg.com/@popperjs/core@2.4.2/dist/umd/popper.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/@popperjs/core@2.4.2/dist/umd/popper.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/jquery-easy-loading/dist/jquery.loading.min.js"></script>
     <script src="./js/vue.min.js"></script>
     <script src="./js/qrcode.min.js"></script>
@@ -265,7 +265,7 @@
             <div class="container">
                 <div class="social-links">
                     <a href="https://t.me/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
-                    <a href="https://twitter.com/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
+                    <a href="https://twitter.com/CryptoNameOrg" class="twitter"><i class="fa fa-twitter"></i></a>
                     <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
                 </div>
             </div>
@@ -339,7 +339,7 @@
                     <div class="col-sm-12">
                         <span style="font-weight: bold;">Account Address:</span>
                     </div>
-                    <div class="col-sm-12" @click="doCopy(selectAddress)">
+                    <div class="col-sm-12" @click="window.open('https://explorer.elaeth.io/address/'+selectAddress+'/transactions', '_blank')">
                         <span style="margin-left: 10px;cursor: pointer;">{{selectAddress}}</span>
                         <img src="./img/diqiu.png" style="cursor: pointer; width:16px;" />
                     </div>
@@ -455,7 +455,7 @@
             <div class="copyright">
                 <b>contact us:</b>
                 <a href="https://t.me/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
-                <a href="https://twitter.com/CryptoName1" class="twitter"><i class="fa fa-twitter"></i></a>
+                <a href="https://twitter.com/CryptoNameOrg" class="twitter"><i class="fa fa-twitter"></i></a>
                 <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
             </div>
             <div class="copyright">
