@@ -639,9 +639,11 @@
                 }
             },
             async initNames(info, num) {
+                var pool = [];
                 for (let index = 0; index < num; index++) {
-                    this.tokenByIndex(info, index);
+                    pool.push(this.tokenByIndex(info, index));
                 }
+                return Promise.all(pool);
             },
             async tokenByIndex(info, index) {
                 info.methods.tokenOfOwnerByIndex(this.selectAddress, index).call().then((tokenId) => {

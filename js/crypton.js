@@ -76,23 +76,45 @@ class Crypton {
 			})
 			.then(async function(count) {
 				var result = [];
+				var pool = [];
 
 				for (var i=start; i<count && (!end || i<end); i++) {
-					var tokenid = await pthis._contact.methods.tokenByIndex(i).call();
-					var owner = await pthis._contact.methods.ownerOf(tokenid).call();
-					var name = await pthis._contact.methods.tokenURI(tokenid).call();
-					var expiration = await pthis._contact.methods.tokenExpiration(tokenid).call();
-					var price = await pthis._contact.methods.tokenPrice(tokenid).call();
-					result.push({
-						"tokenId": tokenid,
-						"name": name,
-						"owner": owner,
-						"expiration": expiration,
-						"price": pthis._web3.utils.fromWei(price, "ether")
-					});
+					(function(){
+						var tokenid, owner, name, expiration, price;
 
+						pool.push(pthis._contact.methods.tokenByIndex(i).call()
+							.then(function(ret) {
+								tokenid = ret;
+								return pthis._contact.methods.ownerOf(tokenid).call();
+							})
+							.then(function(ret) {
+								owner = ret;
+								return pthis._contact.methods.tokenURI(tokenid).call();
+							})
+							.then(function(ret) {
+								name = ret;
+								return pthis._contact.methods.tokenExpiration(tokenid).call();
+							})
+							.then(function(ret) {
+								expiration = ret;
+								return pthis._contact.methods.tokenPrice(tokenid).call();
+							})
+							.then(function(ret) {
+								price = ret;
+								result.push({
+									"tokenId": tokenid,
+									"name": name,
+									"owner": owner,
+									"expiration": expiration,
+									"price": pthis._web3.utils.fromWei(price, "ether")
+								});
+							}));
+					})();
 				}
-				return result;
+
+				return Promise.all(pool).then(() =>{
+					return result;
+				});
 			})
 			.catch(function(){
 				return [];
