@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>CryptoName</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicons -->
+    <link href="img/favicon.png" rel="icon">
+    <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,600,700,700i|Montserrat:300,400,500,600,700" rel="stylesheet">
+
+    <!-- Bootstrap CSS File -->
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Libraries CSS Files -->
+    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Main Stylesheet File -->
+    <link href="css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="./js/vue-datepicker.min.js"></script>
+    <script type="text/javascript" src="./js/sha256.min.js"></script>
+    <script type="text/javascript" src="./js/web3.min.js"></script>
+    <script type="text/javascript" src="./js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="./lib/bootstrap/js/bootstrap_4_5.min.js"></script>
+    <script type="text/javascript" src="./lib/bootstrap/js/bootstrap_4_5.bundle.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/@popperjs/core@2.4.2/dist/umd/popper.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/jquery-easy-loading/dist/jquery.loading.min.js"></script>
+    <script src="./js/vue.min.js"></script>
+    <script src="./js/qrcode.min.js"></script>
+    <script src="./js/vue-clipboard.min.js"></script>
+    <script type="text/javascript">
+        document.write('<script src="./js/contractConfig.js?v=' + (new Date()).getTime() + '"><\/script>');
+    </script>
+
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        
+        body {
+            background-color: #F8F8F8;
+        }
+        
+        .login {
+            text-align: center;
+            margin: 0 auto;
+            margin-top: 50px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            width: 240px;
+            line-height: 50px;
+            height: 50px;
+            border-radius: 4px;
+            background-color: #F5841F;
+            color: #ffffff;
+        }
+        
+        .add {
+            margin-top: 10px;
+            text-align: center;
+            width: 198px;
+            height: 96px;
+            line-height: 96px;
+            background: #FFFFFF;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 26px;
+        }
+        
+        .kuang {
+            margin-top: 10px;
+            padding: 10px;
+            text-align: left;
+            width: 256px;
+            height: 158px;
+            background: #FFFFFF;
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+        
+        .btn1 {
+            color: #4567E2;
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        .dialog {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0px;
+            top: 0px;
+            z-index: 999;
+        }
+        
+        .arrow_mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            z-index: 998;
+            display: block;
+            background: black;
+            opacity: 0.3;
+            box-shadow: 0px 4px 10px rgba(95, 111, 237, 0.2);
+        }
+        
+        .kuang2 {
+            padding: 20px 0px;
+            position: absolute;
+            width: 600px;
+            left: 50%;
+            top: 50%;
+            margin-left: -300px;
+            margin-top: -200px;
+            background: #FFFFFF;
+            box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
+            border-radius: 5px;
+            z-index: 999;
+        }
+        
+        .close {
+            position: relative;
+            height: 15px;
+            cursor: pointer;
+        }
+        
+        .close img {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            right: 0px;
+            top: 0px;
+            padding: 5px;
+        }
+        
+        .dialog .kuang2 .shuoming {
+            text-align: center;
+        }
+        
+        .dialog .kuang2 .shuoming .first {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000000;
+        }
+        
+        .dialog .kuang2 .shuoming .second {
+            margin-top: 25px;
+            text-align: center;
+        }
+        
+        .dialog .kuang2 .shuoming .second .left {
+            display: inline-block;
+            width: 62%;
+            text-align: right;
+            font-size: 16px;
+            color: #dddddd;
+        }
+        
+        .dialog .kuang2 .shuoming .three {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #000000;
+        }
+        
+        .dialog .kuang2 .shuoming .three span {
+            margin-top: 30px;
+            font-size: 18px;
+            color: #ff0000;
+        }
+        
+        .dialog .kuang2 .pay {
+            text-align: center;
+            margin: 0 auto;
+            margin-top: 30px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            width: 90px;
+            line-height: 35px;
+            height: 35px;
+            border-radius: 4px;
+            background-color: #F5841F;
+            color: #ffffff;
+        }
+        
+        .spinner {
+            display: block;
+            margin: 100px auto 0;
+            width: 150px;
+            text-align: center;
+        }
+        
+        .spinner>div {
+            width: 30px;
+            height: 30px;
+            background-color: #67CF22;
+            border-radius: 100%;
+            display: inline-block;
+            -webkit-animation: bouncedelay 1.4s infinite ease-in-out;
+            animation: bouncedelay 1.4s infinite ease-in-out;
+            /* Prevent first frame from flickering when animation starts */
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+        }
+        
+        .spinner .bounce1 {
+            -webkit-animation-delay: -0.32s;
+            animation-delay: -0.32s;
+        }
+        
+        .spinner .bounce2 {
+            -webkit-animation-delay: -0.16s;
+            animation-delay: -0.16s;
+        }
+        
+        @-webkit-keyframes bouncedelay {
+            0%,
+            80%,
+            100% {
+                -webkit-transform: scale(0.0)
+            }
+            40% {
+                -webkit-transform: scale(1.0)
+            }
+        }
+        
+        @keyframes bouncedelay {
+            0%,
+            80%,
+            100% {
+                transform: scale(0.0);
+                -webkit-transform: scale(0.0);
+            }
+            40% {
+                transform: scale(1.0);
+                -webkit-transform: scale(1.0);
+            }
+        }
+
+        #addressimg img {
+            margin: 0 auto;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header id="header">
+
+        <div id="topbar">
+            <div class="container">
+                <div class="social-links">
+                    <a href="https://t.me/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
+                    <a href="https://twitter.com/CryptoNameOrg" class="twitter"><i class="fa fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+
+            <div class="logo float-left">
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <h1 class="text-light"><a href="#intro" class="scrollto"><span>CryptoName</span></a></h1>
+                <!-- <a href="#header" class="scrollto"><img src="img/logo.png" alt="" class="img-fluid"></a> -->
+            </div>
+
+            <nav class="main-nav float-right d-none d-lg-block">
+                <ul>
+                    <li><a href="./index.html">Home</a></li>
+                    <li><a href="./register.html">Register</a></li>
+                    <li><a href="./sale.html">Sale</a></li>
+                    <!--li><a href="./auction.html">Auction</a></li-->
+                    <li><a href="./guide.html">Guide</a></li>
+                    <li><a href="./developer.html">Developer</a></li>
+                    <li class="active"><a href="./account.html">Account</a></li>
+                </ul>
+            </nav>
+            <!-- .main-nav -->
+
+        </div>
+    </header>
+    <!-- #header -->
+    <div style="height:150px"></div>
+    <div class="container" id="app">
+
+        <div class="spinner" v-if="loading">
+
+            <div class="bounce1"></div>
+
+            <div class="bounce2"></div>
+
+            <div class="bounce3"></div>
+        </div>
+        <div class="row text-center" style="color: #0000ff;font-size: 18px;" v-if="loading">
+            <div class="col-sm-12">Transaction confirmation in progress</div>
+        </div>
+
+        <div v-if="!loading">
+
+            <div v-if="!loginStatus" style="width: 500px;margin: 0 auto;">
+                <div class="row text-center">
+                    <div class="col-sm-12" style="text-align: left;margin-bottom: 5px;">
+                        Step 1.Please install the Metamask plugin in your browser.You can get it from .
+                    </div>
+
+                    <div class="col-sm-12" style="text-align: left;margin-bottom: 5px;">
+                        Step 2.Please connect the Elastos eth sidechain，Here is ths guide.
+                    </div>
+
+                    <div class="col-sm-12" style="text-align: left;margin-bottom: 5px;">
+                        Step 3.Click below button.Fine!
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="login" @click="login">Login With Metamask</div>
+                </div>
+                <div style="text-align: center;font-weight: bold;">Please confirm your MetaMask wallet already</div>
+                <div style="text-align: center;font-weight: bold;">connected the Elastos Eth sidechain</div>
+                <div style="text-align: center;font-weight: bold;"><img src="./img/meatMask.png">METAMASK</div>
+            </div>
+
+            <div v-if="loginStatus">
+
+                <div class="row" style="margin-top: 15px;">
+                    <div class="kuang" v-for="(item) in domainNameArr">
+                        <div style="font-weight: bold;font-size: 26px;">{{item.name}}</div>
+                        <div style="font-weight: bold;font-size: 16px;">.elastos.name</div>
+                        <div style="font-size: 14px;border-bottom: 1px solid #E0E0E0;padding-bottom: 25px;">{{dateFormat(new Date(item.expiration * 1000), ' yyyy-MM-dd HH:mm:ss')}}</div>
+                        <div style="text-align: right;margin-top: -4px;"><span class="btn1" @click="renew(item)">renew</span><span class="btn1" @click="view(item)">view</span><span class="btn1" @click="edit(item)">edit</span><span class="btn1" @click="transferDialog(item)" style="width: 57px;">transfer</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer id="footer" class="section-bg">
+
+        <div class="container">
+
+            <div class="copyright">
+                <b>contact us:</b>
+                <a href="https://t.me/CryptoName1" class="Telegram"><i class="fa fa-telegram"></i></a>
+                <a href="https://twitter.com/CryptoNameOrg" class="twitter"><i class="fa fa-twitter"></i></a>
+                <a href="https://www.instagram.com/cryptoname_/?hl=en" class="instagram"><i class="fa fa-instagram"></i></a>
+            </div>
+            <div class="copyright">
+                <div style="color:#7B7B7B">
+                    <a href="https://cryptoname.org"><img src="img/logo.png" style="height:32px"></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- JavaScript Libraries -->
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/jquery/jquery-migrate.min.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/mobile-nav/mobile-nav.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/isotope/isotope.pkgd.min.js"></script>
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
+    <!-- Contact Form JavaScript File -->
+    <script src="contactform/contactform.js"></script>
+
+    <!-- Template Main Javascript File -->
+    <script src="js/main.js"></script>
+    <script src="js/crypton.js"></script>
+
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            loading: false,
+            selectAddress: "",
+            withdrawAmount: "",
+            selectedElaBalance: "",
+            loginStatus: true,
+            domainNameArr: [],
+            showMask: false,
+            daddress: "",
+            curItem: "",
+            depsoitMainchainAddress: "",
+            withDrawMainchainAddress:"",
+            exchangeId:0,
+            depositState:""
+        },
+        methods: {
+            click_close() {
+                this.showMask = false;
+            },
+            dateFormat(date, sFormat) {
+                let time = {
+                    Year: 0,
+                    TYear: '0',
+                    Month: 0,
+                    TMonth: '0',
+                    Day: 0,
+                    TDay: '0',
+                    Hour: 0,
+                    THour: '0',
+                    hour: 0,
+                    Thour: '0',
+                    Minute: 0,
+                    TMinute: '0',
+                    Second: 0,
+                    TSecond: '0',
+                    Millisecond: 0
+                };
+                time.Year = date.getFullYear();
+                time.TYear = String(time.Year).substr(2);
+                time.Month = date.getMonth() + 1;
+                time.TMonth = time.Month < 10 ? "0" + time.Month : String(time.Month);
+                time.Day = date.getDate();
+                time.TDay = time.Day < 10 ? "0" + time.Day : String(time.Day);
+                time.Hour = date.getHours();
+                time.THour = time.Hour < 10 ? "0" + time.Hour : String(time.Hour);
+                time.hour = time.Hour < 13 ? time.Hour : time.Hour - 12;
+                time.Thour = time.hour < 10 ? "0" + time.hour : String(time.hour);
+                time.Minute = date.getMinutes();
+                time.TMinute = time.Minute < 10 ? "0" + time.Minute : String(time.Minute);
+                time.Second = date.getSeconds();
+                time.TSecond = time.Second < 10 ? "0" + time.Second : String(time.Second);
+                time.Millisecond = date.getMilliseconds();
+
+                return sFormat.replace(/yyyy/ig, String(time.Year))
+                    .replace(/yyy/ig, String(time.Year))
+                    .replace(/yy/ig, time.TYear)
+                    .replace(/y/ig, time.TYear)
+                    .replace(/MM/g, time.TMonth)
+                    .replace(/M/g, String(time.Month))
+                    .replace(/dd/ig, time.TDay)
+                    .replace(/d/ig, String(time.Day))
+                    .replace(/HH/g, time.THour)
+                    .replace(/H/g, String(time.Hour))
+                    .replace(/hh/g, time.Thour)
+                    .replace(/h/g, String(time.hour))
+                    .replace(/mm/g, time.TMinute)
+                    .replace(/m/g, String(time.Minute))
+                    .replace(/ss/ig, time.TSecond)
+                    .replace(/s/ig, String(time.Second))
+                    .replace(/fff/ig, String(time.Millisecond))
+            },
+            doCopy(text) {
+                this.$copyText(text).then((e) => {
+                    alert("copy Sucess");
+                }, (e) => {})
+            },
+            async init() {
+                if (window.ethereum) {
+                    window.web3 = new Web3(ethereum);
+                    try {
+                        ethereum.enable();
+
+                        var crypton = new Crypton(window.elaAbi, window.contractAddres, window.web3);
+
+                        this.domainNameArr = await crypton.getNameTokens(0, 999999);
+                        
+                    } catch (error) {
+                        // User denied account access...
+                        console.log(error);
+                    }
+                } else if (window.web3) {
+                    window.web3 = new Web3(web3.currentProvider);
+                }
+                // Non-dapp browsers...
+                else {
+                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                }
+            }
+        },
+
+        created() {
+            this.init();
+        }
+    });
+    $('#depositDiag').on('hidden.bs.modal', function (e) {
+        app._data.exchangeId = 0;
+    });
+</script>
+
+</html>
