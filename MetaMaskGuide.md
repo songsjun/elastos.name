@@ -1,5 +1,9 @@
 # MetaMask Guide
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/MmJpE7xJlBI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+
 ### 1. Install MetaMask and Elaphant wallet app.
 
 First you need a PC/ Laptop with Chrome, Firefox or Brave browser installed. Then download and install Metamask Wallet from here –
@@ -8,7 +12,7 @@ https://metamask.io
 
 Secondly you need an android / IOS device with Elaphant wallet installed, download here –
 
-https://elephantwallet.app/
+https://elaphant.app/
 
 
 
@@ -62,7 +66,9 @@ Please copy that private key to MetaMask. Note, please double check the address 
 
 You are now connected to the Elastos sidechain through Metamask, the next step is to send ELA from your Elaphant wallet to your CryptoName Account.
 
-Go to your CryptoName [**Account**](https://cryptoname.org/account.html) on the PC/Laptop and press Deposit, a QR code will appear on the screen.
+Go to your CryptoName [**Account**](https://cryptoname.org/account.html) on the PC/Laptop and press **Deposit**, a QR code will appear on the screen.
+
+<img src="img/s7.png" />
 
 Now using the Elaphant wallet on your device click send and scan the QR code, enter the amount of ELA and click Send.
 
@@ -109,3 +115,5 @@ Within the CryptoName [**Account**](https://cryptoname.org/account.html) page on
 The Metamask wallet will now pop up, click Confirm. Wait a while and it will appear in the receivers CryptoName Account page.
 
 Please note, you can only transfer your CryptoName, to another registered CryptoName account.
+
+

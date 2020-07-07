@@ -8,7 +8,7 @@ The storage structure of CryptoName is like a Key/Value storage. The user can se
 
 So if others, including apps, want to access some info of the user, you can access them by using the keywords.
 
-By default, the CryptoName has included "btc.address", "eth.address", "ela.address", ustd.address, "did", and "publickey" keywords. If you need more fields on CryptoName, you can ask the user to set it. We support 50 fields within the CryptoName.
+By default, the CryptoName has included "btc.address", "eth.address", "ela.address", usdt.address, "did", and "publickey" keywords. If you need more fields on CryptoName, you can ask the user to set it. We support 50 fields within the CryptoName.
 
 The user can edit their "profile" on https://CryptoName.org, it's very simple. 
 
