@@ -271,17 +271,19 @@
         methods: {
             async getPrices() {
 
-                if (this.dname.length > 2) {
+                if (this.dname.length > 2 && this.dname.length <= 24) {
                     this.checkName().then(() => {
                         this.goodName = 2;
                     }, () => {
                         this.goodName = 1;
                     });
-                } else if (this.dname.length == 0) {
+                } 
+                else if (this.dname.length == 0) {
                     this.goodName = 0;
                 }
                 else {
                     this.goodName = 2;
+                    return ;
                 }
 
                 if (this.dname.length < 3) {
