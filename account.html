@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title>CryptoName</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
+    <meta content="" name="crypto name domain btc elastos eth ethereum ela ">
     <meta content="" name="description">
 
     <!-- Favicons -->
@@ -34,7 +34,6 @@
     <script type="text/javascript" src="./lib/bootstrap/js/bootstrap_4_5.min.js"></script>
     <script type="text/javascript" src="./lib/bootstrap/js/bootstrap_4_5.bundle.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/@popperjs/core@2.4.2/dist/umd/popper.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/jquery-easy-loading/dist/jquery.loading.min.js"></script>
     <script src="./js/vue.min.js"></script>
     <script src="./js/qrcode.min.js"></script>
     <script src="./js/vue-clipboard.min.js"></script>
@@ -258,7 +257,7 @@
 
 </head>
 
-<body>
+<body id="abc">
     <header id="header">
 
         <div id="topbar">
@@ -859,8 +858,6 @@
             },
             WithdrawELA() {
 
-                $("#withdrawDiag").loading('toggle');
-
                 var contract = new web3.eth.Contract([{"constant":false,"inputs":[{"name":"_addr","type":"string"},{"name":"_amount","type":"uint256"},{"name":"_fee","type":"uint256"}],"name":"receivePayload","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_addr","type":"string"},{"indexed":false,"name":"_amount","type":"uint256"},{"indexed":false,"name":"_crosschainamount","type":"uint256"},{"indexed":true,"name":"_sender","type":"address"}],"name":"PayloadReceived","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_sender","type":"address"},{"indexed":false,"name":"_amount","type":"uint256"},{"indexed":true,"name":"_black","type":"address"}],"name":"EtherDeposited","type":"event"}]);
                 contract.options.address = "0xC445f9487bF570fF508eA9Ac320b59730e81e503";
                 var cdata  = contract.methods.receivePayload(this.withDrawMainchainAddress, web3.utils.toWei(this.withdrawAmount+"", "ether"), "100000000000000").encodeABI();
@@ -869,11 +866,11 @@
 
                 web3.eth.sendTransaction(tx)
                     .then(() => {
-                        $("#withdrawDiag").loading('stop');
-                        $("#withdrawDiag").modal('hide');
+                        //$("#withdrawLoading").loading('stop');
                     }, () => {
-                        $("#withdrawDiag").loading('stop');
+                        //$("#withdrawLoading").loading('stop');
                     });
+                $("#withdrawDiag").modal('hide');
             },
             async getExpiration(info, tokenId, address, tokenName) {
                 info.methods.tokenExpiration(tokenId).call().then((expiration) => {
