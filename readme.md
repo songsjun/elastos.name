@@ -24,7 +24,7 @@ Contract address:
 
 ```
 ETH Ropsten Test Network: 0xefdb328c09b6e20314fe201a5dba74cf36ef8bdd
-Elastos sidechain Network: 
+Elastos sidechain Network: 0xc4032babad2b76c39abec3c4e365611de78528ed
 ```
 
 ABI file:
