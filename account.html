@@ -38,6 +38,7 @@
     <script src="./js/vue.min.js"></script>
     <script src="./js/qrcode.min.js"></script>
     <script src="./js/vue-clipboard.min.js"></script>
+    <script src="./js/crypton.js"></script>
     <script type="text/javascript">
         document.write('<script src="./js/contractConfig.js?v=' + (new Date()).getTime() + '"><\/script>');
     </script>
@@ -319,7 +320,7 @@
                     </div>
 
                     <div class="col-sm-12" style="text-align: left;margin-bottom: 5px;">
-                        Step 2.Please connect the Elastos eth sidechain，Here is ths guide.
+                        Step 2.Please connect the Elastos eth sidechain，Here is ths <a href="./guide.html">guide</a>.
                     </div>
 
                     <div class="col-sm-12" style="text-align: left;margin-bottom: 5px;">
@@ -391,7 +392,7 @@
         </div>
 
 
-        <div class="dialog" v-if="showMask">
+        <!--div class="dialog" v-if="showMask">
             <div class="arrow_mask" @click="click_close"></div>
             <div class="kuang2">
                 <div class="close" @click="click_close">
@@ -399,7 +400,7 @@
                     /></div>
                 <div class="shuoming">
                     <div class="first">Enter the address you want to transfer</div>
-                    <div class="second"><input v-model="daddress" style="width:400px" /></div>
+                    <div class="second"><input v-model="transferAddress" style="width:400px" /></div>
                 </div>
 
                 <div class="pay" @click="pay">Submit</div>
@@ -408,7 +409,7 @@
                 <div style="text-align: center;font-weight: bold;"><img src="./img/meatMask.png">METAMASK</div>
                 <div style="text-align: center;"><img src="./img/wenhao.png"><span style="display:inline-block;border-bottom: 1px solid #dddddd;cursor: pointer;" @click="link">How to setup Metamask</span></div>
             </div>
-        </div>
+        </div-->
 
         <div class="modal fade" id="depositDiag" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
@@ -458,18 +459,50 @@
                   <div class="form-group">
                     <label for="recipient-name" class="col-form-label">Withdraw Amount:</label>
                     <input type="number" step="0.00000000001" max="2.0" class="form-control" id="recipient-name"  v-model="withdrawAmount" max="20">
-                    <label for="recipient-name" class="col-form-label">Mainchain Address:</label>
+                    <label for="recipient-name" class="col-form-label">To CryptoName:</label>
+                    <input type="text" class="form-control" id="crypto-name" @input="withdrawDiagChange()" v-model="withDrawCryptoName">
+                    <p for="recipient-name" class="col-form-label">OR</p>
+                    <label for="recipient-name" class="col-form-label">To Mainchain Address:</label>
                     <input type="text" class="form-control" id="recipient-name"  v-model="withDrawMainchainAddress">
                   </div>
                 </form>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-toggle="modal" @click="WithdrawELA()">Go</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" :disabled="withDrawMainchainAddress.length<24" @click="WithdrawELA()">Go</button>
               </div>
             </div>
           </div>
         </div>
+
+        <div class="modal fade" id="transferDialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Transfer CryptoName</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Transfer CryptoName">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">To CryptoName:</label>
+                    <input type="text" class="form-control" id="crypto-name" @input="transferDiagChange()" v-model="transferName">
+                    <p for="recipient-name" class="col-form-label">OR</p>
+                    <label for="recipient-name" class="col-form-label">To Sidechain Address:</label>
+                    <input type="text" class="form-control" id="recipient-name"  v-model="transferAddress">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" :disabled="transferAddress.length<24" @click="transferCryptoname()">Go</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
     </div>
 
     <footer id="footer" class="section-bg">
@@ -527,10 +560,13 @@
             loginStatus: false,
             domainNameArr: [],
             showMask: false,
-            daddress: "",
+            transferAddress: "",
             curItem: "",
             depsoitMainchainAddress: "",
             withDrawMainchainAddress:"",
+            withDrawCryptoName:"",
+            transferName:"",
+            transferAddress:"",
             exchangeId:0,
             depositState:""
         },
@@ -731,18 +767,21 @@
             },
             transferDialog(item) {
                 this.curItem = item;
-                this.showMask = true;
+                
+                $("#transferDialog").modal();
             },
-            pay() {
-                if (this.daddress === "") {
+            transferCryptoname() {
+                if (this.transferAddress === "") {
                     alert("Enter address for the transfer")
                     return false;
                 }
 
                 this._generate_option("0.1").then((option) => {
                     this.transfer(option);
+                }).then(function() {
+                    $("#transferDialog").modal('hide');
                 }).catch((err) => {
-
+                    $("#transferDialog").modal('hide');
                 });;
             },
             async transfer(option) {
@@ -751,7 +790,7 @@
                     try {
                         await ethereum.enable();
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
-                        infoContract.methods.transfer(this.selectAddress, this.daddress, this.curItem.name).send(option, (err, msg) => {
+                        infoContract.methods.transfer(this.selectAddress, this.transferAddress, this.curItem.name).send(option, (err, msg) => {
                             if (!err) {
                                 this.loading = true;
                                 this.showMask = false;
@@ -772,6 +811,34 @@
             },
             link() {
                 //window.open("");
+            },
+            withdrawDiagChange() {
+                var name = this.withDrawCryptoName;
+                if (name.length >= 24)
+                    return;
+
+                var pthis = this;
+                Crypton.QueryKey(name, "ela.address")
+                    .then(function(address) {
+                        pthis.withDrawMainchainAddress = address;
+                        
+                    }, function() {
+                        
+                    }).catch(()=>{});
+            },
+            transferDiagChange() {
+                var name = this.transferName;
+                if (name.length >= 24)
+                    return;
+
+                var pthis = this;
+                Crypton.QueryKey(name, "eth.address")
+                    .then(function(address) {
+                        pthis.transferAddress = address;
+                    }, function() {
+
+                    }).catch(()=>{});
+
             },
             checkDepsoitResult() {
                 if (this.exchangeId == 0) {

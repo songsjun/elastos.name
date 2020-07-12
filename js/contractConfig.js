@@ -14,10 +14,12 @@ window.elaAbi = [{"constant":true,"inputs":[{"name":"interfaceId","type":"bytes4
 window.initWallet = function initWallet() {
     return new Promise((resolve, reject) => {
         if (typeof window.ethereum === 'undefined') {
-            reject('Looks like you need a Dapp browser to get started.Consider installing MetaMask!');
+            //reject('Looks like you need a Dapp browser to get started.Consider installing MetaMask!');
+            window.web3 = new Web3(new Web3.providers.HttpProvider("https://mainrpc.elaeth.io"));
         } else {
             //resolve(1);
             ethereum.enable().catch((reason) => {
+                window.web3 = new Web3(new Web3.providers.HttpProvider("https://mainrpc.elaeth.io"));
                 reject(reason);
             }).then(() => {
                 window.web3 = new Web3(ethereum);

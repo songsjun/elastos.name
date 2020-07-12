@@ -296,33 +296,33 @@
                 this.price = Math.ceil(this.price * 10000) / 10000;
                 if (this.price > 0) return;
 
-                var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
-                infoContract.methods.price_level1().call().then((price) => {
-                    this.price1 = web3.utils.fromWei(price, "ether");
-                    return infoContract.methods.price_level2().call();
-                }).then((price) => {
-                    this.price2 = web3.utils.fromWei(price, "ether");
-                    return infoContract.methods.price_level3().call();
-                }).then((price) => {
-                    this.price3 = web3.utils.fromWei(price, "ether");
-                }).catch((err) => {
-                    console.log(err);
-                });
+                if (window.web3) {
+                    let tokenId = web3.utils.hexToNumberString("0x" + sha256(this.dname));
+                    var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                    infoContract.methods.price_level1().call().then((price) => {
+                        this.price1 = web3.utils.fromWei(price, "ether");
+                        return infoContract.methods.price_level2().call();
+                    }).then((price) => {
+                        this.price2 = web3.utils.fromWei(price, "ether");
+                        return infoContract.methods.price_level3().call();
+                    }).then((price) => {
+                        this.price3 = web3.utils.fromWei(price, "ether");
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+                }
             },
             async checkName() {
-                let tokenId = web3.utils.hexToNumberString("0x" + sha256(this.dname));
-                if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
+
+                if (window.web3) {
                     try {
-                        await ethereum.enable();
+                        let tokenId = web3.utils.hexToNumberString("0x" + sha256(this.dname));
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
                         return infoContract.methods.ownerOf(tokenId).call();
                     } catch (error) {
                         // User denied account access...
                         console.log(error);
                     }
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
                 }
                 // Non-dapp browsers...
                 else {
@@ -349,10 +349,10 @@
                     });
             },
             async pricelevel1() {
-                if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
+
+                if (window.web3) {
                     try {
-                        await ethereum.enable();
+                        let tokenId = web3.utils.hexToNumberString("0x" + sha256(this.dname));
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
                         infoContract.methods.price_level1().call().then((price) => {
                             price = web3.utils.fromWei(price, "ether");
@@ -369,8 +369,6 @@
                         // User denied account access...
                         console.log(error);
                     }
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
                 }
                 // Non-dapp browsers...
                 else {
@@ -378,10 +376,12 @@
                 }
             },
             async pricelevel2() {
-                if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
+
+
+                if (window.web3) {
                     try {
-                        await ethereum.enable();
+                        let tokenId = web3.utils.hexToNumberString("0x" + sha256(this.dname));
+                        
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
                         infoContract.methods.price_level2().call().then((price) => {
                             price = web3.utils.fromWei(price, "ether");
@@ -397,8 +397,6 @@
                         // User denied account access...
                         console.log(error);
                     }
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
                 }
                 // Non-dapp browsers...
                 else {
@@ -406,10 +404,10 @@
                 }
             },
             async pricelevel3() {
-                if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
+
+                if (window.web3) {
                     try {
-                        await ethereum.enable();
+                        let tokenId = web3.utils.hexToNumberString("0x" + sha256(this.dname));
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
                         infoContract.methods.price_level3().call().then((price) => {
                             price = web3.utils.fromWei(price, "ether");
@@ -423,8 +421,6 @@
                         // User denied account access...
                         console.log(error);
                     }
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
                 }
                 // Non-dapp browsers...
                 else {
@@ -450,25 +446,22 @@
             },
             next(txid) {
                 let sid = setInterval(() => {
-                    if (typeof web3 !== 'undefined') {
-                        web3 = new Web3(web3.currentProvider);
+                    if (window.web3) {
+                        web3.eth.getTransaction(txid, (err, data) => {
+                            let blockHash = data['blockHash'] || "";
+                            let blockNumber = data['blockNumber'] || "";
+                            if (blockHash != "" && blockNumber != '') {
+                                this.loading = false;
+                                clearInterval(sid);
+                                window.location.href = "./account.html";
+                            }
+                        });
                     }
-                    web3.eth.getTransaction(txid, (err, data) => {
-                        let blockHash = data['blockHash'] || "";
-                        let blockNumber = data['blockNumber'] || "";
-                        if (blockHash != "" && blockNumber != '') {
-                            this.loading = false;
-                            clearInterval(sid);
-                            window.location.href = "./account.html";
-                        }
-                    });
                 }, 500);
             },
             async getContracts(option) {
                 if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
                     try {
-                        await ethereum.enable();
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
                         infoContract.methods.externalMint(this.dname).send(option, (err, msg) => {
                             if (!err) {
@@ -480,12 +473,9 @@
                         // User denied account access...
                         console.log(error);
                     }
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
-                }
-                // Non-dapp browsers...
+                } 
                 else {
-                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+                    alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
                 }
             },
             uuid2(len, radix) {
@@ -524,11 +514,19 @@
 
         },
         created() {
+            // if (!window.web3) {
+            //     window.web3 = new Web3(new Web3.providers.HttpProvider("https://mainrpc.elaeth.io"));
+            // }
+            
+            // if (window.web3 && window.ethereum) {
+            //     window.web3 = new Web3(ethereum);
+            //     ethereum.enable();
+            // }
             window.initWallet().then((address) => {
                 this.selectAdress = address;
                 this.getPrices();
             }).catch((err) => {
-
+                console.log(err);
             });
         }
     });

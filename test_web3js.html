@@ -21,6 +21,21 @@
     			var ela = await Crypton.QueryKey("songsjun", "ela.address");
     			console.log(ela);
 
+    			var winners = ["Dyiwong", "bobo", "anders", "Marcus", "aixs", "austrader", "Starwire", "Houston", "Michaels", "Neil", "Internet", "Rong", "Feng", "binance", "tron", "satoshi", "Brian", "Ryan", "Starfish", "drexl", "safu", "dex", "bull", "nakamoto", "lambo", "bear", "business", "lamborghini", "hodl", "elonmusk", "airdrop", "Nike", "888", "cocacola", "mpf", "Mikes", "Mike", "pay", "Leo", "kyc", "DMA", "android", "search", "6666", "oyo", "alibaba", "fibo", "MButcho", "911", "top", "111", "miner", "john", "tony"];
+    			for (var item of winners) {
+
+    				(function(){
+	    				var name = item;
+	    				Crypton.QueryKey(name, "ela.address").then(function(ela) {
+	    					console.log(name+","+ela+","+(name.length>3?1:5));
+	    				}, function(ela) {
+	    					console.log(name+",,"+(name.length>3?1:5));
+	    				});
+    				})();
+    			}
+
+    			console.log("done");
+
     			return;
 
     			// 初始化Bridge对象
