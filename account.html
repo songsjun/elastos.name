@@ -429,10 +429,10 @@
                     {{depsoitMainchainAddress}}
                 </p>
                 <p style="text-align: center; color:0xeee; font-size:0.8rem; width:100%; margin:0 15px 0 15px;">
-                    At least 0.1 ELA, 0.1～15 ELA about 5 minutes
+                    At least 0.1 ELA, 0.1～15 ELA about 5 minutes more than 15 ELA about 25 minutes. 
                 </p>
                 <p style="text-align: center; color:0xeee; font-size:0.8rem; width:100%; margin:0 15px 0 15px;">
-                    more than 15 ELA about 25 minutes
+                    <span style="color:red">Warning: This is a temporary address and can only be used once</span>
                 </p>
                 <p style="text-align: center; color:blue; font-size:0.8rem; width:100%; margin:15px;">
                     {{depositState}}
@@ -497,7 +497,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-toggle="modal" :disabled="transferAddress.length<24" @click="transferCryptoname()">Go</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" :disabled="!web3.utils.isAddress(transferAddress)" @click="transferCryptoname()">Go</button>
               </div>
             </div>
           </div>
@@ -656,6 +656,7 @@
                 }, (e) => {})
             },
             login() {
+                this.loginStatus = false;
                 window.initWallet().then((address) => {
                     this.selectAddress = address;
                     this.loginStatus = true;
@@ -681,10 +682,8 @@
                 })
             },
             async init() {
-                if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
+                if (window.web3) {
                     try {
-                        await ethereum.enable();
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
                         infoContract.methods.balanceOf(this.selectAddress).call().then((msg) => {
                             let num = parseInt(msg);
@@ -698,12 +697,6 @@
                         // User denied account access...
                         console.log(error);
                     }
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
-                }
-                // Non-dapp browsers...
-                else {
-                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
                 }
             },
             async initNames(info, num) {
@@ -785,10 +778,9 @@
                 });;
             },
             async transfer(option) {
-                if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
+                if (window.web3 && window.ethereum) {
                     try {
-                        await ethereum.enable();
+                        //await ethereum.enable();
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
                         infoContract.methods.transfer(this.selectAddress, this.transferAddress, this.curItem.name).send(option, (err, msg) => {
                             if (!err) {
@@ -801,12 +793,6 @@
                         // User denied account access...
                         console.log(error);
                     }
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
-                }
-                // Non-dapp browsers...
-                else {
-                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
                 }
             },
             link() {
@@ -925,20 +911,23 @@
             },
             WithdrawELA() {
 
-                $("#withdrawDiag").loading('toggle');
-                var contract = new web3.eth.Contract([{"constant":false,"inputs":[{"name":"_addr","type":"string"},{"name":"_amount","type":"uint256"},{"name":"_fee","type":"uint256"}],"name":"receivePayload","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_addr","type":"string"},{"indexed":false,"name":"_amount","type":"uint256"},{"indexed":false,"name":"_crosschainamount","type":"uint256"},{"indexed":true,"name":"_sender","type":"address"}],"name":"PayloadReceived","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_sender","type":"address"},{"indexed":false,"name":"_amount","type":"uint256"},{"indexed":true,"name":"_black","type":"address"}],"name":"EtherDeposited","type":"event"}]);
-                contract.options.address = "0xC445f9487bF570fF508eA9Ac320b59730e81e503";
-                var cdata  = contract.methods.receivePayload(this.withDrawMainchainAddress, web3.utils.toWei(this.withdrawAmount+"", "ether"), "100000000000000").encodeABI();
-                var tx = {data: cdata, to: contract.options.address, from: this.selectAddress};
-                tx.value = web3.utils.toWei(this.withdrawAmount+"", "ether");
+                if (window.web3 && window.ethereum) {
+                    $("#withdrawDiag").loading('toggle');
 
-                web3.eth.sendTransaction(tx)
-                    .then(() => {
-                        $("#withdrawDiag").loading('stop');
-                        $("#withdrawDiag").modal('hide');
-                    }, () => {
-                        $("#withdrawDiag").loading('stop');
-                    });
+                    var contract = new web3.eth.Contract([{"constant":false,"inputs":[{"name":"_addr","type":"string"},{"name":"_amount","type":"uint256"},{"name":"_fee","type":"uint256"}],"name":"receivePayload","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_addr","type":"string"},{"indexed":false,"name":"_amount","type":"uint256"},{"indexed":false,"name":"_crosschainamount","type":"uint256"},{"indexed":true,"name":"_sender","type":"address"}],"name":"PayloadReceived","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_sender","type":"address"},{"indexed":false,"name":"_amount","type":"uint256"},{"indexed":true,"name":"_black","type":"address"}],"name":"EtherDeposited","type":"event"}]);
+                    contract.options.address = "0xC445f9487bF570fF508eA9Ac320b59730e81e503";
+                    var cdata  = contract.methods.receivePayload(this.withDrawMainchainAddress, web3.utils.toWei(this.withdrawAmount+"", "ether"), "100000000000000").encodeABI();
+                    var tx = {data: cdata, to: contract.options.address, from: this.selectAddress};
+                    tx.value = web3.utils.toWei(this.withdrawAmount+"", "ether");
+
+                    web3.eth.sendTransaction(tx)
+                        .then(() => {
+                            $("#withdrawDiag").loading('stop');
+                            $("#withdrawDiag").modal('hide');
+                        }, () => {
+                            $("#withdrawDiag").loading('stop');
+                        });
+                }
                 
             },
             async getExpiration(info, tokenId, address, tokenName) {
@@ -969,14 +958,7 @@
                 }, 500);
             },
             async renewal_level3() {
-                if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
-
-                    await ethereum.enable();
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
-                }
-                else {
+                if (!window.web3) {
                     console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
                     return;
                 }
@@ -992,14 +974,7 @@
                 });
             },
             async renewal_level2(option) {
-                if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
-
-                    await ethereum.enable();
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
-                }
-                else {
+                if (!window.web3) {
                     console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
                     return;
                 }
@@ -1015,14 +990,7 @@
                 });
             },
             async renewal_level1(option) {
-                if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
-
-                    await ethereum.enable();
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
-                }
-                else {
+                if (!window.web3) {
                     console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
                     return;
                 }
@@ -1056,10 +1024,8 @@
             },
             async callRenewName(option) {
                 if (window.ethereum) {
-                    window.web3 = new Web3(ethereum);
                     try {
                         var pthis = this;
-                        await ethereum.enable();
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
                         infoContract.methods.renewToken(this.curItem.name).send(option, (err, msg) => {
                             if (!err) {
@@ -1071,13 +1037,7 @@
                         // User denied account access...
                         console.log(error);
                     }
-                } else if (window.web3) {
-                    window.web3 = new Web3(web3.currentProvider);
-                }
-                // Non-dapp browsers...
-                else {
-                    console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
-                }
+                } 
             },
 
         },
@@ -1090,9 +1050,9 @@
                 this.loginStatus = JSON.parse(first)["loginStatus"];
             }
             this.login();
-            ethereum.enable().then(() => {
-                window.web3 = new Web3(ethereum);
-            });
+            // ethereum.enable().then(() => {
+            //     window.web3 = new Web3(ethereum);
+            // });
 
             setInterval(this.checkDepsoitResult, 1000);
         }
