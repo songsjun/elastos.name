@@ -25,7 +25,7 @@ class Crypton {
 		if (!force && this._account) return this._account;
 
 		var pthis = this;
-		return await this._web3.eth.getAccounts()
+		return this._web3.eth.getAccounts()
 			.then(function(accounts) {
 				if (!pthis._account || pthis._account != accounts[0]) {
 					pthis._account = accounts[0];
@@ -74,7 +74,7 @@ class Crypton {
 			.then(function() {
         		return pthis._contact.methods.totalSupply().call();
 			})
-			.then(async function(count) {
+			.then(function(count) {
 				var result = [];
 				var pool = [];
 
