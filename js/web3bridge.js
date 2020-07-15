@@ -17,7 +17,9 @@ class Web3Bridge {
 			this._ethereum = window.ethereum;
 		    this._web3 = new Web3(this._ethereum);
 
-            this._ethereum.enable();
+            this._ethereum.enable().then(function() {
+            	console.log("ethereum enabled");
+            });
 	    }
 	    // else if (window.web3) {
 	    //     this._web3 = new Web3(window.web3.currentProvider);

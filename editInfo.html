@@ -289,7 +289,7 @@
                     <div class="col-sm-2 text-left">
                         {{item["key"]}}:
                     </div>
-                    <div class="col-sm-6 text-left" style="padding-left:0px">
+                    <div class="col-sm-6 text-left" style="padding-left:0px;word-break:break-all;">
                         <div>{{item['value']}}</div>
                         <img style="cursor: pointer;position:absolute;right:10px;top:5px" src="./img/edit.png" @click="eidtKey(item)" v-if="!isEidt[item['key']]" />
                         <img style="cursor: pointer;position:absolute;right:10px;top:5px;width:16px;height:16px" src="./img/delete2.png" @click="deleteKey(item)" v-if="isEidt[item['key']]" />
@@ -508,9 +508,6 @@
             },
             buildIdentity() {
                 var baseUrl = this.getUrl();
-                if (baseUrl === "file://") {
-                    baseUrl = 'http://dev1.elapps.net';
-                }
                 this.schemeConfig['ReturnUrl'] = baseUrl + '/editInfo.html?name=' + this.domainName;
                 var url = "elaphant://identity?";
                 _.forEach(this.schemeConfig, function(val, key, index) {
@@ -574,7 +571,7 @@
                             this.loading = false;
                             clearInterval(sid);
                             if (type === "removeKeyword") {
-                                this.getAjax('https://api.elastos.name/nameInfo/set?name=' + this.domainName).then((result) => {
+                                this.getAjax(window.API_URL+'/nameInfo/set?name=' + this.domainName).then((result) => {
                                     let code = result["code"];
                                     if (code === 200) {
                                         console.log(result["message"]);
@@ -587,7 +584,7 @@
                                     alert("err:" + JSON.stringify(err));
                                 });
                             } else if (type === "setKeyword") {
-                                this.getAjax('https://api.elastos.name/nameInfo/set?name=' + this.domainName).then((result) => {
+                                this.getAjax(window.API_URL+'/nameInfo/set?name=' + this.domainName).then((result) => {
                                     let code = result["code"];
                                     if (code === 200) {
                                         console.log(result["message"]);
@@ -600,7 +597,7 @@
                                     alert("err:" + JSON.stringify(err));
                                 });
                             } else if (type === "setBasicInfo") {
-                                this.getAjax('https://api.elastos.name/nameInfo/set?name=' + this.domainName).then((result) => {
+                                this.getAjax(window.API_URL+'/nameInfo/set?name=' + this.domainName).then((result) => {
                                     let code = result["code"];
                                     if (code === 200) {
                                         console.log(result["message"]);
@@ -711,7 +708,7 @@
             },
             init() {
                 this.keyValueArr = [];
-                let url = "https://api.elastos.name/nameInfo/get?name=" + this.domainName;
+                let url = window.API_URL+"/nameInfo/get?name=" + this.domainName;
                 this.getAjax(url).then((result) => {
                     if (result["code"] === 200) {
                         let domainInfo = result["data"];

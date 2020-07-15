@@ -7,6 +7,7 @@
 	<script type="text/javascript" src="js/domain_abi.js"></script>
 	<script type="text/javascript" src="js/sha256.min.js"></script>
 
+	<script type="text/javascript" src="js/web3bridge.js"></script>
 	<script type="text/javascript" src="js/crypton.js"></script>
 	
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -16,27 +17,27 @@
 
     		try {
 
-    			var ss = await Crypton.QueryName("songsjun");
-    			console.log(ss.name);
-    			var ela = await Crypton.QueryKey("songsjun", "ela.address");
-    			console.log(ela);
+    			// var ss = await Crypton.QueryName("songsjun");
+    			// console.log(ss.name);
+    			// var ela = await Crypton.QueryKey("songsjun", "ela.address");
+    			// console.log(ela);
 
-    			var winners = ["Dyiwong", "bobo", "anders", "Marcus", "aixs", "austrader", "Starwire", "Houston", "Michaels", "Neil", "Internet", "Rong", "Feng", "binance", "tron", "satoshi", "Brian", "Ryan", "Starfish", "drexl", "safu", "dex", "bull", "nakamoto", "lambo", "bear", "business", "lamborghini", "hodl", "elonmusk", "airdrop", "Nike", "888", "cocacola", "mpf", "Mikes", "Mike", "pay", "Leo", "kyc", "DMA", "android", "search", "6666", "oyo", "alibaba", "fibo", "MButcho", "911", "top", "111", "miner", "john", "tony"];
-    			for (var item of winners) {
+    			// var winners = ["Dyiwong", "bobo", "anders", "Marcus", "aixs", "austrader", "Starwire", "Houston", "Michaels", "Neil", "Internet", "Rong", "Feng", "binance", "tron", "satoshi", "Brian", "Ryan", "Starfish", "drexl", "safu", "dex", "bull", "nakamoto", "lambo", "bear", "business", "lamborghini", "hodl", "elonmusk", "airdrop", "Nike", "888", "cocacola", "mpf", "Mikes", "Mike", "pay", "Leo", "kyc", "DMA", "android", "search", "6666", "oyo", "alibaba", "fibo", "MButcho", "911", "top", "111", "miner", "john", "tony"];
+    			// for (var item of winners) {
 
-    				(function(){
-	    				var name = item;
-	    				Crypton.QueryKey(name, "ela.address").then(function(ela) {
-	    					console.log(name+","+ela+","+(name.length>3?1:5));
-	    				}, function(ela) {
-	    					console.log(name+",,"+(name.length>3?1:5));
-	    				});
-    				})();
-    			}
+    			// 	(function(){
+	    		// 		var name = item;
+	    		// 		Crypton.QueryKey(name, "ela.address").then(function(ela) {
+	    		// 			console.log(name+","+ela+","+(name.length>3?1:5));
+	    		// 		}, function(ela) {
+	    		// 			console.log(name+",,"+(name.length>3?1:5));
+	    		// 		});
+    			// 	})();
+    			// }
 
-    			console.log("done");
+    			// console.log("done");
 
-    			return;
+    			// return;
 
     			// 初始化Bridge对象
 				var bridge = new Web3Bridge();
@@ -51,7 +52,7 @@
 
 				var web3 = bridge.getWeb3();
 
-				var contact = await web3.eth.ens.getResolver('ethereum.eth');
+				//var contact = await web3.eth.ens.getResolver('ethereum.eth');
 
 				var account = await bridge.getAccount();
 				//var addr = await web3.eth.ens.getAddress("songsjun.eth");
@@ -62,6 +63,13 @@
 
 				// 创建合约包装对象
 				var crypton = new Crypton(abiArray, contract_address, bridge.getWeb3());
+
+				crypton.getOwnerNameTokens("0x071001C919494a8EBF36b2EF9D5AE73C3543bE45").then(function(ret) {
+					for(var item of ret) {
+						console.log(item.name);
+					}
+				});
+				return;
 
 				var tmpName = "hello"+Math.floor(Math.random() * 10000);
 				var address = "";

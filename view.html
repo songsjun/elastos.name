@@ -33,6 +33,9 @@
     <script type="text/javascript" src="./lib/bootstrap/js/bootstrap_4_5.bundle.min.js"></script>
     <script src="./js/vue-qrcode.min.js"></script>
     <script src="./js/vue-clipboard.min.js"></script>
+    <script type="text/javascript">
+        document.write('<script src="./js/contractConfig.js?v=' + (new Date()).getTime() + '"><\/script>');
+    </script>
     <script>
         Vue.component(VueQrcode.name, VueQrcode);
     </script>
@@ -250,7 +253,7 @@
         created() {
             this.isPC = this.getPc();
             this.domainInfo.name = this.GetQueryString("name") || "";
-            let url = "https://api.elastos.name/nameInfo/get?name=" + this.domainInfo.name;
+            let url = window.API_URL+"/nameInfo/get?name=" + this.domainInfo.name;
             this.getAjax(url).then((result) => {
                 console.log(JSON.stringify(result));
                 let code = result["code"];

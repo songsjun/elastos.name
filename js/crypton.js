@@ -129,22 +129,40 @@ class Crypton {
 			})
 			.then(async function(count) {
 				var result = [];
+				var pool = [];
 
 				for (var i=0; i<count; i++) {
-					var tokenid = await pthis._contact.methods.tokenOfOwnerByIndex(address, i).call();
-					var owner = address;
-					var name = await pthis._contact.methods.tokenURI(tokenid).call();
-					var expiration = await pthis._contact.methods.tokenExpiration(tokenid).call();
-					var price = await pthis._contact.methods.tokenPrice(tokenid).call();
-					result.push({
-						"tokenId": tokenid,
-						"name": name,
-						"owner": owner,
-						"expiration": expiration,
-						"price": pthis._web3.utils.fromWei(price, "ether")
-					});
+					(function() {
+						var tokenid, owner, name, expiration, price;
+
+						pool.push(pthis._contact.methods.tokenOfOwnerByIndex(address, i).call()
+							.then(function(ret) {
+								tokenid = ret;
+								return pthis._contact.methods.tokenURI(tokenid).call();
+							})
+							.then(function(ret) {
+								name = ret;
+								return pthis._contact.methods.tokenExpiration(tokenid).call();
+							})
+							.then(function(ret) {
+								expiration = ret;
+								return pthis._contact.methods.tokenPrice(tokenid).call();
+							})
+							.then(function(ret) {
+								price = ret;
+								result.push({
+									"tokenId": tokenid,
+									"name": name,
+									"owner": owner,
+									"expiration": expiration,
+									"price": pthis._web3.utils.fromWei(price, "ether")
+								});
+							}));
+					})();
 				}
-				return result;
+				return Promise.all(pool).then(() =>{
+					return result;
+				});
 			})
 			.catch(function(){
 				return [];
@@ -195,7 +213,7 @@ class Crypton {
 			});
 	}
 
-	async getRenewalPrice (name) {
+	async getRenewalPrice (level) {
 		var pthis = this;
 		return this._init_account()
 			.then(function() {
@@ -207,6 +225,28 @@ class Crypton {
 				}
 				else if (level == 3) {
 					return pthis._contact.methods.renewal_level3().call();
+				}
+			})
+			.then(function(x) {
+				return pthis._web3.utils.fromWei(x, "ether");
+			})
+			.catch(function(){
+				return -1;
+			});
+	}
+
+	async getNamesCount (level) {
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				if (level == 1) {
+					return pthis._contact.methods.count_level1().call();
+				}
+				else if (level == 2) {
+					return pthis._contact.methods.count_level2().call();
+				}
+				else if (level == 3) {
+					return pthis._contact.methods.count_level3().call();
 				}
 			})
 			.then(function(x) {
@@ -273,6 +313,29 @@ class Crypton {
 			})
 			.then(function(option) {
 				return pthis._contact.methods.mint(to, name).send(option);
+			});
+	}
+
+	async approveName (to, name) {
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(option) {
+				var tokenId = pthis._web3.utils.hexToNumberString("0x"+sha256(name));
+				return pthis._contact.methods.approve(to, tokenId).send(option);
+			});
+	}
+
+	async recycleToken (name) {
+		var pthis = this;
+		return this._init_account()
+			.then(function() {
+				return pthis._generate_option();
+			})
+			.then(function(option) {
+				return pthis._contact.methods.recycleToken(name).send(option);
 			});
 	}
 
