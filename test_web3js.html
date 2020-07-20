@@ -64,6 +64,13 @@
 				// 创建合约包装对象
 				var crypton = new Crypton(abiArray, contract_address, bridge.getWeb3());
 
+				crypton.getNameTokens(0, 99999).then(function(ret){
+					for(var item of ret) {
+						console.log(item.name+","+item.owner+","+item.expiration+","+item.price);
+					}
+				});
+				return;
+
 				crypton.getOwnerNameTokens("0x071001C919494a8EBF36b2EF9D5AE73C3543bE45").then(function(ret) {
 					for(var item of ret) {
 						console.log(item.name);

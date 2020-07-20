@@ -283,7 +283,7 @@
                 <ul>
                     <li><a href="./index.html">Home</a></li>
                     <li><a href="./register.html">Register</a></li>
-                    <li><a href="./sale.html">Sale</a></li>
+                    <li><a href="https://onsale.elastosmall.com">Sale</a></li>
                     <!--li><a href="./auction.html">Auction</a></li-->
                     <li><a href="./guide.html">Guide</a></li>
                     <li><a href="./developer.html">Developer</a></li>
@@ -471,9 +471,63 @@
                     try {
                         ethereum.enable();
 
-                        var crypton = new Crypton(window.elaAbi, window.contractAddres, window.web3);
+                        var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
 
-                        this.domainNameArr = await crypton.getNameTokens(0, 999999);
+                        var pthis = this;
+                        pthis.domainNameArr = [];
+                        infoContract.methods.totalSupply().call()
+                        .then(function(count) {
+                            var result = [];
+                            var pool = [];
+
+                            for (var i=0; i<count; i++) {
+                                (function(){
+                                    var tokenid, owner, name, expiration, price;
+
+                                    var item = {};
+
+                                    pool.push(infoContract.methods.tokenByIndex(i).call()
+                                        .then(function(ret) {
+                                            tokenid = ret;
+                                            infoContract.methods.tokenURI(tokenid).call().then(function(ret) {
+                                                name = ret;
+                                                console.log(name);
+                                            });
+                                        })
+                                        .then(function(ret) {
+                                            name = ret;
+                                            console.log(name);
+
+                                            // return (function() {
+                                            //         infoContract.methods.ownerOf(tokenid).call()
+                                            //         .then(function(ret) {
+                                            //             owner = ret;
+                                            //             return infoContract.methods.tokenExpiration(tokenid).call();
+                                            //         })
+                                            //         .then(function(ret) {
+                                            //             expiration = ret;
+                                            //             return infoContract.methods.tokenPrice(tokenid).call();
+                                            //         });
+                                            //     })();
+                                        })
+                                        .then(function(ret) {
+                                            price = ret;
+                                            pthis.domainNameArr.push({
+                                                "tokenId": tokenid,
+                                                "name": name,
+                                                "owner": owner,
+                                                "expiration": expiration,
+                                                "price": window.web3.utils.fromWei(price+"", "ether")
+                                            });
+                                        }));
+                                })();
+                            }
+
+                            return Promise.all(pool).then(() =>{
+                                pthis.domainNameArr = result;
+                            });
+                        });
+
                         
                     } catch (error) {
                         // User denied account access...
