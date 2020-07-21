@@ -158,7 +158,7 @@
             border-top:0px;  
             border-left:0px;  
             border-right:0px;
-            width: 96%;
+            width: 90%;
         }
     </style>
 
@@ -243,7 +243,10 @@
                 </div>
                 <div class="col-sm-6 text-left" style="padding-left:0px">
                     <input v-model="defaultKeys[key]" class="value_box" />
-                    <img src="./img/copy.png" style="width: 24px;cursor: pointer;position:absolute;right:10px;top:5px;z-index:111" @click="doCopy(value)">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check-circle" fill="green" xmlns="http://www.w3.org/2000/svg"  v-if="checkedKeys[ key ]">
+                      <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                      <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
+                    </svg>
                 </div>
                 <div class="col-sm-2 text-left">
 
@@ -290,7 +293,11 @@
                         {{item["key"]}}:
                     </div>
                     <div class="col-sm-6 text-left" style="padding-left:0px;word-break:break-all;">
-                        <div>{{item['value']}}</div>
+                        <div class="value_box">{{item['value']}}</div>
+                        <svg style="cursor: pointer;position:absolute;right:40px;top:8px" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check-circle" fill="green" xmlns="http://www.w3.org/2000/svg" v-if="checkedKeys[ item['key'] ]">
+                          <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                          <path fill-rule="evenodd" d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.236.236 0 0 1 .02-.022z"/>
+                        </svg>{{ checkedKeys[ item['key'] ] }}
                         <img style="cursor: pointer;position:absolute;right:10px;top:5px" src="./img/edit.png" @click="eidtKey(item)" v-if="!isEidt[item['key']]" />
                         <img style="cursor: pointer;position:absolute;right:10px;top:5px;width:16px;height:16px" src="./img/delete2.png" @click="deleteKey(item)" v-if="isEidt[item['key']]" />
                     </div>
@@ -311,6 +318,17 @@
                     </div>
                 </div>
 
+                <div class="row text-left" style="margin-top: 10px;" v-if="(item['key']=='messenger' || item['key']=='messagewall') && isEidt[item['key']]">
+                    <div class="col-sm-2">
+
+                    </div>
+                    <div class="col-sm-2">
+                        Please sign this string via Elephant:
+                    </div>
+                    <div class="col-sm-8 text-right">
+                        <p class="text-left">{{ domainName.toLowerCase()+".elastos.name"+item['key']+selectAddress }}</p>
+                    </div>
+                </div>
                 <div class="row text-center" style="margin-top: 10px;" v-if="isEidt[item['key']]">
                     <div class="col-sm-5">
 
@@ -327,14 +345,26 @@
                 <div class="col-sm-2">
 
                 </div>
-                <div class="col-sm-4 text-right">
+                <div class="col-sm-2 text-right">
                     <input placeholder="Please input key" style="width:100%;" v-model="keyValueObj.key" />
+
                 </div>
-                <div class="col-sm-4 text-left" style="padding-left:0px">
+                <div class="col-sm-6 text-left" style="padding-left:0px">
                     <input placeholder="Please input value" v-model="keyValueObj.value" style="width:90%;" />
                 </div>
                 <div class="col-sm-2 text-left">
+                    
+                </div>
+            </div>
+            <div class="row text-left" style="margin-top: 10px;" v-if="keyValueObj.key=='messenger' || keyValueObj.key=='messagewall'">
+                <div class="col-sm-2">
 
+                </div>
+                <div class="col-sm-2">
+                    Please sign this string via Elephant:
+                </div>
+                <div class="col-sm-8 text-right">
+                    <p class="text-left">{{ domainName.toLowerCase()+".elastos.name"+keyValueObj.key+selectAddress }}</p>
                 </div>
             </div>
 
@@ -389,6 +419,7 @@
     <script src="contactform/contactform.js"></script>
 
     <!-- Template Main Javascript File -->
+    <script src="js/elastos-wallet-api.js"></script>
     <script src="js/main.js"></script>
 </body>
 <script>
@@ -405,6 +436,7 @@
                 "ela.address": "",
                 "eth.address": "",
             },
+            checkedKeys: {},
             schemeConfig: {
                 "AppID": "ac89a6a3ff8165411c8426529dccde5cd44d5041407bf249b57ae99a6bfeadd60f74409bd5a3d81979805806606dd2d55f6979ca467982583ac734cf6f55a290",
                 "AppName": "Mini Apps",
@@ -619,7 +651,7 @@
                     try {
                         await ethereum.enable();
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
-                        infoContract.methods.setBasicInfo(this.domainName, this.defaultKeys["btc.address"], this.defaultKeys["eth.address"], this.defaultKeys["ela.address"], this.defaultKeys.did, this.defaultKeys.publickey).send(option, (err, msg) => {
+                        infoContract.methods.setBasicInfo(this.domainName.trim().toLowerCase(), this.defaultKeys["btc.address"].trim(), this.defaultKeys["eth.address"].trim(), this.defaultKeys["ela.address"].trim(), this.defaultKeys.did.trim(), this.defaultKeys.publickey.trim()).send(option, (err, msg) => {
                             if (!err) {
                                 this.loading = true;
                                 this.next(msg, "setBasicInfo");
@@ -663,7 +695,7 @@
                     try {
                         await ethereum.enable();
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
-                        infoContract.methods.setKeyword(this.domainName, item.key, item.value).send(option, (err, msg) => {
+                        infoContract.methods.setKeyword(this.domainName.trim().toLowerCase(), item.key.trim().toLowerCase(), item.value.trim()).send(option, (err, msg) => {
                             if (!err) {
                                 this.loading = true;
                                 this.next(msg, "setKeyword");
@@ -717,12 +749,45 @@
                         this.defaultKeys["btc.address"] = domainInfo["btc.address"];
                         this.defaultKeys["ela.address"] = domainInfo["ela.address"];
                         this.defaultKeys["eth.address"] = domainInfo["eth.address"];
+
+                        try {
+                            if (domainInfo["publickey"] && domainInfo["publickey"] != "") {
+                                this.checkedKeys["publickey"] = true;
+                                if (getDid(domainInfo["publickey"]).toLowerCase() == domainInfo["did"].toLowerCase())
+                                    this.checkedKeys["did"] = true;
+
+                                if (getAddress(domainInfo["publickey"]).toLowerCase() == domainInfo["ela.address"].toLowerCase())
+                                    this.checkedKeys["ela.address"] = true;
+                            }
+                        }
+                        catch (err) {
+                            console.log(err);
+                        }
+
+
+
                         for (let key in domainInfo) {
                             if (key != "did" && key != "publickey" && key != "btc.address" && key != "eth.address" && key != "ela.address" && key != "name") {
                                 this.keyValueArr.push({
                                     "key": key,
                                     "value": domainInfo[key]
                                 });
+
+                                try {
+                                    if (key == "messenger") {
+                                        if (verify(this.domainName.toLowerCase()+".elastos.namemessenger"+this.selectAddress.toLowerCase(), domainInfo["messenger"], domainInfo["publickey"])) {
+                                            this.checkedKeys["messenger"] = true;
+                                        }
+                                    }
+                                    else if (key == "messagewall") {
+                                        if (verify(this.domainName.toLowerCase()+".elastos.namemessagewall"+this.selectAddress.toLowerCase(), domainInfo["messagewall"], domainInfo["publickey"])) {
+                                            this.checkedKeys["messagewall"] = true;
+                                        }
+                                    }
+                                }
+                                catch (err) {
+                                    console.log(err);
+                                }
                             }
                         }
                     }
@@ -746,6 +811,16 @@
                 this.defaultKeys["btc.address"] = dataObj["BTCAddress"];
                 this.defaultKeys["eth.address"] = dataObj["ETHAddress"];
                 this.defaultKeys.publickey = dataObj["PublicKey"];
+
+                if (dataObj["publickey"] && dataObj["publickey"] != "") {
+                    this.checkedKeys["publickey"] = true;
+
+                    if (getDid(dataObj["publickey"]).toLowerCase() == dataObj["did"].toLowerCase())
+                        this.checkedKeys["did"] = true;
+
+                    if (getAddress(dataObj["publickey"]).toLowerCase() == dataObj["ela.address"].toLowerCase())
+                        this.checkedKeys["ela.address"] = true;
+                }
             }
             window.initWallet().then((address) => {
                 this.selectAddress = address;
