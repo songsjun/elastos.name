@@ -260,6 +260,7 @@
         },
         created() {
             window.initWallet().then((address) => {
+                window.crypton = new Crypton(window.elaAbi, window.contractAddres, window.web3);
             }).catch((err) => {
                 console.log(err);
             });
