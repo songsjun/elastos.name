@@ -259,16 +259,43 @@
             },
         },
         created() {
-            window.initWallet().then((address) => {
-                window.crypton = new Crypton(window.elaAbi, window.contractAddres, window.web3);
-            }).catch((err) => {
-                console.log(err);
-            });
-
             this.isPC = this.getPc();
             var pthis = this;
             this.domainInfo.name = this.GetQueryString("name") || "";
             let url = window.API_URL+"/nameInfo/get?name=" + this.domainInfo.name;
+
+            window.initWallet().finally(e => {
+                if (!web3) return;
+                try {
+                    var tokenId = web3.utils.hexToNumberString("0x" + sha256(pthis.domainInfo.name));
+                    var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                    infoContract.methods.ownerOf(tokenId).call().then(function(owner) {
+                        
+                        if(pthis.domainInfo["messenger"]) {
+                            var name = pthis.domainInfo.name;
+                            var signature = pthis.domainInfo["messenger"];
+                            var publickey = pthis.domainInfo["publickey"];
+                            if (verify(name.toLowerCase()+".elastos.namemessenger"+owner.toLowerCase(), signature, publickey)) {
+                                pthis.messengerEnabled = true;
+                            }
+                        }
+                        if(pthis.domainInfo["messagewall"]) {
+                            var name = pthis.domainInfo.name;
+                            var signature = pthis.domainInfo["messagewall"];
+                            var publickey = pthis.domainInfo["publickey"];
+                            if (verify(name.toLowerCase()+".elastos.namemessagewall"+owner.toLowerCase(), signature, publickey)) {
+                                pthis.messagewallEnabled = true;
+                            }
+                        }
+                    });
+                } catch (error) {
+                    // User denied account access...
+                    console.log(error);
+                }
+            }).catch((err) => {
+                console.log(err);
+            });
+
             this.getAjax(url).then((result) => {
                 console.log(JSON.stringify(result));
                 let code = result["code"];
@@ -278,34 +305,6 @@
                     for (var index in pthis.domainInfo) {
                         if (pthis.domainInfo[index] == "") {
                             delete pthis.domainInfo[index];
-                        }
-                        else if (index == "messagewall") {
-                            (function() {
-                                var name = pthis.domainInfo.name;
-                                var signature = pthis.domainInfo["messagewall"];
-                                var publickey = pthis.domainInfo["publickey"];
-
-                                window.crypton.getOwnerOfNameToken(name.toLowerCase()).then(function(owner) {
-                                    if (verify(name.toLowerCase()+".elastos.namemessagewall"+owner.toLowerCase(), signature, publickey)) {
-                                        pthis.messagewallEnabled = true;
-                                    }
-                                });
-                            })();
-                            
-                        }
-                        else if (index == "messenger") {
-                            (function() {
-                                var name = pthis.domainInfo.name;
-                                var signature = pthis.domainInfo["messenger"];
-                                var publickey = pthis.domainInfo["publickey"];
-
-                                window.crypton.getOwnerOfNameToken(name.toLowerCase()).then(function(owner) {
-                                    if (verify(name.toLowerCase()+".elastos.namemessenger"+owner.toLowerCase(), signature, publickey)) {
-                                        pthis.messengerEnabled = true;
-                                    }
-                                });
-                            })();
-
                         }
                     }
                 } else {
