@@ -17,18 +17,12 @@ window.initWallet = function initWallet() {
     return new Promise((resolve, reject) => {
         if (typeof window.ethereum === 'undefined') {
             window.web3 = new Web3(new Web3.providers.HttpProvider("https://mainrpc.elaeth.io"));
-            window.crypton = new Crypton(elaAbi, contractAddres, window.web3);
             reject('Looks like you need a Dapp browser to get started.Consider installing MetaMask!');
-            
-
-            //resolve(selectedAddress);
         } else {
             //resolve(1);
             ethereum.enable().then(() => {
                 window.web3 = new Web3(ethereum);
                 var selectedAddress = ethereum.selectedAddress;
-                
-                window.crypton = new Crypton(elaAbi, contractAddres, window.web3);
                 resolve(selectedAddress);
 
 
