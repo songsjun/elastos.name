@@ -69,14 +69,14 @@
         .add {
             margin-top: 10px;
             text-align: center;
-            width: 198px;
-            height: 96px;
-            line-height: 96px;
+            width: 256px;
+            height: 158px;
+            line-height: 158px;
             background: #FFFFFF;
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             border-radius: 5px;
             cursor: pointer;
-            font-size: 26px;
+            font-size: 42px;
         }
         
         .kuang {
@@ -360,13 +360,15 @@
 
                 <div class="row" style="margin-top: 15px;">
                     <div class="kuang" v-for="(item) in domainNameArr">
-                        <div style="font-weight: bold;font-size: 26px;">{{item.name}}</div>
+                        <div style="font-weight: bold;font-size: 26px; word-break:break-all;line-height: 1.2;" v-if="item.name.length>15">{{item.name}}</div>
+                        <div style="font-weight: bold;font-size: 26px; word-break:break-all;line-height: 1.5;" v-if="item.name.length<16">{{item.name}}</div>
                         <div style="font-weight: bold;font-size: 16px;">.elastos.name</div>
-                        <div style="font-size: 14px;border-bottom: 1px solid #E0E0E0;padding-bottom: 25px;">{{dateFormat(new Date(item.expiration * 1000), ' yyyy-MM-dd HH:mm:ss')}}</div>
+                        <div style="font-size: 14px;border-bottom: 1px solid #E0E0E0;padding-bottom: 12px;" v-if="item.name.length>15">{{dateFormat(new Date(item.expiration * 1000), ' yyyy-MM-dd HH:mm:ss')}}</div>
+                        <div style="font-size: 14px;border-bottom: 1px solid #E0E0E0;padding-bottom: 36px;" v-if="item.name.length<16">{{dateFormat(new Date(item.expiration * 1000), ' yyyy-MM-dd HH:mm:ss')}}</div>
                         <div style="text-align: right;margin-top: -4px;"><span class="btn1" @click="renew(item)">renew</span><span class="btn1" @click="view(item)">view</span><span class="btn1" @click="edit(item)">edit</span><span class="btn1" @click="transferDialog(item)" style="width: 57px;">transfer</span></div>
                     </div>
                     <div class="add" @click="add">
-                        + add
+                        + New
                     </div>
                 </div>
             </div>

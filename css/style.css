@@ -1138,6 +1138,7 @@ h6 {
     border-bottom: 0px;
     -moz-text-align-last: center;
     text-align-last: center;
+    word-break:break-all;
 }
 
 #pricing .card .card-title {
