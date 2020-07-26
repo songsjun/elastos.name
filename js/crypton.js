@@ -30,7 +30,7 @@ class Crypton {
 				if (!pthis._account || pthis._account != accounts[0]) {
 					pthis._account = accounts[0];
 				}
-				return pthis._account;
+				return pthis._account.toLowerCase();
 			});
 	}
 

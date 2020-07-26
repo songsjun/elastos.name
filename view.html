@@ -33,6 +33,9 @@
     <script type="text/javascript" src="./lib/bootstrap/js/bootstrap_4_5.bundle.min.js"></script>
     <script src="./js/vue-qrcode.min.js"></script>
     <script src="./js/vue-clipboard.min.js"></script>
+    <script src="js/sha256.min.js"></script>
+    <script src="./js/web3.min.js"></script>
+    <script src="js/crypton.js"></script>
     <script type="text/javascript">
         document.write('<script src="./js/contractConfig.js?v=' + (new Date()).getTime() + '"><\/script>');
     </script>
@@ -87,6 +90,8 @@
                     <h5 class="card-title">{{v}}</h5>
                     <a href="#" class="btn btn-info btn-sm" @click="doCopy(v)">Copy</a>
                     <a href="#" class="btn btn-info btn-sm" @click="doOpen(v)" v-if="v && v.indexOf('http')==0">Open</a>
+                    <a href="#" class="btn btn-info btn-sm" @click="window.open('https://elamessage.elaphant.app/sendto.html?n='+domainInfo.name)" v-if="k && k.indexOf('messenger')==0 && messengerEnabled">Message</a>
+                    <a href="#" @click="window.open('https://elamessage.elaphant.app/channel.html?n='+domainInfo.name)" class="btn btn-info btn-sm" v-if="k && k.indexOf('messagewall')==0 && messagewallEnabled">View</a>
                     <a href="#" class="btn btn-info btn-sm" id="#depsoitBtn" @click="depsoitAddr=v;depsoitToken=k.substring(0, k.indexOf('.address')).toUpperCase();$('#depsoitDailog').modal('show')" data-target="#depsoitDailog" v-if="k && k.indexOf('.address')!=-1">Deposit</a>
                   </div>
                   <div class="card-footer bg-transparent">
@@ -154,6 +159,7 @@
     <script src="lib/lightbox/js/lightbox.min.js"></script>
     <!-- Contact Form JavaScript File -->
     <script src="contactform/contactform.js"></script>
+    <script src="js/elastos-wallet-api.js"></script>
 
     <!-- Template Main Javascript File -->
     <script src="js/main.js"></script>
@@ -180,6 +186,8 @@
             domainInfo: {},
             depsoitAddr: "",
             depsoitToken: "",
+            messengerEnabled: false,
+            messagewallEnabled: false,
             addresses: []
         },
         methods: {
@@ -251,21 +259,56 @@
             },
         },
         created() {
+            window.initWallet().then((address) => {
+            }).catch((err) => {
+                console.log(err);
+            });
+
             this.isPC = this.getPc();
+            var pthis = this;
             this.domainInfo.name = this.GetQueryString("name") || "";
             let url = window.API_URL+"/nameInfo/get?name=" + this.domainInfo.name;
             this.getAjax(url).then((result) => {
                 console.log(JSON.stringify(result));
                 let code = result["code"];
                 if (code === 200) {
-                    this.loading = false;
-                    this.domainInfo = result["data"] || "";
-                    for (var index in this.domainInfo) {
-                        if (this.domainInfo[index] == "")
-                            delete this.domainInfo[index];
+                    pthis.loading = false;
+                    pthis.domainInfo = result["data"] || "";
+                    for (var index in pthis.domainInfo) {
+                        if (pthis.domainInfo[index] == "") {
+                            delete pthis.domainInfo[index];
+                        }
+                        else if (index == "messagewall") {
+                            (function() {
+                                var name = pthis.domainInfo.name;
+                                var signature = pthis.domainInfo["messagewall"];
+                                var publickey = pthis.domainInfo["publickey"];
+
+                                window.crypton.getOwnerOfNameToken(name.toLowerCase()).then(function(owner) {
+                                    if (verify(name.toLowerCase()+".elastos.namemessagewall"+owner.toLowerCase(), signature, publickey)) {
+                                        pthis.messagewallEnabled = true;
+                                    }
+                                });
+                            })();
+                            
+                        }
+                        else if (index == "messenger") {
+                            (function() {
+                                var name = pthis.domainInfo.name;
+                                var signature = pthis.domainInfo["messenger"];
+                                var publickey = pthis.domainInfo["publickey"];
+
+                                window.crypton.getOwnerOfNameToken(name.toLowerCase()).then(function(owner) {
+                                    if (verify(name.toLowerCase()+".elastos.namemessenger"+owner.toLowerCase(), signature, publickey)) {
+                                        pthis.messengerEnabled = true;
+                                    }
+                                });
+                            })();
+
+                        }
                     }
                 } else {
-                    this.isShowEdit = true;
+                    pthis.isShowEdit = true;
                 }
             }).catch((err) => {
                 console.log(err);

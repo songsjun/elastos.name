@@ -318,7 +318,7 @@
                     </div>
                 </div>
 
-                <div class="row text-left" style="margin-top: 10px;" v-if="(item['key']=='messenger' || item['key']=='messagewall') && isEidt[item['key']]">
+                <div class="row text-left" style="margin-top: 10px;" v-if="isEidt[item['key']] && (item['key']=='messenger' || item['key']=='messagewall')">
                     <div class="col-sm-2">
 
                     </div>
@@ -356,7 +356,7 @@
                     
                 </div>
             </div>
-            <div class="row text-left" style="margin-top: 10px;" v-if="keyValueObj.key=='messenger' || keyValueObj.key=='messagewall'">
+            <div class="row text-left" style="margin-top: 10px;" v-if="isNew && (keyValueObj.key=='messenger' || keyValueObj.key=='messagewall')">
                 <div class="col-sm-2">
 
                 </div>
