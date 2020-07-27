@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>how_to_login_with_did</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="https://cdn.bootcss.com/lodash.js/4.17.12-pre/lodash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+</head>
+<style type="text/css">
+    .four {
+        width: 220px;
+        margin: 0 auto;
+        text-align: center;
+    }
+    
+    .four p {
+        font-family: Bio Sans;
+        font-size: 16px;
+        margin-top: 30px;
+        width: 220px;
+        line-height: 44px;
+        height: 44px;
+        background: #0070C8;
+        border-radius: 200px;
+        color: #FFFFFF;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div style="text-align: center;margin-top:50px;">签名前的内容：{{objStr}}</div>
+        <div class="four" v-on:click="goBuildSign()">
+            <p>签名</p>
+        </div>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            schemeConfig: {
+                "AppID": "7d80c7e800f5842b3b8e7ec7318189f66b7fd5b6db13bb80fbd89d2b1c444772c1d0202fea1e9cbabbf3258b3d91685484c02c2ae52d78ca39e2e54593ec81dd",
+                "AppName": "Hackathon",
+                "RandomNumber": "123456789",
+                "DID": "iXzenTELVRDc712tmt2Qvbtk3KcAwV2tU8",
+                "PublicKey": "032f6347b27401dc0bced2de0ab4531e62c496841cd8e67a58c572e3018dcb72d9",
+                "RequestedContent": "",
+                "UseStatement": "didvote",
+                "ReturnUrl": "",
+            },
+            qrcode: "",
+            timer: "",
+            returncode: "",
+            returnContent: "",
+            objStr: JSON.stringify({
+                "test": "test",
+                "test1": "1234678"
+            })
+        },
+        methods: {
+            getUrl() {
+                //获取主机地址
+                var localhostPaht = window.location.protocol + "//" + window.location.host;
+                return localhostPaht;
+            },
+            isPC() {
+                var userAgentInfo = navigator.userAgent;
+                var Agents = ["Android", "iPhone",
+                    "SymbianOS", "Windows Phone",
+                    "iPad", "iPod"
+                ];
+                var flag = true;
+                for (var v = 0; v < Agents.length; v++) {
+                    if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                        flag = false;
+                        break;
+                    }
+                }
+                return flag;
+            },
+            isWechat() {
+                var ua = navigator.userAgent.toLowerCase();
+                return /micromessenger/i.test(ua) || typeof navigator.wxuserAgent !== 'undefined';
+            },
+            goBuildSign() {
+                var url = this.buildSign(this.objStr);
+
+                if (this.isPC() || this.isWechat()) {
+                    var turl = 'https://launch.elaphant.app?appName=test&autoRedirect=True&appTitle=test&redirectURL=' + encodeURIComponent(url);
+                    location.href = turl;
+                } else {
+                    location.href = url;
+                }
+            },
+            buildSign(objStr) {
+                this.schemeConfig['RequestedContent'] = objStr;
+                var baseUrl = this.getUrl();
+                this.schemeConfig['ReturnUrl'] = baseUrl + '/sign.html';
+                var url = "elaphant://sign?";
+                _.forEach(this.schemeConfig, function(val, key, index) {
+                    if (key === 'ReturnUrl' || key === 'RequestInfo' || key === 'RequestedContent') {
+                        val = encodeURIComponent(val);
+                    }
+                    url += key + '=' + val + '&';
+                });
+
+                return url.substring(0, url.length - 1);
+            },
+            getUrlParam: function(name) {
+                //正则表达式过滤
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                //正则规则
+                var r = window.location.search.substr(1).match(reg);
+
+                if (r != null) return decodeURI(r[2]);
+                return null;
+            },
+        },
+        created: function() {
+            this.returnContent = this.getUrlParam("data") || "";
+            if (this.returnContent != "") {
+                alert("签名后的内容" + this.returnContent);
+            }
+        }
+    });
+</script>
+
+</html>
