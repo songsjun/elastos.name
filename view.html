@@ -90,8 +90,8 @@
                     <h5 class="card-title">{{v}}</h5>
                     <a href="#" class="btn btn-info btn-sm" @click="doCopy(v)">Copy</a>
                     <a href="#" class="btn btn-info btn-sm" @click="doOpen(v)" v-if="v && v.indexOf('http')==0">Open</a>
-                    <a href="#" class="btn btn-info btn-sm" @click="window.open('https://elamessage.elaphant.app/sendto.html?n='+domainInfo.name)" v-if="k && k.indexOf('messenger')==0 && messengerEnabled">Message</a>
-                    <a href="#" @click="window.open('https://elamessage.elaphant.app/channel.html?n='+domainInfo.name)" class="btn btn-info btn-sm" v-if="k && k.indexOf('messagewall')==0 && messagewallEnabled">View</a>
+                    <a href="#" class="btn btn-info btn-sm" @click="window.open('https://elamessenger.elaphant.app/sendto.html?n='+domainInfo.name)" v-if="k && k.indexOf('messenger')==0 && messengerEnabled">Message</a>
+                    <a href="#" @click="window.open('https://elamessenger.elaphant.app/channel.html?n='+domainInfo.name)" class="btn btn-info btn-sm" v-if="k && k.indexOf('messagewall')==0 && messagewallEnabled">View</a>
                     <a href="#" class="btn btn-info btn-sm" id="#depsoitBtn" @click="depsoitAddr=v;depsoitToken=k.substring(0, k.indexOf('.address')).toUpperCase();$('#depsoitDailog').modal('show')" data-target="#depsoitDailog" v-if="k && k.indexOf('.address')!=-1">Deposit</a>
                   </div>
                   <div class="card-footer bg-transparent">
