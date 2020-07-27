@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <script src="https://cdn.bootcss.com/lodash.js/4.17.12-pre/lodash.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
 </head>
 <style type="text/css">
     .four {
@@ -18,7 +19,7 @@
     .four p {
         font-family: Bio Sans;
         font-size: 16px;
-        margin-top: 30px;
+        margin-top: 10px;
         width: 220px;
         line-height: 44px;
         height: 44px;
@@ -30,10 +31,27 @@
 
 <body>
     <div id="app">
-        <div style="text-align: center;margin-top:50px;">签名前的内容：{{objStr}}</div>
-        <div class="four" v-on:click="goBuildSign()">
-            <p>签名</p>
+        <div style="width: 320px;margin:0 auto ;text-align:left;margin-top:50px;">签名前的内容：{{objStr}}</div>
+        <div style="width: 320px;margin:0 auto ;text-align:left;margin-top:10px;" v-if="singResult">签名后的内容：</div>
+        <div style="width: 320px;height:110px;word-break: break-all;margin: 0 auto;" v-if="singResult">
+            {{singResult}}
         </div>
+
+        <div v-if="vresult" style="width: 320px;margin:0 auto ;text-align:left;">验证结果：{{vresult}}</div>
+
+
+        <!-- <div class="four" v-on:click="goBuildSign()">
+            <p>大象app签名</p>
+        </div> -->
+
+        <div class="four" v-on:click="personalSign()">
+            <p>meatMask personal.sign</p>
+        </div>
+
+        <div class="four" v-on:click="ecRcover()">
+            <p>meatMask ecRrcover</p>
+        </div>
+
     </div>
 </body>
 <script>
@@ -54,12 +72,49 @@
             timer: "",
             returncode: "",
             returnContent: "",
-            objStr: JSON.stringify({
-                "test": "test",
-                "test1": "1234678"
-            })
+            objStr: "test",
+            singResult: "",
+            selectedAddress: "",
+            vresult: "",
         },
         methods: {
+            init() {
+                if (typeof window.ethereum === 'undefined') {
+                    reject('Looks like you need a Dapp browser to get started.Consider installing MetaMask!');
+                } else {
+                    //resolve(1);
+                    ethereum.enable().catch((reason) => {
+                        reject(reason);
+                    }).then(() => {
+                        window.web3 = new Web3(ethereum);
+                        this.selectedAddress = ethereum.selectedAddress;
+                        // }
+                    });
+                }
+            },
+            personalSign() {
+                window.web3.eth.personal.sign(this.objStr, this.selectedAddress).then((result) => {
+                    alert(result);
+                    this.singResult = result;
+                }).catch((err) => {
+                    alert(err);
+                });
+            },
+
+            ecRcover() {
+                if (this.singResult === "") {
+                    alert('签名后才能验签');
+                    return;
+                }
+                window.web3.eth.personal.ecRecover(this.objStr, this.singResult).then((accoutAddress) => {
+                    alert(accoutAddress);
+                    if (accoutAddress === this.selectedAddress) {
+                        this.vresult = "true"
+                    } else {
+                        this.vresult = "false"
+                    }
+                });
+            },
             getUrl() {
                 //获取主机地址
                 var localhostPaht = window.location.protocol + "//" + window.location.host;
@@ -119,6 +174,7 @@
             },
         },
         created: function() {
+            this.init();
             this.returnContent = this.getUrlParam("data") || "";
             if (this.returnContent != "") {
                 alert("签名后的内容" + this.returnContent);
