@@ -108,7 +108,7 @@
                 }
                 window.web3.eth.personal.ecRecover(this.objStr, this.singResult).then((accoutAddress) => {
                     alert(accoutAddress);
-                    if (accoutAddress === this.selectedAddress) {
+                    if (accoutAddress.toLowerCase() === this.selectedAddress.toLowerCase()) {
                         this.vresult = "true"
                     } else {
                         this.vresult = "false"
