@@ -16,7 +16,7 @@ window.elaAbi = [{"constant":true,"inputs":[{"name":"interfaceId","type":"bytes4
 window.initWallet = function initWallet() {
     return new Promise((resolve, reject) => {
         if (typeof window.ethereum === 'undefined') {
-            window.web3 = new Web3(new Web3.providers.HttpProvider("https://mainrpc.elaeth.io"));
+            window.web3 = new Web3(new Web3.providers.HttpProvider("https://escrpc.elaphant.app"));
             reject('Looks like you need a Dapp browser to get started.Consider installing MetaMask!');
         } else {
             //resolve(1);
