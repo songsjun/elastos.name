@@ -651,7 +651,7 @@
                     try {
                         await ethereum.enable();
                         var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
-                        infoContract.methods.setBasicInfo(this.domainName.trim().toLowerCase(), this.defaultKeys["btc.address"].trim(), this.defaultKeys["eth.address"].trim(), this.defaultKeys["ela.address"].trim(), this.defaultKeys.did.trim(), this.defaultKeys.publickey.trim()).send(option, (err, msg) => {
+                        infoContract.methods.setBasicInfo((this.domainName || "").trim().toLowerCase(), (this.defaultKeys["btc.address"] || "").trim(), (this.defaultKeys["eth.address"] || "").trim(), (this.defaultKeys["ela.address"] || "").trim(), (this.defaultKeys.did || "").trim(), (this.defaultKeys.publickey || "").trim()).send(option, (err, msg) => {
                             if (!err) {
                                 this.loading = true;
                                 this.next(msg, "setBasicInfo");
