@@ -34,16 +34,21 @@ Symbol:
 ELA
 ```
 
+ChainID: 
+
+```
+20
+```
 New RPC URL: 
 
 ```
-https://mainrpc.elaeth.io
+https://escrpc.elaphant.app
 ```
 
 Block Explorer URL: 
 
 ```
-https://explorer.elaeth.io
+https://escscan.elaphant.app
 ```
 
 Above is the network setting.
