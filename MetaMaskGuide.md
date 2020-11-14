@@ -18,9 +18,11 @@ https://elaphant.app/
 
 ### 2. Connect to the Elastos sidechain.
 
-<img src="img/s4.png" width="240"/><img src="img/s3.png" width="240"/>
+<img src="img/s4.png" width="240"/><img src="img/s3.png" width="240"/><img src="img/s31.png" width="240"/>
 
 
+
+There are two public node can be used.
 
 Network Name: 
 
@@ -37,7 +39,7 @@ ELA
 ChainID: 
 
 ```
-20
+0x14
 ```
 New RPC URL: 
 
@@ -45,10 +47,22 @@ New RPC URL:
 https://escrpc.elaphant.app
 ```
 
+or
+
+```
+https://mainrpc.elaeth.io
+```
+
 Block Explorer URL: 
 
 ```
 https://escscan.elaphant.app
+```
+
+or
+
+```
+https://explorer.elaeth.io
 ```
 
 Above is the network setting.
