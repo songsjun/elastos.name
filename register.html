@@ -429,8 +429,15 @@
             },
             async buyIt() {
                 if (this.goodName == 2) {
-                    alert("ERROR: Name exist");
-                    return;
+
+                    var infoContract = new web3.eth.Contract(window.elaAbi, window.contractAddres);
+                    let tokenId = web3.utils.hexToNumberString("0x" + sha256(this.dname));
+                    var expired = await infoContract.methods.tokenExpiration(tokenId).call();
+                    console.log(expired)
+                    if (expired > new Date().getTime()) {
+                        alert("ERROR: Name exist");
+                        return;
+                    }
                 }
 
                 var level = 1;
